@@ -1,0 +1,110 @@
+{
+  "app_name": "PDR Connect",
+  "tagline": "Conexión B2B para Profesionales del Automóvil",
+  "operator": "Cybratech-Solutions",
+  "nav": {
+    "dashboard": "Panel",
+    "search": "Buscar Profesionales",
+    "messages": "Mensajes",
+    "profile": "Mi Perfil",
+    "documents": "Documentos",
+    "premium": "Hazte Premium",
+    "admin": "Admin",
+    "logout": "Cerrar Sesión"
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "register": "Crear Cuenta",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "full_name": "Nombre Completo",
+    "phone": "Número de Teléfono",
+    "role": "Tu Rol",
+    "gdpr_consent": "Acepto la Política de Privacidad y los Términos de Servicio, y consiento el tratamiento de mis datos personales de conformidad con el RGPD.",
+    "already_account": "¿Ya tienes una cuenta?",
+    "no_account": "¿No tienes una cuenta?",
+    "forgot_password": "¿Olvidaste tu contraseña?",
+    "verify_email": "Revisa tu correo electrónico para verificar tu cuenta.",
+    "role_hint": "Selecciona el rol que mejor describe tu trabajo"
+  },
+  "roles": {
+    "PDR_TECHNICIAN": "Técnico PDR",
+    "CAR_PAINTER": "Pintor de Coches",
+    "PREPARER": "Preparador",
+    "DISMANTLER": "Desguazador"
+  },
+  "profile": {
+    "verified": "Verificado",
+    "premium": "Premium",
+    "bio": "Sobre Mí",
+    "countries": "Países Disponibles",
+    "services": "Servicios Ofrecidos",
+    "visible": "Perfil Visible",
+    "hidden": "Perfil Oculto",
+    "edit": "Editar Perfil",
+    "save": "Guardar Cambios",
+    "upload_avatar": "Subir Foto"
+  },
+  "documents": {
+    "eu_id": "DNI UE / Pasaporte",
+    "a1": "Certificado A1",
+    "travel_doc": "Documento de Viaje",
+    "company_doc": "Documento de Empresa",
+    "status_pending": "En Revisión",
+    "status_verified": "Verificado",
+    "status_rejected": "Rechazado",
+    "upload": "Subir Documento",
+    "awaiting_verification": "Tu perfil está pendiente de verificación de documentos."
+  },
+  "messages": {
+    "send": "Enviar Mensaje",
+    "placeholder": "Escribe un mensaje...",
+    "premium_required": "Se requiere membresía Premium para enviar mensajes.",
+    "no_conversations": "Aún no hay conversaciones.",
+    "filter_warning": "Tu mensaje contenía información de contacto que ha sido eliminada. No está permitido compartir datos de contacto externos."
+  },
+  "premium": {
+    "title": "Desbloquear Premium",
+    "price": "€9,99 / mes",
+    "features": [
+      "Ver nombres completos de los profesionales",
+      "Enviar y recibir mensajes",
+      "Prioridad en los resultados de búsqueda",
+      "Visibilidad ilimitada del perfil"
+    ],
+    "subscribe": "Suscribirse Ahora",
+    "manage": "Gestionar Suscripción",
+    "active": "Premium Activo"
+  },
+  "search": {
+    "title": "Buscar Profesionales",
+    "role_filter": "Filtrar por Rol",
+    "country_filter": "Filtrar por País",
+    "no_results": "No se encontraron profesionales con tus criterios.",
+    "view_profile": "Ver Perfil",
+    "message": "Enviar Mensaje"
+  },
+  "admin": {
+    "title": "Panel de Admin",
+    "users": "Gestión de Usuarios",
+    "documents": "Revisión de Documentos",
+    "violations": "Violaciones de Bypass",
+    "verify": "Verificar",
+    "reject": "Rechazar",
+    "block": "Bloquear Usuario",
+    "unblock": "Desbloquear Usuario",
+    "stats": "Estadísticas de la Plataforma"
+  },
+  "status": {
+    "loading": "Cargando...",
+    "error": "Se produjo un error. Por favor, inténtalo de nuevo.",
+    "success": "Cambios guardados correctamente.",
+    "saved": "Guardado"
+  },
+  "legal": {
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "legal": "Aviso Legal",
+    "gdpr": "RGPD"
+  }
+}

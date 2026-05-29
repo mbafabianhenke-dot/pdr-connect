@@ -1,0 +1,110 @@
+{
+  "app_name": "PDR Connect",
+  "tagline": "B2B Matching for Automotive Professionals",
+  "operator": "Cybratech-Solutions",
+  "nav": {
+    "dashboard": "Dashboard",
+    "search": "Find Professionals",
+    "messages": "Messages",
+    "profile": "My Profile",
+    "documents": "Documents",
+    "premium": "Go Premium",
+    "admin": "Admin",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Create Account",
+    "email": "Email Address",
+    "password": "Password",
+    "full_name": "Full Name",
+    "phone": "Phone Number",
+    "role": "Your Role",
+    "gdpr_consent": "I agree to the Privacy Policy and Terms of Service, and consent to the processing of my personal data in accordance with GDPR.",
+    "already_account": "Already have an account?",
+    "no_account": "Don't have an account?",
+    "forgot_password": "Forgot password?",
+    "verify_email": "Please check your email to verify your account.",
+    "role_hint": "Select the role that best describes your work"
+  },
+  "roles": {
+    "PDR_TECHNICIAN": "PDR Technician",
+    "CAR_PAINTER": "Car Painter",
+    "PREPARER": "Preparer",
+    "DISMANTLER": "Dismantler"
+  },
+  "profile": {
+    "verified": "Verified",
+    "premium": "Premium",
+    "bio": "About Me",
+    "countries": "Available Countries",
+    "services": "Services Offered",
+    "visible": "Profile Visible",
+    "hidden": "Profile Hidden",
+    "edit": "Edit Profile",
+    "save": "Save Changes",
+    "upload_avatar": "Upload Photo"
+  },
+  "documents": {
+    "eu_id": "EU ID / Passport",
+    "a1": "A1 Certificate",
+    "travel_doc": "Travel Document",
+    "company_doc": "Company Document",
+    "status_pending": "Pending Review",
+    "status_verified": "Verified",
+    "status_rejected": "Rejected",
+    "upload": "Upload Document",
+    "awaiting_verification": "Your profile is awaiting document verification."
+  },
+  "messages": {
+    "send": "Send Message",
+    "placeholder": "Write a message...",
+    "premium_required": "Premium membership required to send messages.",
+    "no_conversations": "No conversations yet.",
+    "filter_warning": "Your message contained contact information which has been removed. Sharing external contact details is not permitted."
+  },
+  "premium": {
+    "title": "Unlock Premium",
+    "price": "€9.99 / month",
+    "features": [
+      "See full names of professionals",
+      "Send & receive messages",
+      "Priority in search results",
+      "Unlimited profile visibility"
+    ],
+    "subscribe": "Subscribe Now",
+    "manage": "Manage Subscription",
+    "active": "Premium Active"
+  },
+  "search": {
+    "title": "Find Professionals",
+    "role_filter": "Filter by Role",
+    "country_filter": "Filter by Country",
+    "no_results": "No professionals found matching your criteria.",
+    "view_profile": "View Profile",
+    "message": "Send Message"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "User Management",
+    "documents": "Document Review",
+    "violations": "Bypass Violations",
+    "verify": "Verify",
+    "reject": "Reject",
+    "block": "Block User",
+    "unblock": "Unblock User",
+    "stats": "Platform Statistics"
+  },
+  "status": {
+    "loading": "Loading...",
+    "error": "An error occurred. Please try again.",
+    "success": "Changes saved successfully.",
+    "saved": "Saved"
+  },
+  "legal": {
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "legal": "Legal Notice",
+    "gdpr": "GDPR"
+  }
+}
