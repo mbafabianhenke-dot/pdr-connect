@@ -136,6 +136,10 @@ export default function ProfilePage() {
   const [hasIdentityDoc, setHasIdentityDoc]     = useState(false);
   const [identityDocUploading, setIdentityDocUploading] = useState(false);
 
+  /* ── Australia work visa document ── */
+  const [hasWorkVisaDoc, setHasWorkVisaDoc]     = useState(false);
+  const [workVisaDocUploading, setWorkVisaDocUploading] = useState(false);
+
   /* ── all docs (for completion check) ── */
   const [allDocuments, setAllDocuments]         = useState<any[]>([]);
 
@@ -216,6 +220,7 @@ export default function ProfilePage() {
     setAllDocuments(docs);
     setHasCompanyDoc(docs.some((d: any) => d.type === 'COMPANY_DOC'));
     setHasIdentityDoc(docs.some((d: any) => d.type === 'IDENTITY_DOC'));
+    setHasWorkVisaDoc(docs.some((d: any) => d.type === 'WORK_VISA'));
     const pm = docs.filter((d: any) =>
       ['GALLERY_IMAGE', 'AVATAR'].includes(d.type) && d.status === 'pending',
     );
@@ -557,6 +562,46 @@ export default function ProfilePage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ docType: 'IDENTITY_DOC' }),
+    }).catch(() => {});
+    e.target.value = '';
+  };
+
+  /* ── Australia work visa upload ────────────────────────── */
+  const handleWorkVisaDocUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { toast.error(t('documents.errors.tooLarge')); return; }
+    const allowed = ['image/jpeg', 'image/png', 'application/pdf'];
+    if (!allowed.includes(file.type)) { toast.error(t('documents.errors.invalidType')); return; }
+
+    setWorkVisaDocUploading(true);
+    const uid = await userId();
+    if (!uid) { setWorkVisaDocUploading(false); return; }
+
+    const ext = file.name.split('.').pop();
+    const path = `${uid}/WORK_VISA_${Date.now()}.${ext}`;
+    const { error: uploadError } = await supabase.storage.from('documents').upload(path, file);
+    if (uploadError) { toast.error(uploadError.message); setWorkVisaDocUploading(false); return; }
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const fileUrl = `${supabaseUrl}/storage/v1/object/public/documents/${path}`;
+
+    const { error: dbError } = await supabase.from('documents').insert({
+      user_id: uid,
+      type: 'WORK_VISA',
+      file_url: fileUrl,
+      status: 'pending',
+    });
+
+    setWorkVisaDocUploading(false);
+    if (dbError) { toast.error(dbError.message); return; }
+    setHasWorkVisaDoc(true);
+    setAllDocuments(prev => [...prev, { type: 'WORK_VISA', status: 'pending' }]);
+    toast.success(t('profile.workVisaDocUploadedToast', 'Work visa uploaded — awaiting review'));
+    fetch('/api/admin/notify-new-doc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ docType: 'WORK_VISA' }),
     }).catch(() => {});
     e.target.value = '';
   };
@@ -1141,6 +1186,59 @@ export default function ProfilePage() {
                     className="hidden"
                     disabled={identityDocUploading}
                     onChange={handleIdentityDocUpload}
+                  />
+                </label>
+              )}
+            </div>
+
+            {/* Australia Work Visa Upload */}
+            <div id="section-work-visa-doc">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('profile.workVisaDocLabel', '🇦🇺 Upload your Australia Work Visa')}
+              </label>
+              <p className="text-xs text-gray-400 mb-2">
+                {t('profile.workVisaDocHint', 'Upload your approved Subclass 400 work visa once it is granted. Accepted: PDF, JPG, PNG · max 10 MB')}
+              </p>
+              {hasWorkVisaDoc ? (
+                <div className="flex items-center gap-3 rounded-xl bg-green-50 border border-green-200 px-4 py-3">
+                  <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-green-700">{t('profile.workVisaDocUploaded', 'Work visa uploaded')}</p>
+                    <p className="text-xs text-green-600">{t('profile.identityDocPending', 'Awaiting admin review')}</p>
+                  </div>
+                  <label className={`flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 cursor-pointer transition hover:bg-gray-50 flex-shrink-0 ${workVisaDocUploading ? 'opacity-50 cursor-wait' : ''}`}>
+                    <Upload className="h-3.5 w-3.5" />
+                    {workVisaDocUploading ? t('profile.companyDocUploading') : t('profile.companyDocReplace', 'Replace')}
+                    <input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="hidden"
+                      disabled={workVisaDocUploading}
+                      onChange={handleWorkVisaDocUpload}
+                    />
+                  </label>
+                </div>
+              ) : (
+                <label className={`flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed py-7 cursor-pointer transition ${
+                  workVisaDocUploading
+                    ? 'opacity-50 cursor-wait border-gray-200 bg-gray-50'
+                    : 'border-sky-300 bg-sky-50 hover:border-sky-400 hover:bg-sky-100'
+                }`}>
+                  <Globe className="h-9 w-9 text-sky-400" />
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-sky-700">
+                      {workVisaDocUploading ? t('profile.companyDocUploading') : t('profile.workVisaDocUpload', 'Upload your Australia Work Visa')}
+                    </p>
+                    <p className="text-xs text-sky-500 mt-0.5">
+                      {t('profile.workVisaDocHintShort', 'PDF, JPG or PNG · max 10 MB')}
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="hidden"
+                    disabled={workVisaDocUploading}
+                    onChange={handleWorkVisaDocUpload}
                   />
                 </label>
               )}
