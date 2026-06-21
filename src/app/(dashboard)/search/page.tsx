@@ -7,8 +7,9 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  const { data: me } = await supabase.from('users').select('is_admin').eq('id', user!.id).single();
-  const isAdmin = me?.is_admin ?? false;
+  const { data: me } = await supabase.from('users').select('is_admin, role').eq('id', user!.id).single();
+  const isAdmin    = me?.is_admin ?? false;
+  const isCustomer = me?.role === 'CUSTOMER';
 
   // user_public_profiles view: no email/phone, already filters
   // verified + visible_public + not blocked at the DB level.
@@ -39,6 +40,7 @@ export default async function SearchPage({ searchParams }: { searchParams: Searc
       currentCountry={searchParams.country ?? ''}
       currentBundesland={searchParams.bundesland ?? ''}
       isAdmin={isAdmin}
+      isCustomer={isCustomer}
     />
   );
 }

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; }
+
+  .card {
+    width: 1080px; height: 1080px;
+    background: linear-gradient(145deg, #0f172a 0%, #1e3a5f 50%, #1d4ed8 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; overflow: hidden; padding: 60px;
+  }
+
+  /* Background dots */
+  .dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* Gold accent bar */
+  .accent-bar {
+    position: absolute; top: 0; left: 0; right: 0; height: 8px;
+    background: linear-gradient(90deg, #1d4ed8, #fbbf24, #1d4ed8);
+  }
+
+  /* Logo */
+  .logo {
+    position: absolute; top: 48px; left: 60px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .logo-circle {
+    width: 52px; height: 52px; border-radius: 12px;
+    background: rgba(251,191,36,0.15); border: 2px solid rgba(251,191,36,0.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .logo-text { color: white; font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+  .logo-sub { color: rgba(255,255,255,0.4); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; }
+
+  /* Badge */
+  .badge {
+    background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.4);
+    border-radius: 40px; padding: 10px 24px; margin-bottom: 40px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+  .badge-text { color: #fbbf24; font-size: 16px; font-weight: 600; letter-spacing: 1px; }
+
+  /* Avatar */
+  .avatar-wrap {
+    width: 140px; height: 140px; border-radius: 50%;
+    background: linear-gradient(135deg, #1d4ed8, #fbbf24);
+    padding: 4px; margin-bottom: 32px;
+    box-shadow: 0 0 40px rgba(251,191,36,0.3);
+  }
+  .avatar-inner {
+    width: 100%; height: 100%; border-radius: 50%;
+    background: linear-gradient(135deg, #1e3a5f, #0f172a);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px;
+  }
+
+  /* Quote */
+  .quote-mark {
+    font-size: 120px; color: rgba(251,191,36,0.2); line-height: 0.5;
+    font-family: Georgia, serif; margin-bottom: 16px;
+  }
+
+  .quote-text {
+    font-size: 36px; color: white; text-align: center; line-height: 1.4;
+    font-weight: 500; max-width: 860px; margin-bottom: 36px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .quote-text em { color: #fbbf24; font-style: normal; font-weight: 700; }
+
+  /* Author */
+  .author-name { color: #fbbf24; font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+  .author-role { color: rgba(255,255,255,0.6); font-size: 17px; }
+  .author-flag { font-size: 20px; }
+
+  /* Stars */
+  .stars { color: #fbbf24; font-size: 28px; margin-bottom: 12px; letter-spacing: 4px; }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #1d4ed8, #fbbf24, #1d4ed8);
+  }
+
+  /* Website */
+  .website {
+    position: absolute; bottom: 36px; right: 60px;
+    color: rgba(255,255,255,0.4); font-size: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="dots"></div>
+  <div class="accent-bar"></div>
+
+  <div class="logo">
+    <div class="logo-circle">🔧</div>
+    <div>
+      <div class="logo-text">PDR Connect</div>
+      <div class="logo-sub">by Cybratech Solutions</div>
+    </div>
+  </div>
+
+  <div class="badge">
+    <div class="badge-dot"></div>
+    <span class="badge-text">VERIFIED TECHNICIAN</span>
+  </div>
+
+  <div class="avatar-wrap">
+    <div class="avatar-inner">👨‍🔧</div>
+  </div>
+
+  <div class="stars">★★★★★</div>
+
+  <div class="quote-mark">"</div>
+  <div class="quote-text">
+    Within 3 days of joining PDR Connect,
+    I received <em>2 job requests from Germany</em>.
+    The best platform for PDR professionals!
+  </div>
+
+  <div class="author-name">Marco R. <span class="author-flag">🇩🇪</span></div>
+  <div class="author-role">PDR Technician · 8 years experience</div>
+
+  <div class="bottom-bar"></div>
+  <div class="website">pdrconnect.eu</div>
+</div>
+</body>
+</html>

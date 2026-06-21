@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { Wrench, ArrowLeft } from 'lucide-react';
 import AGB_CONTENT from '@/lib/agb-content';
+import LegalPageHeader from '@/components/LegalPageHeader';
 
 const LINKS: Record<string, { privacy: string; legal: string; home: string }> = {
   en: { privacy: 'Privacy Policy',        legal: 'Legal Notice',    home: 'Back to Home'        },
@@ -36,19 +36,14 @@ export default function TermsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="mx-auto max-w-4xl flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Wrench className="h-6 w-6 text-brand-600" />
-            <span className="font-bold text-gray-900">PDR Connect</span>
-          </Link>
-          <Link href="/" className="ml-auto flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700">
-            <ArrowLeft className="h-4 w-4" /> {links.home}
-          </Link>
-        </div>
-      </header>
+      <LegalPageHeader
+        variant="agb"
+        backHref="/"
+        backLabel={links.home}
+        subtitle={`${c.subtitle} · ${lastUpdated}: ${dateStr}`}
+      />
 
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="mx-auto max-w-4xl px-6 py-10">
         <div className="card prose prose-sm max-w-none">
           <h1 className="text-3xl font-bold text-gray-900 mb-1">{c.title}</h1>
           <p className="text-brand-600 font-medium mb-1">{c.subtitle}</p>

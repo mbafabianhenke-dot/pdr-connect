@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'PDR Connect', url: APP_URL }],
   creator: 'PDR Connect',
+  verification: {
+    google: 'GwVQLYzpeJjy_1SiXkmtEKn35A54ES6LKgxcixciols',
+  },
   publisher: 'PDR Connect',
   robots: { index: true, follow: true },
   openGraph: {

@@ -178,14 +178,10 @@ export default function HomeClient() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="hidden sm:block"><LanguageSwitcher /></div>
-            <Link href="/login" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition px-3 py-2 rounded-lg hover:bg-gray-50">
-              {t('home.signIn')}
+            <Link href="/blog" className="hidden sm:block text-sm font-medium text-gray-600 hover:text-gray-900 transition px-3 py-2 rounded-lg hover:bg-gray-50">
+              Blog
             </Link>
-            <Link href="/register" className="group inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-brand-600 to-brand-700 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md hover:from-brand-700 hover:to-brand-800 transition-all">
-              {t('home.joinFree')}
-              <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
+            <LanguageSwitcher />
           </div>
         </div>
       </header>

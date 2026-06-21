@@ -186,7 +186,7 @@ export default function OnboardingPage() {
     router.push('/login');
   };
 
-  /* ─── Step 1 save + advance ─── */
+  /* ─── Step 1 save → direct to dashboard ─── */
   const saveStep1 = async () => {
     if (!fullName.trim())           { toast.error(t('onboarding.step1.errName'));     return; }
     if (!phoneNumber.trim())        { toast.error(t('onboarding.step1.errPhone'));    return; }
@@ -195,8 +195,16 @@ export default function OnboardingPage() {
     if (!companyHouseNumber.trim()) { toast.error(t('onboarding.step1.errHouse'));    return; }
     if (!companyZip.trim())         { toast.error(t('onboarding.step1.errZip'));      return; }
     if (!companyCountry)            { toast.error(t('onboarding.step1.errCountry'));  return; }
-    if (needsVat && !vatId.trim())  { toast.error(t('onboarding.step1.errVat'));      return; }
-    if (countries.length === 0)     { toast.error(t('onboarding.step1.errCountries')); return; }
+    // EU companies must provide VAT ID
+    if (needsVat && !vatId.trim())  {
+      toast.error(
+        t('onboarding.step1.errVat') ||
+        (companyCountry === 'DE' ? 'Pflichtfeld für EU-Unternehmen: USt-IdNr.' :
+         companyCountry === 'AT' ? 'Pflichtfeld für EU-Unternehmen: UID-Nummer' :
+         'VAT ID is required for EU companies')
+      );
+      return;
+    }
 
     setLoading(true);
     const fullPhone = `${phoneCode} ${phoneNumber.trim()}`;
@@ -209,12 +217,14 @@ export default function OnboardingPage() {
       company_zip:          companyZip.trim(),
       company_country:      companyCountry,
       vat_id:               vatId.trim() || null,
-      available_countries:  countries,
+      available_countries:  countries.length > 0 ? countries : [companyCountry],
     }).eq('id', uid);
     setLoading(false);
     if (error) { toast.error(error.message); return; }
-    setStep(2);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Profile complete → go to dashboard (documents can be uploaded later)
+    toast.success(t('onboarding.step1.saved') || '✅ Profile saved! Welcome to PDR Connect.');
+    setTimeout(() => router.push('/dashboard'), 1000);
   };
 
   /* ─── Step 2: company doc upload ─── */
@@ -306,6 +316,19 @@ export default function OnboardingPage() {
           <LogOut className="h-4 w-4" />
           {t('onboarding.signOut')}
         </button>
+      </div>
+
+      {/* Mandatory step banner */}
+      <div className="rounded-xl bg-amber-50 border-2 border-amber-400 p-4 flex gap-3 items-start mb-2">
+        <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
+        <div>
+          <p className="font-bold text-amber-800 text-sm">
+            {t('onboarding.mandatoryBanner') || 'Schritt 2 von 2 — Firmendaten erforderlich'}
+          </p>
+          <p className="text-xs text-amber-700 mt-0.5">
+            {t('onboarding.mandatoryDesc') || 'Bitte füllen Sie alle Felder aus. Ohne vollständige Firmendaten erhalten Sie keinen Zugang zum Dashboard. EU-Unternehmen müssen ihre USt-IdNr. angeben.'}
+          </p>
+        </div>
       </div>
 
       {/* Header */}

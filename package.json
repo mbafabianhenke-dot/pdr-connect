@@ -13,6 +13,7 @@
     "@stripe/stripe-js": "^4.1.0",
     "@supabase/ssr": "^0.5.1",
     "@supabase/supabase-js": "^2.45.0",
+    "@tailwindcss/typography": "^0.5.19",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "i18next": "^23.12.2",

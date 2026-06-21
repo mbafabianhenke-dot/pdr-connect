@@ -1,4 +1,28 @@
 {
+  "inquiry": {
+    "banner": "Busca técnicos y haz clic en \"Añadir a Solicitud\" en los perfiles que te interesen. Nuestro equipo gestionará la conexión y se pondrá en contacto en 24h.",
+    "addToRequest": "Añadir a Solicitud",
+    "added": "Añadido ✓",
+    "selectedCount": "{{count}} técnico seleccionado",
+    "selectedCount_plural": "{{count}} técnicos seleccionados",
+    "sendBtn": "Enviar Solicitud a PDR Connect",
+    "modalTitle": "Enviar Solicitud a PDR Connect",
+    "modalSub": "Nuestro equipo se pondrá en contacto en 24 horas",
+    "selectedTechs": "Técnicos Seleccionados",
+    "noTechs": "Sin técnico específico — solicitud general",
+    "location": "Ubicación / Ciudad",
+    "locationPlaceholder": "ej. Múnich, Alemania",
+    "startDate": "Fecha de inicio deseada",
+    "budget": "Presupuesto (opcional)",
+    "budgetPlaceholder": "ej. 800-1200 € por día",
+    "message": "Tu Mensaje / Requisitos",
+    "messagePlaceholder": "Describe tu proyecto, número de vehículos, tipo de daño, duración, requisitos específicos...",
+    "notice": "Tu solicitud y los perfiles seleccionados se envían al equipo de PDR Connect. Revisaremos y te conectaremos con el mejor candidato en 24 horas.",
+    "cancel": "Cancelar — no enviar",
+    "send": "Enviar a PDR Connect",
+    "sending": "Enviando...",
+    "success": "Tu solicitud ha sido enviada a nuestro equipo. Nos pondremos en contacto pronto."
+  },
   "nav": {
     "dashboard": "Panel",
     "myOffer": "Mi Disponibilidad",
@@ -586,7 +610,11 @@
     "uploadSignedDesc": "Suba un PDF que haya firmado a mano o con una herramienta externa (máx. 20 MB).",
     "uploadClient": "Subir Contrato de Cliente",
     "uploadWorker": "Subir Contrato de Técnico",
-    "uploadSuccess": "Contrato firmado subido correctamente."
+    "uploadSuccess": "Contrato firmado subido correctamente.",
+    "agbContract": "Términos y Condiciones (AGB)",
+    "privacyContract": "Política de Privacidad (RGPD)",
+    "signedOn": "Firmado el",
+    "accepted": "Aceptado"
   },
   "admin": {
     "title": "Panel de Administración",
@@ -856,6 +884,8 @@
     "badge": "Activación de cuenta",
     "title": "Completa tu perfil",
     "subtitle": "Rellena todos los campos obligatorios y envía tu perfil para revisión. Tras la aprobación tendrás acceso a PDR Connect.",
+    "mandatoryBanner": "Datos de empresa requeridos",
+    "mandatoryDesc": "Por favor completa todos los campos obligatorios. Sin datos completos de empresa no tendrás acceso al panel. Las empresas de la UE deben proporcionar su NIF/CIF.",
     "signOut": "Cerrar sesión",
     "step1Label": "Datos empresa",
     "step2Label": "Documentos",

@@ -10,7 +10,7 @@ import { formatDate } from '@/lib/utils';
 import {
   Upload, FileText, CheckCircle, Clock, XCircle,
   ExternalLink, Info, Building2, Wrench, Download,
-  ShieldCheck, Loader2, ClipboardCheck, Trash2,
+  ShieldCheck, Loader2, ClipboardCheck, Trash2, Shield, Eye,
 } from 'lucide-react';
 
 /** Extract the storage object path from a full Supabase Storage URL */
@@ -28,6 +28,118 @@ function getStoragePath(fileUrl: string): string | null {
 
 const DOC_TYPE_KEYS: DocType[] = ['EU_ID', 'A1', 'TRAVEL_DOC', 'COMPANY_DOC'];
 const REQUIRED_TYPES: DocType[] = ['EU_ID'];
+
+/** Public download URLs for the Australia Subclass 400 invitation templates. */
+const VISA_TEMPLATES = [
+  {
+    key: 'adr',
+    url: 'https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/ADR-Subclass-400-Visa-Invitation-Template.docx',
+  },
+  {
+    key: 'pdrTeam',
+    url: 'https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/PDR-Team-Visa-Invitation-Template.docx',
+  },
+] as const;
+
+type VisaLang = 'en' | 'de' | 'es' | 'el' | 'pt';
+/** Self-contained copy for the Work Visa section (independent of the i18n JSON files). */
+const VISA_COPY: Record<VisaLang, {
+  title: string; subtitle: string; intro: string;
+  downloadTitle: string; adr: string; pdr: string; download: string;
+  uploadTitle: string; uploadHint: string; upload: string; uploading: string; replace: string;
+  approvedNotice: string; uploadedOn: string; viewFile: string; delete: string;
+}> = {
+  en: {
+    title: 'Work Visa for Australia',
+    subtitle: 'Subclass 400 (Temporary Work – Short Stay Specialist)',
+    intro: 'Download the official invitation-letter templates below, complete your applicant details (full name as in passport, passport number, date of birth, nationality) and send them back so your Letter of Invitation can be issued. Typical engagement: 3–4 months, approx. AUD $2,000–$4,000 per week.',
+    downloadTitle: 'Invitation templates',
+    adr: 'ADR — Subclass 400 Invitation Template',
+    pdr: 'PDR-Team — Subclass 400 Invitation Template',
+    download: 'Download',
+    uploadTitle: 'Upload your approved Work Visa',
+    uploadHint: 'Once your Subclass 400 visa is approved, upload the grant letter / visa here so it is saved to your profile. PDF, JPG or PNG.',
+    upload: 'Upload Work Visa',
+    uploading: 'Uploading…',
+    replace: 'Upload another',
+    approvedNotice: 'Visa approved? Upload it here.',
+    uploadedOn: 'Uploaded on',
+    viewFile: 'View file',
+    delete: 'Delete',
+  },
+  de: {
+    title: 'Arbeitsvisum für Australien',
+    subtitle: 'Subklasse 400 (Temporary Work – Short Stay Specialist)',
+    intro: 'Laden Sie unten die offiziellen Einladungsschreiben-Vorlagen herunter, ergänzen Sie Ihre Antragsdaten (vollständiger Name wie im Reisepass, Reisepassnummer, Geburtsdatum, Staatsangehörigkeit) und senden Sie diese zurück, damit Ihr Einladungsschreiben ausgestellt werden kann. Typischer Einsatz: 3–4 Monate, ca. AUD 2.000–4.000 pro Woche.',
+    downloadTitle: 'Einladungsvorlagen',
+    adr: 'ADR — Subclass 400 Einladungsvorlage',
+    pdr: 'PDR-Team — Subclass 400 Einladungsvorlage',
+    download: 'Herunterladen',
+    uploadTitle: 'Genehmigtes Arbeitsvisum hochladen',
+    uploadHint: 'Sobald Ihr Subclass-400-Visum genehmigt ist, laden Sie das Bewilligungsschreiben / Visum hier hoch, damit es in Ihrem Profil gespeichert wird. PDF, JPG oder PNG.',
+    upload: 'Visum hochladen',
+    uploading: 'Lädt hoch…',
+    replace: 'Weiteres hochladen',
+    approvedNotice: 'Visum genehmigt? Hier hochladen.',
+    uploadedOn: 'Hochgeladen am',
+    viewFile: 'Datei ansehen',
+    delete: 'Löschen',
+  },
+  es: {
+    title: 'Visa de trabajo para Australia',
+    subtitle: 'Subclass 400 (Trabajo Temporal – Especialista de Estancia Corta)',
+    intro: 'Descarga abajo las plantillas oficiales de carta de invitación, completa tus datos (nombre completo como en el pasaporte, número de pasaporte, fecha de nacimiento, nacionalidad) y envíalas de vuelta para que se pueda emitir tu Carta de Invitación. Compromiso típico: 3–4 meses, aprox. AUD 2.000–4.000 por semana.',
+    downloadTitle: 'Plantillas de invitación',
+    adr: 'ADR — Plantilla de invitación Subclass 400',
+    pdr: 'PDR-Team — Plantilla de invitación Subclass 400',
+    download: 'Descargar',
+    uploadTitle: 'Sube tu Visa de Trabajo aprobada',
+    uploadHint: 'Una vez aprobada tu visa Subclass 400, sube aquí la carta de concesión / visa para guardarla en tu perfil. PDF, JPG o PNG.',
+    upload: 'Subir Visa',
+    uploading: 'Subiendo…',
+    replace: 'Subir otra',
+    approvedNotice: '¿Visa aprobada? Súbela aquí.',
+    uploadedOn: 'Subido el',
+    viewFile: 'Ver archivo',
+    delete: 'Eliminar',
+  },
+  el: {
+    title: 'Άδεια εργασίας για Αυστραλία',
+    subtitle: 'Subclass 400 (Προσωρινή Εργασία – Ειδικός Σύντομης Διαμονής)',
+    intro: 'Κατεβάστε παρακάτω τα επίσημα πρότυπα επιστολής πρόσκλησης, συμπληρώστε τα στοιχεία σας (πλήρες όνομα όπως στο διαβατήριο, αριθμός διαβατηρίου, ημερομηνία γέννησης, υπηκοότητα) και στείλτε τα πίσω ώστε να εκδοθεί η Επιστολή Πρόσκλησής σας. Τυπική απασχόληση: 3–4 μήνες, περίπου AUD 2.000–4.000 την εβδομάδα.',
+    downloadTitle: 'Πρότυπα πρόσκλησης',
+    adr: 'ADR — Πρότυπο πρόσκλησης Subclass 400',
+    pdr: 'PDR-Team — Πρότυπο πρόσκλησης Subclass 400',
+    download: 'Λήψη',
+    uploadTitle: 'Ανεβάστε την εγκεκριμένη άδεια εργασίας σας',
+    uploadHint: 'Μόλις εγκριθεί η βίζα σας Subclass 400, ανεβάστε εδώ την επιστολή έγκρισης / βίζα ώστε να αποθηκευτεί στο προφίλ σας. PDF, JPG ή PNG.',
+    upload: 'Ανέβασμα βίζας',
+    uploading: 'Μεταφόρτωση…',
+    replace: 'Ανέβασμα άλλου',
+    approvedNotice: 'Εγκρίθηκε η βίζα; Ανεβάστε την εδώ.',
+    uploadedOn: 'Ανέβηκε στις',
+    viewFile: 'Προβολή αρχείου',
+    delete: 'Διαγραφή',
+  },
+  pt: {
+    title: 'Visto de trabalho para a Austrália',
+    subtitle: 'Subclass 400 (Trabalho Temporário – Especialista de Curta Duração)',
+    intro: 'Baixe abaixo os modelos oficiais de carta-convite, preencha seus dados (nome completo como no passaporte, número do passaporte, data de nascimento, nacionalidade) e devolva-os para que sua Carta-Convite seja emitida. Engajamento típico: 3–4 meses, aprox. AUD 2.000–4.000 por semana.',
+    downloadTitle: 'Modelos de convite',
+    adr: 'ADR — Modelo de convite Subclass 400',
+    pdr: 'PDR-Team — Modelo de convite Subclass 400',
+    download: 'Baixar',
+    uploadTitle: 'Envie seu Visto de Trabalho aprovado',
+    uploadHint: 'Assim que seu visto Subclass 400 for aprovado, envie aqui a carta de concessão / visto para que fique salvo no seu perfil. PDF, JPG ou PNG.',
+    upload: 'Enviar Visto',
+    uploading: 'Enviando…',
+    replace: 'Enviar outro',
+    approvedNotice: 'Visto aprovado? Envie aqui.',
+    uploadedOn: 'Enviado em',
+    viewFile: 'Ver arquivo',
+    delete: 'Excluir',
+  },
+};
 
 interface SignedContract {
   id: string;
@@ -55,7 +167,7 @@ const StatusBadge = ({ status, t }: { status: string; t: (k: string) => string }
 };
 
 export default function DocumentsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [docs,              setDocs]              = useState<Document[]>([]);
   const [signedContracts,   setSignedContracts]   = useState<SignedContract[]>([]);
   const [loading,           setLoading]           = useState(true);
@@ -66,6 +178,7 @@ export default function DocumentsPage() {
   const [verificationReqAt, setVerificationReqAt] = useState<string | null>(null);
   const [verifying,         setVerifying]         = useState(false);
   const [deletingDoc,       setDeletingDoc]       = useState<string | null>(null);
+  const [deletingContract,  setDeletingContract]  = useState<string | null>(null);
   const [signedUrls,        setSignedUrls]        = useState<Record<string, string>>({});
   const [profile,           setProfile]           = useState<any>(null);
   const [termsAccepted,     setTermsAccepted]     = useState(false);
@@ -123,6 +236,19 @@ export default function DocumentsPage() {
     toast.success(t('documents.deleted') || 'Dokument gelöscht');
     setDocs(prev => prev.filter(d => d.id !== doc.id));
     setSignedUrls(prev => { const n = { ...prev }; delete n[doc.id]; return n; });
+  };
+
+  const handleDeleteContract = async (contractId: string, label: string) => {
+    if (!confirm(`"${label}" wirklich löschen?`)) return;
+    setDeletingContract(contractId);
+    try {
+      const res = await fetch(`/api/contracts/${contractId}`, { method: 'DELETE' });
+      const j = await res.json();
+      if (!res.ok) { toast.error(j.error ?? 'Fehler'); return; }
+      toast.success('Dokument gelöscht');
+      setSignedContracts(prev => prev.filter(c => c.id !== contractId));
+    } catch { toast.error('Netzwerkfehler'); }
+    finally { setDeletingContract(null); }
   };
 
   const handleRequestVerification = async () => {
@@ -333,6 +459,132 @@ export default function DocumentsPage() {
           );
         })}
       </div>
+
+      {/* ── Work Visa for Australia ── */}
+      {(() => {
+        const vlang: VisaLang = (['en', 'de', 'es', 'el', 'pt'] as VisaLang[])
+          .includes((i18n.language?.split('-')[0] ?? 'en') as VisaLang)
+          ? (i18n.language.split('-')[0] as VisaLang)
+          : 'en';
+        const v = VISA_COPY[vlang];
+        const workVisaDocs = docs.filter(d => d.type === 'WORK_VISA');
+        const labelFor = (key: string) => (key === 'adr' ? v.adr : v.pdr);
+
+        return (
+          <div className="rounded-2xl border-2 border-emerald-200 overflow-hidden shadow-sm">
+            <div className="px-5 py-4 bg-emerald-50 border-b border-emerald-200 flex items-center gap-3">
+              <span className="text-2xl leading-none">🇦🇺</span>
+              <div>
+                <h2 className="font-bold text-base text-emerald-900">{v.title}</h2>
+                <p className="text-xs text-emerald-700">{v.subtitle}</p>
+              </div>
+            </div>
+
+            <div className="px-5 py-5 bg-white space-y-5">
+              <p className="text-sm text-gray-600">{v.intro}</p>
+
+              {/* Template downloads */}
+              <div>
+                <p className="text-sm font-semibold text-gray-700 mb-2">{v.downloadTitle}</p>
+                <div className="space-y-2">
+                  {VISA_TEMPLATES.map(tpl => (
+                    <div key={tpl.key} className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 px-4 py-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 flex-shrink-0">
+                          <FileText className="h-5 w-5 text-emerald-600" />
+                        </div>
+                        <p className="text-sm font-medium text-gray-800 truncate">{labelFor(tpl.key)}</p>
+                      </div>
+                      <a
+                        href={tpl.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                        className="btn-secondary flex-shrink-0 inline-flex items-center gap-1.5 text-sm"
+                      >
+                        <Download className="h-4 w-4" />
+                        {v.download}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Approved visa upload */}
+              <div className="rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/40 p-4">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-emerald-200 flex-shrink-0">
+                      <ShieldCheck className="h-5 w-5 text-emerald-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{v.uploadTitle}</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">{v.uploadHint}</p>
+                    </div>
+                  </div>
+                  <label className="btn-secondary cursor-pointer flex-shrink-0">
+                    <Upload className="h-4 w-4 mr-1.5" />
+                    {uploading === 'WORK_VISA'
+                      ? v.uploading
+                      : workVisaDocs.length > 0
+                      ? v.replace
+                      : v.upload}
+                    <input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      className="hidden"
+                      disabled={uploading === 'WORK_VISA'}
+                      onChange={e => {
+                        const f = e.target.files?.[0];
+                        if (f) handleUpload('WORK_VISA', f);
+                      }}
+                    />
+                  </label>
+                </div>
+
+                {/* Uploaded approved visas */}
+                {workVisaDocs.length > 0 && (
+                  <div className="mt-4 space-y-2 border-t border-emerald-200 pt-4">
+                    {workVisaDocs.map(doc => (
+                      <div key={doc.id} className="flex items-center justify-between gap-3 rounded-lg bg-white border border-gray-200 px-3 py-2">
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2">
+                            <StatusBadge status={doc.status} t={t} />
+                          </div>
+                          <p className="text-xs text-gray-400 mt-0.5">{v.uploadedOn} {formatDate(doc.created_at)}</p>
+                        </div>
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          {signedUrls[doc.id] && (
+                            <a
+                              href={signedUrls[doc.id]}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 text-xs text-brand-600 hover:underline"
+                            >
+                              {v.viewFile} <ExternalLink className="h-3 w-3" />
+                            </a>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteDoc(doc)}
+                            disabled={deletingDoc === doc.id}
+                            className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition disabled:opacity-50"
+                          >
+                            {deletingDoc === doc.id
+                              ? <Loader2 className="h-3 w-3 animate-spin" />
+                              : <Trash2 className="h-3 w-3" />}
+                            {v.delete}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* ── Profile Verification Request ── */}
       {(() => {
@@ -555,42 +807,90 @@ export default function DocumentsPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {signedContracts.map(sc => (
-              <div key={sc.id} className="card flex items-center gap-4">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0 ${
-                  sc.version === 'client' ? 'bg-blue-100' : 'bg-orange-100'
-                }`}>
-                  {sc.version === 'client'
-                    ? <Building2 className="h-5 w-5 text-blue-600" />
-                    : <Wrench className="h-5 w-5 text-orange-600" />
-                  }
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <p className="font-semibold text-gray-900 text-sm">
-                      {sc.version === 'client' ? t('contracts.clientContract') : t('contracts.workerContract')}
-                    </p>
-                    <span className="badge-verified text-xs">
-                      <CheckCircle className="h-3 w-3 inline mr-0.5" />
-                      {t('contracts.signedBadge')}
-                    </span>
-                    <span className="text-xs text-gray-400 uppercase tracking-wide">{sc.language}</span>
+            {signedContracts.map(sc => {
+              const cfg: Record<string, { bg: string; iconColor: string; Icon: any; label: string }> = {
+                agb:     { bg: 'bg-brand-100',  iconColor: 'text-brand-600',  Icon: FileText,  label: t('contracts.agbContract')     || 'AGB — Allgemeine Geschäftsbedingungen' },
+                privacy: { bg: 'bg-purple-100', iconColor: 'text-purple-600', Icon: Shield,    label: t('contracts.privacyContract') || 'Datenschutzerklärung (DSGVO)' },
+                client:  { bg: 'bg-blue-100',   iconColor: 'text-blue-600',   Icon: Building2, label: t('contracts.clientContract') },
+                worker:  { bg: 'bg-orange-100', iconColor: 'text-orange-600', Icon: Wrench,    label: t('contracts.workerContract') },
+              };
+              const c = cfg[sc.version] ?? cfg.worker;
+
+              // ALL contract types use the view API:
+              // - agb/privacy: generates HTML document on-the-fly
+              // - client/worker: generates a fresh signed URL (works even with private bucket)
+              const hasContent = (sc.version === 'agb' || sc.version === 'privacy') || (sc.pdf_url && sc.pdf_url.length > 0);
+              const viewUrl     = hasContent ? `/api/contracts/${sc.id}/view` : null;
+              const downloadUrl = hasContent ? `/api/contracts/${sc.id}/view?download=1` : null;
+
+              return (
+                <div key={sc.id} className="card">
+                  <div className="flex items-start gap-3">
+                    {/* Icon */}
+                    <div className={`flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0 ${c.bg}`}>
+                      <c.Icon className={`h-5 w-5 ${c.iconColor}`} />
+                    </div>
+
+                    {/* Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-semibold text-gray-900 text-sm">{c.label}</p>
+                        <span className="badge-verified text-xs">
+                          <CheckCircle className="h-3 w-3 inline mr-0.5" />
+                          {t('contracts.signedBadge')}
+                        </span>
+                        {sc.language && (
+                          <span className="text-xs text-gray-400 uppercase tracking-wide">{sc.language}</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {t('contracts.signedOn') || 'Unterzeichnet am'}: {sc.signed_at ? formatDate(sc.signed_at) : formatDate(sc.created_at)}
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-400 mt-0.5">
-                    {sc.signed_at ? formatDate(sc.signed_at) : formatDate(sc.created_at)}
-                  </p>
+
+                  {/* Action buttons */}
+                  <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
+                    {/* View */}
+                    {viewUrl && (
+                      <a
+                        href={viewUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3 py-1.5 text-xs font-semibold text-brand-700 transition"
+                      >
+                        <Eye className="h-3.5 w-3.5" />
+                        {t('documents.viewFile') || 'Ansehen'}
+                      </a>
+                    )}
+
+                    {/* Download */}
+                    {downloadUrl && (
+                      <a
+                        href={downloadUrl}
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700 transition"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        {t('contracts.downloadSigned') || 'Herunterladen'}
+                      </a>
+                    )}
+
+                    {/* Delete */}
+                    <button
+                      onClick={() => handleDeleteContract(sc.id, c.label)}
+                      disabled={deletingContract === sc.id}
+                      className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 text-xs font-semibold text-red-600 transition disabled:opacity-50 ml-auto"
+                    >
+                      {deletingContract === sc.id
+                        ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        : <Trash2 className="h-3.5 w-3.5" />
+                      }
+                      {t('documents.delete') || 'Löschen'}
+                    </button>
+                  </div>
                 </div>
-                <a
-                  href={sc.pdf_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-shrink-0 flex items-center gap-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition px-3 py-2 text-sm font-medium text-gray-700"
-                >
-                  <Download className="h-4 w-4" />
-                  {t('contracts.downloadSigned')}
-                </a>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

@@ -161,13 +161,19 @@ export default function ContractsPage() {
 
   const c = CONTRACTS[lang];
 
-  const [activeTab,    setActiveTab]    = useState<'client' | 'worker'>('client');
+  // Check if this is a mandatory signing (came from dashboard gate)
+  const isRequired = typeof window !== 'undefined'
+    ? new URLSearchParams(window.location.search).get('required') === '1'
+    : false;
+
+  const [activeTab,    setActiveTab]    = useState<'client' | 'worker' | 'privacy'>('client');
   const [showModal,    setShowModal]    = useState(false);
   const [signerName,   setSignerName]   = useState('');
   const [signerEmail,  setSignerEmail]  = useState('');
   const [uploading,    setUploading]    = useState(false);
-  const [signedUrls,   setSignedUrls]   = useState<{ client?: string; worker?: string }>({});
+  const [signedUrls,   setSignedUrls]   = useState<{ client?: string; worker?: string; privacy?: string }>({});
   const [userId,       setUserId]       = useState('');
+  const [userRole,     setUserRole]     = useState<string>('worker');
 
   // Load user profile + existing signed contracts
   useEffect(() => {
@@ -180,10 +186,16 @@ export default function ContractsPage() {
 
       const { data: profile } = await supabase
         .from('users')
-        .select('full_name')
+        .select('full_name, role')
         .eq('id', user.id)
         .single();
       setSignerName(profile?.full_name ?? '');
+
+      // Auto-select the correct contract type based on user role
+      const role = profile?.role ?? 'PDR_TECHNICIAN';
+      setUserRole(role);
+      const contractType = role === 'CUSTOMER' ? 'client' : 'worker';
+      setActiveTab(contractType);
 
       // Load previously signed contracts
       const { data: contracts } = await supabase
@@ -194,10 +206,11 @@ export default function ContractsPage() {
         .order('created_at', { ascending: false });
 
       if (contracts) {
-        const urls: { client?: string; worker?: string } = {};
-        for (const c of contracts) {
-          if (c.version === 'client' && !urls.client) urls.client = c.pdf_url;
-          if (c.version === 'worker' && !urls.worker) urls.worker = c.pdf_url;
+        const urls: { client?: string; worker?: string; privacy?: string } = {};
+        for (const ct of contracts) {
+          if (ct.version === 'client'  && !urls.client)  urls.client  = ct.pdf_url;
+          if (ct.version === 'worker'  && !urls.worker)  urls.worker  = ct.pdf_url;
+          if (ct.version === 'privacy' && !urls.privacy) urls.privacy = ct.pdf_url;
         }
         setSignedUrls(urls);
       }
@@ -209,9 +222,10 @@ export default function ContractsPage() {
     setUploading(true);
 
     try {
-      // 1. Generate the PDF (client-side, returns Blob)
-      const pdfBlob = generateContractPDF({
-        contractType: activeTab,
+      // 1. Generate the PDF — privacy uses worker layout with privacy content
+      const pdfContractType: 'client' | 'worker' = activeTab === 'privacy' ? 'worker' : (activeTab as 'client' | 'worker');
+      const pdfBlob = await generateContractPDF({
+        contractType: pdfContractType,
         signerName: name,
         signerEmail,
         signatureDataUrl,
@@ -221,7 +235,8 @@ export default function ContractsPage() {
       const blobUrl = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
       a.href = blobUrl;
-      a.download = `PDR-Connect-${activeTab === 'client' ? 'Client' : 'Worker'}-Contract-${Date.now()}.pdf`;
+      const docLabel = activeTab === 'privacy' ? 'Privacy-Policy' : activeTab === 'client' ? 'Client-AGB' : 'Worker-AGB';
+      a.download = `PDR-Connect-${docLabel}-${Date.now()}.pdf`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -258,9 +273,22 @@ export default function ContractsPage() {
       if (dbErr) throw dbErr;
 
       // 5. Update local state
-      setSignedUrls(prev => ({ ...prev, [activeTab]: publicUrl }));
+      setSignedUrls(prev => {
+        const updated = { ...prev, [activeTab]: publicUrl };
+        // Auto-redirect when BOTH required docs are signed
+        const contractVersion = userRole === 'CUSTOMER' ? 'client' : 'worker';
+        const bothSigned = updated[contractVersion as 'client' | 'worker'] && updated.privacy;
+        if (isRequired && bothSigned) {
+          toast.success(lang === 'de' ? '✅ Beide Dokumente unterzeichnet! Weiterleitung...' : '✅ Both documents signed! Redirecting...');
+          setTimeout(() => { window.location.href = '/dashboard'; }, 2000);
+        } else if (isRequired) {
+          toast.success(t('contracts.signedSuccess'));
+        } else {
+          toast.success(t('contracts.signedSuccess'));
+        }
+        return updated;
+      });
       setShowModal(false);
-      toast.success(t('contracts.signedSuccess'));
 
     } catch (err: any) {
       console.error('Contract signing error:', err);
@@ -274,6 +302,118 @@ export default function ContractsPage() {
 
   return (
     <div className="space-y-6">
+
+      {/* ── MANDATORY SIGNING BANNER + ACTION CARDS ── */}
+      {isRequired && (
+        <div className="space-y-4">
+          {/* Warning */}
+          <div className="rounded-xl bg-red-50 border-2 border-red-400 p-5 flex gap-4 items-center">
+            <div className="text-3xl flex-shrink-0">⚠️</div>
+            <div>
+              <p className="font-bold text-red-800 text-base">
+                {lang === 'de' ? 'Pflicht: AGB & Datenschutz unterzeichnen' :
+                 lang === 'es' ? 'Obligatorio: Firmar AGB y Protección de Datos' :
+                 lang === 'el' ? 'Υποχρεωτικό: Υπογραφή ΓΟΣ & Προστασίας Δεδομένων' :
+                 'Required: Sign Terms & Privacy Policy'}
+              </p>
+              <p className="text-red-700 text-sm mt-0.5">
+                {lang === 'de'
+                  ? 'Ohne beide Unterschriften haben Sie keinen Zugang zu PDR Connect.'
+                  : lang === 'es'
+                  ? 'Sin ambas firmas no puede acceder a PDR Connect.'
+                  : lang === 'el'
+                  ? 'Χωρίς και τις δύο υπογραφές δεν έχετε πρόσβαση στο PDR Connect.'
+                  : 'Without both signatures you cannot access PDR Connect.'}
+              </p>
+            </div>
+          </div>
+
+          {/* TWO ACTION CARDS */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Card 1: AGB */}
+            <div className={`rounded-2xl border-2 p-6 flex flex-col gap-4 ${signedUrls[activeTab as 'client' | 'worker'] ? 'border-green-400 bg-green-50' : 'border-brand-300 bg-brand-50'}`}>
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">{signedUrls[activeTab as 'client' | 'worker'] ? '✅' : '📋'}</div>
+                <div>
+                  <p className="font-bold text-gray-900 text-base">
+                    {lang === 'de' ? 'Allgemeine Geschäftsbedingungen' :
+                     lang === 'es' ? 'Términos y Condiciones (AGB)' :
+                     lang === 'el' ? 'Γενικοί Όροι (AGB)' :
+                     'Terms & Conditions (AGB)'}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {lang === 'de' ? 'Nutzungsregeln der Plattform' :
+                     lang === 'es' ? 'Reglas de uso de la plataforma' :
+                     lang === 'el' ? 'Κανόνες χρήσης πλατφόρμας' :
+                     'Platform usage rules'}
+                  </p>
+                </div>
+              </div>
+              {signedUrls[activeTab as 'client' | 'worker']
+                ? <div className="flex items-center gap-2 text-green-700 font-semibold text-sm">
+                    <CheckCircle className="h-5 w-5" />
+                    {lang === 'de' ? 'Unterzeichnet ✓' : lang === 'es' ? 'Firmado ✓' : lang === 'el' ? 'Υπογεγραμμένο ✓' : 'Signed ✓'}
+                  </div>
+                : <button
+                    onClick={() => { setActiveTab(activeTab as 'client' | 'worker'); setShowModal(true); document.getElementById('contract-content')?.scrollIntoView({ behavior: 'smooth' }); }}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-brand-600 text-white px-5 py-3 font-bold text-sm hover:bg-brand-700 transition"
+                  >
+                    <PenLine className="h-4 w-4" />
+                    {lang === 'de' ? 'Lesen & Unterzeichnen' : lang === 'es' ? 'Leer y Firmar' : lang === 'el' ? 'Ανάγνωση & Υπογραφή' : 'Read & Sign'}
+                  </button>
+              }
+            </div>
+
+            {/* Card 2: Datenschutz — uses 'privacy' version */}
+            <div className={`rounded-2xl border-2 p-6 flex flex-col gap-4 ${signedUrls.privacy ? 'border-green-400 bg-green-50' : 'border-purple-300 bg-purple-50'}`}>
+              <div className="flex items-center gap-3">
+                <div className="text-3xl">{signedUrls.privacy ? '✅' : '🔒'}</div>
+                <div>
+                  <p className="font-bold text-gray-900 text-base">
+                    {lang === 'de' ? 'Datenschutzerklärung' :
+                     lang === 'es' ? 'Política de Privacidad' :
+                     lang === 'el' ? 'Πολιτική Απορρήτου' :
+                     'Privacy Policy'}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    {lang === 'de' ? 'Umgang mit Ihren persönlichen Daten' :
+                     lang === 'es' ? 'Manejo de sus datos personales' :
+                     lang === 'el' ? 'Χειρισμός προσωπικών δεδομένων' :
+                     'How we handle your personal data'}
+                  </p>
+                </div>
+              </div>
+              {signedUrls.privacy
+                ? <div className="flex items-center gap-2 text-green-700 font-semibold text-sm">
+                    <CheckCircle className="h-5 w-5" />
+                    {lang === 'de' ? 'Unterzeichnet ✓' : lang === 'es' ? 'Firmado ✓' : lang === 'el' ? 'Υπογεγραμμένο ✓' : 'Signed ✓'}
+                  </div>
+                : <button
+                    onClick={() => { setActiveTab('privacy' as any); setShowModal(true); document.getElementById('contract-content')?.scrollIntoView({ behavior: 'smooth' }); }}
+                    className="w-full flex items-center justify-center gap-2 rounded-xl bg-purple-600 text-white px-5 py-3 font-bold text-sm hover:bg-purple-700 transition"
+                  >
+                    <PenLine className="h-4 w-4" />
+                    {lang === 'de' ? 'Lesen & Unterzeichnen' : lang === 'es' ? 'Leer y Firmar' : lang === 'el' ? 'Ανάγνωση & Υπογραφή' : 'Read & Sign'}
+                  </button>
+              }
+            </div>
+          </div>
+
+          {/* Progress indicator */}
+          {(signedUrls[activeTab as 'client' | 'worker'] || signedUrls.privacy) && (
+            <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-800">
+              {signedUrls[activeTab as 'client' | 'worker'] && signedUrls.privacy
+                ? <span className="font-bold text-green-700">✅ {lang === 'de' ? 'Beide Dokumente unterzeichnet! Sie werden weitergeleitet...' : 'Both documents signed! Redirecting...'}</span>
+                : <span>
+                    {lang === 'de'
+                      ? `Noch ${[!signedUrls[activeTab as 'client' | 'worker'], !signedUrls.privacy].filter(Boolean).length} Dokument(e) ausstehend`
+                      : `${[!signedUrls[activeTab as 'client' | 'worker'], !signedUrls.privacy].filter(Boolean).length} document(s) still pending`}
+                  </span>
+              }
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Page header */}
       <div>
@@ -332,8 +472,8 @@ export default function ContractsPage() {
         </div>
       )}
 
-      {/* Tab switcher */}
-      <div className="flex gap-2 p-1 bg-gray-100 rounded-xl w-fit">
+      {/* Tab switcher + Contract Content */}
+      <div id="contract-content" className="flex gap-2 p-1 bg-gray-100 rounded-xl w-fit">
         {(['client', 'worker'] as const).map(tab => (
           <button
             key={tab}
@@ -356,15 +496,15 @@ export default function ContractsPage() {
       {/* Active contract */}
       <ContractView
         doc={activeTab === 'client' ? c.client : c.worker}
-        contractType={activeTab}
-        signedUrl={signedUrls[activeTab]}
+        contractType={activeTab === 'privacy' ? 'worker' : activeTab}
+        signedUrl={signedUrls[activeTab] ?? signedUrls[activeTab === 'privacy' ? 'privacy' : activeTab]}
         onSign={() => setShowModal(true)}
       />
 
       {/* Signature modal */}
       {showModal && (
         <SignatureModal
-          contractType={activeTab}
+          contractType={activeTab === 'privacy' ? 'worker' : activeTab}
           signerName={signerName}
           onComplete={handleSignComplete}
           onClose={() => !uploading && setShowModal(false)}

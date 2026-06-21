@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Segoe UI', Arial, sans-serif; }
+
+  .card {
+    width: 1080px; height: 1080px;
+    background: #0f172a;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+
+  /* Top colored band */
+  .top-band {
+    background: linear-gradient(135deg, #fbbf24, #f97316);
+    height: 320px; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 12px;
+    position: relative; overflow: hidden;
+  }
+  .top-band::after {
+    content: ''; position: absolute; bottom: -40px; left: 0; right: 0;
+    height: 80px;
+    background: #0f172a;
+    border-radius: 50% 50% 0 0 / 40px 40px 0 0;
+    transform: scaleX(1.1);
+  }
+
+  .hail-icon { font-size: 100px; line-height: 1; }
+  .top-title { font-size: 44px; font-weight: 900; color: #1e3a5f; text-align: center; }
+  .top-sub { font-size: 22px; color: rgba(30,58,95,0.7); }
+
+  /* Bottom content */
+  .content {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 20px 60px 60px; gap: 28px; position: relative;
+    z-index: 1;
+  }
+
+  .stat-row { display: flex; gap: 30px; }
+  .stat {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 20px 30px; text-align: center; flex: 1;
+  }
+  .stat-num { font-size: 48px; font-weight: 900; color: #fbbf24; line-height: 1; }
+  .stat-label { color: rgba(255,255,255,0.5); font-size: 15px; margin-top: 6px; }
+
+  .message {
+    font-size: 30px; color: white; text-align: center; line-height: 1.5;
+    max-width: 860px;
+  }
+  .message em { color: #fbbf24; font-style: normal; font-weight: 700; }
+
+  .cta {
+    background: linear-gradient(135deg, #fbbf24, #f97316);
+    color: #1e3a5f; font-weight: 900; font-size: 26px;
+    padding: 20px 60px; border-radius: 50px;
+    letter-spacing: 1px;
+  }
+
+  .logo-bottom {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    color: rgba(255,255,255,0.3); font-size: 16px; letter-spacing: 2px;
+  }
+
+  .dots {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="top-band">
+    <div class="hail-icon">⛈️</div>
+    <div class="top-title">Hail Season is HERE</div>
+    <div class="top-sub">Workshops need you — NOW</div>
+  </div>
+
+  <div class="dots"></div>
+
+  <div class="content">
+    <div class="stat-row">
+      <div class="stat">
+        <div class="stat-num">1000+</div>
+        <div class="stat-label">PDR Technicians</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">48+</div>
+        <div class="stat-label">Countries</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">€0</div>
+        <div class="stat-label">Free to Join</div>
+      </div>
+    </div>
+
+    <div class="message">
+      Germany & Belgium are <em>already contacting us</em> for PDR Technicians
+      and <em>R&I Guys</em>. Is your profile complete?
+    </div>
+
+    <div class="cta">Complete Profile → Get Jobs</div>
+
+    <div class="logo-bottom">PDR CONNECT · pdrconnect.eu</div>
+  </div>
+</div>
+</body>
+</html>

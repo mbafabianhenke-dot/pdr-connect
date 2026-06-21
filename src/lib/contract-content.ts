@@ -24,162 +24,17 @@ export type ContractSet = {
 };
 
 const CONTRACTS: Record<string, ContractSet> = {
-  /* ─────────────── ENGLISH ─────────────── */
-  en: {
-    pageTitle: 'Platform Contracts',
-    pageSubtitle: 'Two contract versions — for Clients and for Technicians/Workers',
-    tabClient: '🏢 For Clients / Contractors',
-    tabWorker: '🔧 For Technicians / Workers',
-    client: {
-      title: 'Placement & Service Agreement',
-      badge: 'Client / Contractor Version',
-      printBtn: 'Print / Save as PDF',
-      parties: {
-        label: 'Parties',
-        operator: 'PDR Connect, operated by Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, Republic of Cyprus, VAT No. CY60015676H — hereinafter "PDR Connect"',
-        client: 'The company, dealership, workshop or individual registered on the platform — hereinafter "Client"',
-      },
-      intro: 'This Agreement governs the placement services provided by PDR Connect to the Client. By registering on the PDR Connect platform, the Client accepts this Agreement in full.',
-      sections: [
-        {
-          h: '§1 Subject of Agreement',
-          p: 'PDR Connect provides professional talent placement services, sourcing and presenting verified PDR technicians and automotive professionals to the Client through the PDR Connect platform (pdrconnect.com).',
-        },
-        {
-          h: '§2 Services Provided by PDR Connect',
-          p: 'PDR Connect provides the following services to the Client:',
-          list: [
-            'Identification and presentation of verified technicians matching the Client\'s requirements',
-            'Verification of professional credentials, certifications, and identity documents',
-            'Facilitation of secure communication between Client and Technician via the platform',
-            'Issuance of all invoices and processing of all payments relating to placed assignments',
-            'Ongoing support and assistance throughout the placement process',
-          ],
-        },
-        {
-          h: '§3 Platform Service — Client (Currently Free)',
-          p: '(1) During the current launch phase, PDR Connect provides its placement and matching services to Clients free of charge. No platform service fee is charged to the Client.\n(2) Clients pay only the agreed technician remuneration as invoiced by PDR Connect. No additional platform surcharge applies.\n(3) Example: If the agreed technician remuneration is €1,000, the Client is invoiced for exactly €1,000.\n(4) PDR Connect reserves the right to introduce a platform service fee for Clients in the future. Clients will be notified with at least 30 days\' advance notice before any such fee takes effect.',
-        },
-        {
-          h: '§4 Payment Terms',
-          p: '(1) As a Client/Contractor, you have free and unrestricted access to our platform. However, should any payment obligation arise, the following terms apply:\n(2) All invoices are payable to the Operator of this Platform: "Operated by Cybratech-Solutions · Efesou 9, 5280 Paralimni, Cyprus · VAT: CY60015676H" within 14 days of the invoice date.\n(3) All payments must be transferred exclusively to the Operator of this Platform: "Cybratech-Solutions · Efesou 9, 5280 Paralimni, Cyprus · VAT: CY60015676H". Direct payments from the Client to Technicians outside the platform are strictly prohibited.\n(4) In the event of payment circumvention, PDR Connect reserves the right to immediately suspend the Client\'s account, invoice the outstanding platform fee plus a surcharge, and pursue legal remedies.\n(5) Late payments may be subject to statutory interest under applicable Cypriot law.',
-        },
-        {
-          h: '§5 Client Obligations',
-          list: [
-            'Provide accurate and complete job requirements when requesting placements',
-            'Ensure a safe, legal, and professionally appropriate working environment for all placed technicians',
-            'Comply with all applicable labor laws in the country where the technician performs work',
-            'Honor all agreed assignment terms including duration, scope, and remuneration',
-            'Conduct all communications with Technicians exclusively through the PDR Connect platform',
-            'Not establish any direct employment or service relationships with placed technicians outside PDR Connect',
-          ],
-        },
-        {
-          h: '§6 Technician Verification & Warranty',
-          p: '(1) PDR Connect warrants that all presented technicians have been identity-verified through official documentation.\n(2) PDR Connect does not guarantee specific work outcomes, productivity levels, or results.\n(3) The Client is responsible for assessing the suitability of presented technicians for their specific requirements.',
-        },
-        {
-          h: '§7 Liability',
-          p: '(1) PDR Connect\'s liability is limited to the total platform fees paid by the Client for the relevant assignment.\n(2) PDR Connect is not liable for work quality disputes, damages arising from the technician\'s conduct, delays, or consequential losses.\n(3) The Client assumes full liability for compliance with local labor, tax, and employment regulations in the country of work.',
-        },
-        {
-          h: '§8 Confidentiality',
-          p: '(1) Both Parties agree to keep all commercial terms, pricing, and assignment details confidential.\n(2) Client data is processed in accordance with PDR Connect\'s Privacy Policy and applicable GDPR regulations.',
-        },
-        {
-          h: '§9 Term and Termination',
-          p: '(1) This Agreement is effective from the date of Client registration on the PDR Connect platform.\n(2) Either Party may terminate this Agreement with 14 days\' written notice to info@cybratech-solutions.com.\n(3) Termination does not affect payment obligations or active assignments in progress.\n(4) In cases of serious breach, PDR Connect may terminate this Agreement with immediate effect.',
-        },
-        {
-          h: '§10 Governing Law and Jurisdiction',
-          p: 'This Agreement is governed exclusively by the laws of the Republic of Cyprus. Any disputes shall be brought before the competent courts of Nicosia, Cyprus.',
-        },
-        {
-          h: '§11 Amendments',
-          p: 'PDR Connect reserves the right to amend these terms with 30 days\' advance notice. Continued use of the platform after the notice period constitutes acceptance of the amended terms.',
-        },
-      ],
-    },
-    worker: {
-      title: 'Placement & Service Agreement',
-      badge: 'Technician / Worker Version',
-      printBtn: 'Print / Save as PDF',
-      parties: {
-        label: 'Parties',
-        operator: 'PDR Connect, operated by Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, Republic of Cyprus, VAT No. CY60015676H — hereinafter "PDR Connect"',
-        client: 'The individual professional registered on the platform — hereinafter "Technician"',
-      },
-      intro: 'This Agreement governs the placement services provided by PDR Connect to the Technician. By registering on the PDR Connect platform, the Technician accepts this Agreement in full.',
-      sections: [
-        {
-          h: '§1 Subject of Agreement',
-          p: 'PDR Connect provides professional placement services, matching the Technician with client businesses requiring skilled automotive professionals, through the PDR Connect platform (pdrconnect.com).',
-        },
-        {
-          h: '§2 Services Provided by PDR Connect',
-          p: 'PDR Connect provides the following services to the Technician:',
-          list: [
-            'Active promotion of the Technician\'s profile to client businesses seeking automotive specialists',
-            'Facilitation of secure communication between Technician and potential Clients via the platform',
-            'Issuance of all invoices to Clients and processing of all payments',
-            'Transfer of the Technician\'s earnings (minus the platform service fee) upon receipt of Client payment',
-            'Support and assistance throughout the placement process',
-          ],
-        },
-        {
-          h: '§3 Platform Service Fee — Technician',
-          p: '(1) PDR Connect retains a platform service fee of 10% of the total agreed assignment value as a placement and administration fee.\n(2) This fee is deducted from the agreed assignment value before the remainder is transferred to the Technician.\n(3) Example: For an assignment with an agreed value of €1,000, PDR Connect retains €100 (10%), and the Technician receives €900.\n(4) The platform fee covers: profile marketing and visibility, client matching, secure communication, contract and invoicing administration, and payment processing.\n(5) PDR Connect reserves the right to adjust the platform fee with 30 days\' advance notice.',
-        },
-        {
-          h: '§4 Payment Terms for Technicians / Workers',
-          p: '(1) PDR Connect will transfer the Technician\'s/Worker\'s earnings within 7 business days after receiving the Invoice issued by the Technician/Worker AND after PDR Connect has reviewed and approved said Invoice.\n(2) Technicians/Workers shall only issue an Invoice to PDR Connect (Cybratech Solutions Ltd.) after being formally notified by PDR Connect that the full payment from the Client has been received by the Platform. Invoices issued prior to such notification are not valid and will not be processed.\n(3) The Technician shall not request, accept, or facilitate any direct payments from Clients that bypass the PDR Connect platform. Such conduct constitutes a serious breach of this Agreement.\n(4) In the event of payment circumvention, PDR Connect reserves the right to immediately suspend the Technician\'s profile, withhold any pending payments, and pursue all available legal remedies.\n(5) Approved earnings are transferred exclusively to the bank account provided by the Technician in their platform profile. The Technician is solely responsible for ensuring their banking details are accurate and up to date.\n(6) All Invoices must be issued to: Cybratech-Solutions · Efesou 9, 5280 Paralimni, Cyprus · VAT: CY60015676H.',
-        },
-        {
-          h: '§5 Technician Obligations',
-          list: [
-            'Maintain an accurate, complete, and up-to-date profile including certifications, qualifications, and availability',
-            'Upload and maintain all required documentation (valid ID, A1 certificate where applicable, professional certifications)',
-            'Honor all accepted placements and agreed assignment terms',
-            'Conduct all communications with Clients exclusively through the PDR Connect platform',
-            'Notify PDR Connect promptly in case of inability to fulfill an accepted placement',
-            'Maintain professional conduct and appropriate industry standards throughout all assignments',
-          ],
-        },
-        {
-          h: '§6 Professional Standards and Qualifications',
-          p: '(1) The Technician warrants that all stated qualifications, experience, and certifications are accurate, genuine, and current.\n(2) The Technician agrees to perform all work to recognized professional industry standards.\n(3) PDR Connect may suspend a Technician\'s profile in case of verified professional misconduct, fraudulent documentation, or repeated breaches of this Agreement.',
-        },
-        {
-          h: '§7 Independent Contractor Status',
-          p: '(1) The Technician operates as an independent service provider. This Agreement does not establish an employment relationship between the Technician and PDR Connect.\n(2) The Technician is solely responsible for: all applicable taxes and social security contributions, professional liability insurance, and compliance with labor and immigration regulations in the country of work.\n(3) PDR Connect does not provide employee benefits, paid leave, or social security contributions on behalf of the Technician.',
-        },
-        {
-          h: '§8 Confidentiality',
-          p: '(1) The Technician agrees to keep all Client information, assignment details, and commercial terms confidential.\n(2) Technician personal data is processed in accordance with PDR Connect\'s Privacy Policy and applicable GDPR regulations.',
-        },
-        {
-          h: '§9 Term and Termination',
-          p: '(1) This Agreement is effective from the date of Technician registration on the PDR Connect platform.\n(2) Either Party may terminate this Agreement with 14 days\' written notice to info@cybratech-solutions.com.\n(3) Termination does not affect payment obligations for completed or active assignments.\n(4) In cases of serious breach, fraudulent conduct, or document fraud, PDR Connect may terminate with immediate effect.',
-        },
-        {
-          h: '§10 Governing Law and Jurisdiction',
-          p: 'This Agreement is governed exclusively by the laws of the Republic of Cyprus. Any disputes shall be brought before the competent courts of Nicosia, Cyprus.',
-        },
-        {
-          h: '§11 Amendments',
-          p: 'PDR Connect reserves the right to amend these terms with 30 days\' advance notice. Continued use of the platform after the notice period constitutes acceptance of the amended terms.',
-        },
-      ],
-    },
-  },
 
-  /* ─────────────── GERMAN ─────────────── */
+  /* ═══════════════════════════════════════════════════════════
+     DEUTSCH  (DE)
+  ═══════════════════════════════════════════════════════════ */
   de: {
     pageTitle: 'Plattform-Verträge',
-    pageSubtitle: 'Zwei Vertragsversionen — für Kunden und für Techniker/Fachkräfte',
+    pageSubtitle: 'Zwei Vertragsversionen — für Kunden/Auftraggeber und für Techniker/Fachkräfte',
     tabClient: '🏢 Für Kunden / Auftraggeber',
     tabWorker: '🔧 Für Techniker / Fachkräfte',
+
+    /* ── CLIENT ── */
     client: {
       title: 'Vermittlungs- und Dienstleistungsvertrag',
       badge: 'Kunden-/Auftraggeber-Version',
@@ -193,7 +48,7 @@ const CONTRACTS: Record<string, ContractSet> = {
       sections: [
         {
           h: '§1 Vertragsgegenstand',
-          p: 'PDR Connect erbringt professionelle Personalvermittlungsdienstleistungen und präsentiert dem Kunden verifizierte PDR-Techniker und Kfz-Fachkräfte über die PDR Connect Plattform (pdrconnect.com).',
+          p: 'PDR Connect erbringt professionelle Personalvermittlungsdienstleistungen und präsentiert dem Kunden verifizierte PDR-Techniker und Kfz-Fachkräfte über die PDR Connect Plattform (pdrconnect.eu). PDR Connect ist dabei ausschließlich als Vermittler tätig und wird nicht selbst Vertragspartner des zwischen Auftraggeber und Techniker geschlossenen Auftragsvertrages.',
         },
         {
           h: '§2 Von PDR Connect erbrachte Leistungen',
@@ -203,54 +58,72 @@ const CONTRACTS: Record<string, ContractSet> = {
             'Verifizierung beruflicher Qualifikationen, Zertifikate und Ausweisdokumente',
             'Erleichterung sicherer Kommunikation zwischen Kunde und Techniker über die Plattform',
             'Ausstellung aller Rechnungen und Abwicklung aller Zahlungen',
-            'Laufender Support während des gesamten Vermittlungsprozesses',
+            'Laufender Support und Unterstützung während des gesamten Vermittlungsprozesses',
           ],
         },
         {
           h: '§3 Plattformservice — Auftraggeber (Derzeit kostenlos)',
-          p: '(1) In der aktuellen Startphase erbringt PDR Connect seine Vermittlungs- und Matching-Leistungen für Auftraggeber kostenlos. Es wird keine Plattformgebühr vom Auftraggeber erhoben.\n(2) Auftraggeber zahlen ausschließlich die vereinbarte Technikervergütung gemäß der von PDR Connect ausgestellten Rechnung. Es fallen keine zusätzlichen Gebühren an.\n(3) Beispiel: Bei einer vereinbarten Technikervergütung von 1.000 € erhält der Auftraggeber eine Rechnung über genau 1.000 €.\n(4) PDR Connect behält sich vor, in Zukunft eine Plattformgebühr für Auftraggeber einzuführen. Auftraggeber werden mit mindestens 30 Tagen Vorankündigung informiert, bevor eine solche Gebühr in Kraft tritt.',
+          p: '(1) In der aktuellen Startphase erbringt PDR Connect seine Vermittlungs- und Matching-Leistungen für Auftraggeber kostenlos. Es wird keine Plattformgebühr vom Auftraggeber erhoben.\n(2) Auftraggeber zahlen ausschließlich die vereinbarte Technikervergütung gemäß der von PDR Connect ausgestellten Rechnung. Es fallen keine zusätzlichen Plattformgebühren an.\n(3) Beispiel: Bei einer vereinbarten Technikervergütung von 1.000 € erhält der Auftraggeber eine Rechnung über genau 1.000 €.\n(4) PDR Connect behält sich vor, in Zukunft eine Plattformgebühr für Auftraggeber einzuführen. Auftraggeber werden mit mindestens 30 Tagen Vorankündigung informiert, bevor eine solche Gebühr in Kraft tritt. Der Kunde ist berechtigt, den Vertrag bis zum Zeitpunkt des Inkrafttretens der Änderung fristlos zu kündigen.',
         },
         {
           h: '§4 Zahlungsbedingungen',
-          p: '(1) Als Auftraggeber/Contractor haben Sie freien, kostenlosen Zugang zu unserer APP. Falls jedoch eine Zahlungsverpflichtung entsteht, gelten folgende Bedingungen:\n(2) Alle Rechnungen sind binnen 14 Tagen nach Rechnungsdatum an den Betreiber dieser Plattform zu zahlen: „Betrieben von Cybratech-Solutions · Efesou 9, 5280 Paralimni, Zypern · USt-IdNr.: CY60015676H".\n(3) Alle Zahlungen sind ausschließlich an den Betreiber dieser Plattform zu überweisen: „Cybratech-Solutions · Efesou 9, 5280 Paralimni, Zypern · USt-IdNr.: CY60015676H". Direkte Zahlungen des Kunden an Techniker außerhalb der Plattform sind streng verboten.\n(4) Bei Zahlungsumgehung behält sich PDR Connect vor, das Konto zu sperren, die ausstehende Gebühr zzgl. Aufschlag zu berechnen und Rechtsbehelfe einzuleiten.\n(5) Verzugszinsen richten sich nach anwendbarem zypriotischem Recht.',
+          p: '(1) Als Auftraggeber haben Sie freien, kostenlosen Zugang zu unserer Plattform. Sofern eine Zahlungsverpflichtung entsteht, gelten folgende Bedingungen:\n(2) Alle Rechnungen sind binnen 14 Tagen nach Rechnungsdatum zu zahlen an: Cybratech Solutions Ltd. · Efesou 9, 5280 Paralimni, Zypern · USt-IdNr.: CY60015676H.\n(3) Alle Zahlungen sind ausschließlich an PDR Connect (Cybratech Solutions Ltd.) zu überweisen. Direkte Zahlungen an Techniker außerhalb der Plattform sind untersagt.\n(4) Bei Verdacht auf Zahlungsumgehung ist PDR Connect berechtigt, Zahlungen vorübergehend zurückzuhalten, soweit dies zur Prüfung des Sachverhalts erforderlich ist. Nach Abschluss der Prüfung werden unstreitige Beträge unverzüglich ausgezahlt bzw. abgerechnet. Das Recht auf Sperrung des Kontos und Geltendmachung weiterer Ansprüche bleibt vorbehalten.\n(5) Verzugszinsen richten sich nach Art. 10 ff. der EU-Richtlinie 2011/7/EU über Zahlungsverzug bzw. dem anwendbaren nationalen Recht des Auftraggebers.',
         },
         {
           h: '§5 Kundenpflichten',
           list: [
             'Genaue und vollständige Auftragsanforderungen bereitstellen',
-            'Sichere und legale Arbeitsumgebung für vermittelte Techniker gewährleisten',
-            'Alle anwendbaren Arbeitsgesetze im Einsatzland einhalten',
+            'Sichere, legale und professionell geeignete Arbeitsumgebung für vermittelte Techniker gewährleisten',
+            'Alle anwendbaren Arbeits-, Steuer- und Sozialversicherungsgesetze im Einsatzland einhalten',
             'Vereinbarte Auftragsbedingungen einschließlich Dauer, Umfang und Vergütung einhalten',
-            'Kommunikation ausschließlich über die PDR Connect Plattform führen',
-            'Keine direkten Beschäftigungsbeziehungen mit Technikern außerhalb von PDR Connect eingehen',
+            'Kommunikation mit Technikern ausschließlich über die PDR Connect Plattform führen',
+            'Keine direkten Beschäftigungs- oder Dienstverhältnisse mit vermittelten Technikern außerhalb von PDR Connect eingehen',
           ],
         },
         {
           h: '§6 Technikerverifizierung und Gewährleistung',
-          p: '(1) PDR Connect versichert, dass alle präsentierten Techniker durch offizielle Dokumente verifiziert wurden.\n(2) PDR Connect garantiert keine spezifischen Arbeitsergebnisse oder Resultate.\n(3) Der Kunde ist verantwortlich für die Beurteilung der Eignung der präsentierten Techniker.',
+          p: '(1) PDR Connect versichert, dass alle präsentierten Techniker durch offizielle Dokumente identitätsverifiziert wurden.\n(2) PDR Connect übernimmt keine Garantie für spezifische Arbeitsergebnisse, Produktivitätsniveaus oder Projekterfolge.\n(3) Der Kunde ist verantwortlich für die Beurteilung der fachlichen Eignung der präsentierten Techniker für seinen konkreten Bedarf.',
         },
         {
-          h: '§7 Haftung',
-          p: '(1) Die Haftung von PDR Connect ist auf die gezahlten Plattformgebühren für den betreffenden Einsatz begrenzt.\n(2) PDR Connect haftet nicht für Arbeitqualitätsstreitigkeiten, Schäden aus dem Verhalten des Technikers oder Folgeschäden.\n(3) Der Kunde übernimmt die volle Haftung für die Einhaltung lokaler Arbeits- und Steuervorschriften im Einsatzland.',
+          h: '§7 Datenschutz und DSGVO',
+          p: '(1) PDR Connect verarbeitet personenbezogene Daten des Kunden ausschließlich zur Erfüllung dieses Vertrages und zur Erbringung der Vermittlungsleistungen.\n(2) Die Verarbeitung personenbezogener Daten erfolgt gemäß der jeweils aktuellen Datenschutzerklärung von PDR Connect sowie der Verordnung (EU) 2016/679 (Datenschutz-Grundverordnung — DSGVO).\n(3) Der Kunde hat das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch gemäß Art. 15–22 DSGVO. Anfragen sind an: datenschutz@cybratech-solutions.com zu richten.\n(4) Eine Weitergabe von Kundendaten an Dritte erfolgt nur, soweit dies zur Vertragserfüllung (z.B. Vermittlung des Technikers) erforderlich oder gesetzlich vorgeschrieben ist.',
         },
         {
           h: '§8 Vertraulichkeit',
-          p: '(1) Beide Parteien behandeln alle Konditionen, Preise und Auftragsdetails vertraulich.\n(2) Kundendaten werden gemäß der Datenschutzerklärung von PDR Connect und DSGVO verarbeitet.',
+          p: '(1) Beide Parteien behandeln alle kommerziellen Konditionen, Preise und Auftragsdetails streng vertraulich.\n(2) Diese Vertraulichkeitsverpflichtung gilt über die Vertragslaufzeit hinaus für einen Zeitraum von drei (3) Jahren nach Vertragsende.',
         },
         {
-          h: '§9 Laufzeit und Kündigung',
-          p: '(1) Dieser Vertrag gilt ab dem Datum der Kundenregistrierung auf der PDR Connect Plattform.\n(2) Jede Partei kann mit 14-tägiger schriftlicher Frist per E-Mail an info@cybratech-solutions.com kündigen.\n(3) Eine Kündigung berührt nicht Zahlungsverpflichtungen aus laufenden Einsätzen.\n(4) Bei schwerwiegenden Verstößen kann PDR Connect fristlos kündigen.',
+          h: '§9 Haftung',
+          p: '(1) PDR Connect haftet unbeschränkt für Schäden, die auf Vorsatz oder grober Fahrlässigkeit von PDR Connect, seiner gesetzlichen Vertreter oder Erfüllungsgehilfen beruhen, sowie bei Verletzung von Leben, Körper oder Gesundheit.\n(2) Bei einfacher Fahrlässigkeit haftet PDR Connect nur bei Verletzung wesentlicher Vertragspflichten (Kardinalpflichten), deren Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst ermöglicht und auf deren Einhaltung der Kunde regelmäßig vertrauen darf. In diesen Fällen ist die Haftung auf den typischerweise vorhersehbaren Schaden begrenzt.\n(3) Eine weitergehende Haftung ist ausgeschlossen. Dies gilt insbesondere für entgangenen Gewinn, mittelbare Schäden und Folgeschäden.\n(4) Die vorstehenden Haftungsbeschränkungen gelten nicht, soweit zwingend anwendbares Verbraucher- oder EU-Recht eine strengere Haftung vorschreibt.',
         },
         {
-          h: '§10 Anwendbares Recht und Gerichtsstand',
-          p: 'Dieser Vertrag unterliegt ausschließlich dem Recht der Republik Zypern. Streitigkeiten sind vor den zuständigen Gerichten in Nikosia, Zypern, zu klären.',
+          h: '§10 Streitigkeiten zwischen Auftraggeber und Techniker',
+          p: '(1) Im Falle von Streitigkeiten über die Qualität oder den Umfang erbrachter Leistungen zwischen Auftraggeber und Techniker kann PDR Connect betroffene Zahlungen bis zur abschließenden Klärung des Sachverhalts vorübergehend zurückhalten.\n(2) PDR Connect entscheidet nicht verbindlich über den materiellen Leistungsanspruch der Parteien. Diese Entscheidung obliegt im Streitfall ausschließlich den zuständigen Gerichten oder einem einvernehmlich bestellten Schlichter.\n(3) PDR Connect verpflichtet sich, nach besten Kräften auf eine gütliche Einigung hinzuwirken.',
         },
         {
-          h: '§11 Änderungen',
-          p: 'PDR Connect behält sich vor, diese Bedingungen mit 30 Tagen Vorankündigung zu ändern. Die weitere Nutzung gilt als Zustimmung zu den geänderten Bedingungen.',
+          h: '§11 Plattformverfügbarkeit',
+          p: '(1) PDR Connect bemüht sich um eine möglichst hohe Verfügbarkeit der Plattform, übernimmt jedoch keine Gewähr für eine jederzeit unterbrechungsfreie Nutzung.\n(2) Wartungsarbeiten, technische Störungen oder Ausfälle, die außerhalb des Einflussbereichs von PDR Connect liegen, begründen keine Ansprüche gegenüber PDR Connect, sofern PDR Connect diese nicht zu vertreten hat.\n(3) Im Falle geplanter Wartungsarbeiten wird PDR Connect den Kunden möglichst frühzeitig informieren.',
+        },
+        {
+          h: '§12 Laufzeit und Kündigung',
+          p: '(1) Dieser Vertrag gilt ab dem Datum der Kundenregistrierung auf der PDR Connect Plattform auf unbestimmte Zeit.\n(2) Jede Partei kann diesen Vertrag mit einer Frist von 14 Tagen in Textform (E-Mail an info@cybratech-solutions.com) kündigen.\n(3) Eine Kündigung berührt nicht bestehende Zahlungsverpflichtungen aus laufenden oder abgeschlossenen Einsätzen.\n(4) Das Recht zur außerordentlichen Kündigung aus wichtigem Grund bleibt unberührt. Als wichtiger Grund gilt insbesondere eine schwerwiegende Verletzung der Plattformregeln oder eine Zahlungsumgehung.',
+        },
+        {
+          h: '§13 Vertragsänderungen',
+          p: '(1) PDR Connect ist berechtigt, diese Vertragsbedingungen zu ändern, soweit dies aus sachlichen Gründen erforderlich ist (z.B. gesetzliche Änderungen, technische Weiterentwicklung, Marktveränderungen).\n(2) Wesentliche Änderungen werden dem Kunden mindestens 30 Tage vor Inkrafttreten in Textform (E-Mail) mitgeteilt.\n(3) Der Kunde hat das Recht, den Vertrag bis zum Zeitpunkt des Inkrafttretens der Änderung fristlos zu kündigen. Macht der Kunde von diesem Kündigungsrecht keinen Gebrauch und nutzt die Plattform nach Inkrafttreten der Änderungen weiter, gilt dies als Zustimmung zu den geänderten Bedingungen.\n(4) Nicht wesentliche Änderungen (z.B. redaktionelle Anpassungen, Klarstellungen) können ohne Vorankündigung vorgenommen werden.',
+        },
+        {
+          h: '§14 Anwendbares Recht und Gerichtsstand',
+          p: '(1) Dieser Vertrag unterliegt dem Recht der Republik Zypern unter Ausschluss des UN-Kaufrechts (CISG).\n(2) Soweit gesetzlich zulässig, ist ausschließlicher Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit diesem Vertrag Nikosia, Republik Zypern.\n(3) Zwingende gesetzliche Gerichtsstände, insbesondere Verbraucherschutzvorschriften der EU oder der Mitgliedstaaten, bleiben von vorstehender Regelung unberührt. In diesen Fällen sind die gesetzlich vorgeschriebenen Gerichtsstände maßgeblich.\n(4) Die EU-Kommission stellt unter https://ec.europa.eu/consumers/odr/ eine Plattform zur Online-Streitbeilegung bereit.',
+        },
+        {
+          h: '§15 Salvatorische Klausel',
+          p: 'Sollte eine Bestimmung dieses Vertrages ganz oder teilweise unwirksam oder undurchführbar sein oder werden, so bleibt die Wirksamkeit der übrigen Bestimmungen hiervon unberührt. Die unwirksame oder undurchführbare Bestimmung ist durch eine wirksame Regelung zu ersetzen, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung am nächsten kommt.',
         },
       ],
     },
+
+    /* ── WORKER (TECHNIKER) ── */
     worker: {
       title: 'Vermittlungs- und Dienstleistungsvertrag',
       badge: 'Techniker-/Fachkraft-Version',
@@ -258,73 +131,287 @@ const CONTRACTS: Record<string, ContractSet> = {
       parties: {
         label: 'Vertragsparteien',
         operator: 'PDR Connect, betrieben von Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, Republik Zypern, USt-IdNr. CY60015676H — nachfolgend „PDR Connect"',
-        client: 'Die auf der Plattform registrierte Einzelperson (Fachkraft) — nachfolgend „Techniker"',
+        client: 'Die auf der Plattform registrierte natürliche Person (Fachkraft/Techniker) — nachfolgend „Techniker"',
       },
-      intro: 'Dieser Vertrag regelt die Vermittlungsdienstleistungen von PDR Connect für den Techniker. Mit der Registrierung auf der PDR Connect Plattform akzeptiert der Techniker diesen Vertrag vollständig.',
+      intro: 'Dieser Vermittlungs- und Dienstleistungsvertrag (nachfolgend „Vertrag") regelt das Rechtsverhältnis zwischen PDR Connect und dem Techniker hinsichtlich der Nutzung der PDR Connect Plattform sowie der damit verbundenen Vermittlungsleistungen. Mit der Registrierung auf der PDR Connect Plattform erklärt der Techniker sein rechtsverbindliches Einverständnis mit diesem Vertrag.',
       sections: [
         {
           h: '§1 Vertragsgegenstand',
-          p: 'PDR Connect erbringt Personalvermittlungsdienstleistungen und vermittelt den Techniker an Kundenunternehmen, die Kfz-Fachkräfte benötigen, über die PDR Connect Plattform (pdrconnect.com).',
+          p: 'PDR Connect erbringt Personalvermittlungsdienstleistungen und vermittelt den Techniker an Kundenunternehmen, die qualifizierte Kfz-Fachkräfte benötigen, über die PDR Connect Plattform (pdrconnect.eu). PDR Connect ist dabei ausschließlich als Vermittler tätig und wird nicht selbst Vertragspartner des zwischen Techniker und Auftraggeber geschlossenen Auftragsvertrages.',
         },
         {
           h: '§2 Von PDR Connect erbrachte Leistungen',
-          p: 'PDR Connect erbringt folgende Leistungen für den Techniker:',
+          p: 'PDR Connect erbringt für den Techniker insbesondere folgende Leistungen:',
           list: [
-            'Aktive Vermarktung des Technikerprofils gegenüber Kundenunternehmen',
-            'Erleichterung sicherer Kommunikation zwischen Techniker und potenziellen Kunden',
-            'Ausstellung aller Rechnungen an Kunden und Abwicklung aller Zahlungen',
-            'Überweisung der Technikervergütung (abzüglich Plattformgebühr) nach Zahlungseingang',
-            'Support während des gesamten Vermittlungsprozesses',
+            'Aktive Vermarktung des Technikerprofils gegenüber registrierten Kundenunternehmen',
+            'Erleichterung sicherer Kommunikation zwischen Techniker und potenziellen Auftraggebern über die Plattform',
+            'Ausstellung aller Rechnungen an Auftraggeber und vollständige Abwicklung der Zahlungsströme',
+            'Überweisung der Technikervergütung (abzüglich Plattformgebühr gemäß §3) nach geprüftem Zahlungseingang',
+            'Unterstützung und Beratung während des gesamten Vermittlungsprozesses',
           ],
         },
         {
           h: '§3 Plattformgebühr — Techniker',
-          p: '(1) PDR Connect behält eine Plattformdienstleistungsgebühr von 10 % des vereinbarten Gesamtauftragswertes als Vermittlungs- und Verwaltungsgebühr ein.\n(2) Diese Gebühr wird vom Gesamtauftragswert abgezogen, bevor die Zahlung an den Techniker überwiesen wird.\n(3) Beispiel: Bei einem vereinbarten Auftragswert von 1.000 € behält PDR Connect 100 € (10 %) ein und der Techniker erhält 900 €.\n(4) Die Gebühr deckt ab: Profilvermarktung, Kundenvermittlung, Kommunikation, Rechnungsverwaltung und Zahlungsabwicklung.\n(5) PDR Connect behält sich vor, die Plattformgebühr mit 30 Tagen Vorankündigung anzupassen.',
+          p: '(1) PDR Connect behält als Vergütung für seine Vermittlungs- und Verwaltungsleistungen eine Plattformdienstleistungsgebühr von 10 % des vereinbarten Gesamtauftragswertes (netto) ein.\n(2) Diese Gebühr wird vom vereinbarten Bruttobetrag abgezogen, bevor die Zahlung an den Techniker überwiesen wird.\n(3) Rechenbeispiel: Bei einem vereinbarten Auftragswert von 1.000 € (netto) behält PDR Connect 100 € (10 %) als Vermittlungsgebühr ein. Der Techniker erhält 900 €.\n(4) Die Plattformgebühr umfasst: Profilvermarktung und Sichtbarkeit, Kundenakquise und -matching, sichere Kommunikationsinfrastruktur, Rechnungs- und Vertragsverwaltung sowie Zahlungsabwicklung.\n(5) PDR Connect behält sich vor, die Plattformgebühr anzupassen. Eine Anpassung wird dem Techniker mindestens 30 Tage vor Inkrafttreten mitgeteilt. Der Techniker hat das Recht, den Vertrag bis zum Inkrafttreten der Anpassung fristlos zu kündigen.',
         },
         {
-          h: '§4 Zahlungsbedingungen für Techniker / Arbeitnehmer',
-          p: '(1) PDR Connect überweist die Vergütung des Technikers/Arbeitnehmers innerhalb von 7 Werktagen, nachdem die vom Techniker/Arbeitnehmer ausgestellte Rechnung bei PDR Connect eingegangen ist UND von PDR Connect geprüft und freigegeben wurde.\n(2) Techniker/Arbeitnehmer dürfen eine Rechnung an PDR Connect (Cybratech Solutions Ltd.) ausschließlich dann ausstellen, nachdem sie von PDR Connect ausdrücklich darüber informiert wurden, dass der vollständige Zahlungseingang des Kunden auf der Plattform bestätigt wurde. Rechnungen, die vor dieser Benachrichtigung ausgestellt werden, sind ungültig und werden nicht bearbeitet.\n(3) Der Techniker darf keine direkten Zahlungen von Kunden außerhalb der PDR Connect-Plattform anfordern, annehmen oder vermitteln. Ein solches Verhalten stellt einen schwerwiegenden Vertragsbruch dar.\n(4) Bei Zahlungsumgehung behält sich PDR Connect vor, das Profil des Technikers sofort zu sperren, ausstehende Zahlungen einzubehalten und alle verfügbaren Rechtsbehelfe einzuleiten.\n(5) Freigegebene Vergütungen werden ausschließlich auf das Bankkonto überwiesen, das der Techniker in seinem Plattformprofil hinterlegt hat. Der Techniker trägt die alleinige Verantwortung dafür, dass seine Bankdaten korrekt und aktuell sind.\n(6) Alle Rechnungen sind auszustellen an: Cybratech-Solutions · Efesou 9, 5280 Paralimni, Zypern · USt-IdNr.: CY60015676H.',
+          h: '§4 Zahlungsbedingungen',
+          p: '(1) PDR Connect überweist die Vergütung des Technikers innerhalb von 7 Werktagen, nachdem (a) die vollständige Zahlung des Auftraggebers bei PDR Connect eingegangen ist, (b) der Techniker eine ordnungsgemäße Rechnung gestellt hat und (c) PDR Connect diese Rechnung geprüft und freigegeben hat.\n(2) Der Techniker ist berechtigt, eine Rechnung an PDR Connect (Cybratech Solutions Ltd.) ausschließlich dann auszustellen, nachdem er von PDR Connect ausdrücklich darüber informiert wurde, dass der vollständige Zahlungseingang des Auftraggebers bestätigt wurde. Vor dieser Benachrichtigung ausgestellte Rechnungen sind nicht fällig und werden nicht bearbeitet.\n(3) Alle Rechnungen sind auszustellen an: Cybratech Solutions Ltd. · Efesou 9, 5280 Paralimni, Zypern · USt-IdNr.: CY60015676H.\n(4) Der Techniker ist nicht berechtigt, direkte Zahlungen von Auftraggebern außerhalb der PDR Connect Plattform anzufordern, anzunehmen oder zu vermitteln. Ein solches Verhalten stellt einen schwerwiegenden Vertragsbruch dar und berechtigt PDR Connect zur fristlosen Kündigung und Geltendmachung von Schadensersatz.\n(5) Bei begründetem Verdacht auf Zahlungsumgehung oder sonstigen Unregelmäßigkeiten ist PDR Connect berechtigt, ausstehende Zahlungen zurückzuhalten, soweit dies zur Sachverhaltsklärung erforderlich ist. Nach Abschluss der Prüfung werden unstreitige Beträge unverzüglich ausgezahlt. Das Recht auf Sperrung des Profils und Geltendmachung weiterer Ansprüche bleibt vorbehalten.\n(6) Freigegebene Vergütungen werden ausschließlich auf das Bankkonto überwiesen, das der Techniker in seinem Plattformprofil hinterlegt hat. Der Techniker ist verpflichtet, seine Bankverbindung stets aktuell zu halten und trägt das alleinige Risiko bei unrichtigen oder veralteten Angaben.',
         },
         {
           h: '§5 Technikerpflichten',
           list: [
-            'Genaues, vollständiges und aktuelles Profil mit Zertifikaten und Verfügbarkeit pflegen',
-            'Alle erforderlichen Dokumente hochladen und aktuell halten (Ausweis, A1-Bescheinigung, Zertifikate)',
-            'Alle zugesagten Einsätze und vereinbarten Auftragsbedingungen einhalten',
-            'Kommunikation mit Kunden ausschließlich über die PDR Connect Plattform führen',
-            'PDR Connect unverzüglich benachrichtigen, wenn ein Einsatz nicht angetreten werden kann',
-            'Professionelles Verhalten und Branchenstandards bei allen Einsätzen einhalten',
+            'Pflege eines vollständigen, wahrheitsgemäßen und aktuellen Profils mit allen relevanten Qualifikationen, Zertifikaten und Verfügbarkeiten',
+            'Hochladen und laufende Aktualisierung aller erforderlichen Dokumente (Personalausweis oder Reisepass, A1-Bescheinigung wo erforderlich, Berufsqualifikationsnachweise)',
+            'Einhaltung aller zugesagten Einsätze und vereinbarten Auftragsbedingungen',
+            'Ausschließliche Nutzung der PDR Connect Plattform für die Kommunikation mit Auftraggebern — kein Austausch privater Kontaktdaten',
+            'Unverzügliche Benachrichtigung von PDR Connect, wenn ein zugesagter Einsatz nicht angetreten werden kann',
+            'Professionelles Verhalten und Einhaltung anerkannter Branchenstandards bei allen Einsätzen',
           ],
         },
         {
           h: '§6 Berufsstandards und Qualifikationen',
-          p: '(1) Der Techniker versichert, dass alle angegebenen Qualifikationen, Erfahrungen und Zertifikate korrekt, authentisch und aktuell sind.\n(2) Der Techniker verpflichtet sich, alle Arbeiten gemäß professionellen Branchenstandards auszuführen.\n(3) PDR Connect kann das Profil eines Technikers bei nachgewiesenem Fehlverhalten, gefälschten Dokumenten oder wiederholten Verstößen sperren.',
+          p: '(1) Der Techniker versichert, dass alle angegebenen Qualifikationen, Berufserfahrungen und Zertifikate wahrheitsgemäß, echt und aktuell sind. Falschangaben berechtigen PDR Connect zur fristlosen Kündigung und Geltendmachung von Schadensersatz.\n(2) Der Techniker verpflichtet sich, alle Arbeiten entsprechend den anerkannten Regeln der Technik und professionellen Branchenstandards durchzuführen.\n(3) PDR Connect ist berechtigt, das Profil eines Technikers bei nachgewiesenem professionellen Fehlverhalten, Urkundenfälschung oder wiederholten schwerwiegenden Verstößen gegen diesen Vertrag vorübergehend zu sperren oder dauerhaft zu löschen.',
         },
         {
           h: '§7 Status als selbstständiger Dienstleister',
-          p: '(1) Der Techniker ist als selbstständiger Dienstleister tätig. Dieser Vertrag begründet kein Arbeitsverhältnis zwischen Techniker und PDR Connect.\n(2) Der Techniker ist allein verantwortlich für: Steuern und Sozialabgaben, Berufshaftpflichtversicherung, Einhaltung von Arbeits- und Einwanderungsvorschriften im Einsatzland.\n(3) PDR Connect erbringt keine Arbeitgeberleistungen, Urlaubsansprüche oder Sozialversicherungsbeiträge.',
+          p: '(1) Der Techniker ist als selbstständiger Unternehmer (Dienstleister) tätig. Dieser Vertrag begründet kein Arbeitsverhältnis, kein arbeitnehmerähnliches Verhältnis und keine sonstige Abhängigkeit im Sinne des Arbeitsrechts zwischen dem Techniker und PDR Connect.\n(2) Der Techniker ist allein verantwortlich für:\n• Ordnungsgemäße steuerliche Anmeldung und Abführung aller Steuern (Einkommensteuer, Umsatzsteuer etc.) in seinem jeweiligen Ansässigkeitsstaat\n• Zahlung von Sozialversicherungsbeiträgen und sonstigen gesetzlichen Abgaben\n• Abschluss einer angemessenen Berufshaftpflichtversicherung\n• Einhaltung aller anwendbaren Arbeits-, Gewerbe- und Aufenthaltsvorschriften im Einsatzland\n(3) PDR Connect erbringt keine Leistungen als Arbeitgeber. Insbesondere werden keine Sozialversicherungsbeiträge abgeführt, kein Urlaub gewährt und keine Lohnfortzahlung im Krankheitsfall geleistet.',
         },
         {
-          h: '§8 Vertraulichkeit',
-          p: '(1) Der Techniker behandelt alle Kundeninformationen, Auftragsdetails und Konditionen vertraulich.\n(2) Technikerdaten werden gemäß der Datenschutzerklärung von PDR Connect und DSGVO verarbeitet.',
+          h: '§8 Datenschutz und DSGVO',
+          p: '(1) PDR Connect verarbeitet personenbezogene Daten des Technikers zur Erfüllung dieses Vertrages und zur Erbringung der Vermittlungsleistungen.\n(2) Die Verarbeitung personenbezogener Daten erfolgt gemäß der jeweils aktuellen Datenschutzerklärung von PDR Connect sowie der Verordnung (EU) 2016/679 des Europäischen Parlaments und des Rates vom 27. April 2016 (Datenschutz-Grundverordnung — DSGVO).\n(3) Der Techniker hat folgende Rechte gemäß DSGVO:\n• Auskunftsrecht (Art. 15 DSGVO)\n• Recht auf Berichtigung (Art. 16 DSGVO)\n• Recht auf Löschung / „Recht auf Vergessenwerden" (Art. 17 DSGVO)\n• Recht auf Einschränkung der Verarbeitung (Art. 18 DSGVO)\n• Recht auf Datenübertragbarkeit (Art. 20 DSGVO)\n• Widerspruchsrecht (Art. 21 DSGVO)\n(4) Zur Wahrnehmung dieser Rechte oder bei Datenschutzanfragen wenden Sie sich an: datenschutz@cybratech-solutions.com\n(5) Weitergabe von Technikerdaten an Dritte (insbesondere Auftraggeber) erfolgt nur im für die Vermittlung erforderlichen Umfang oder soweit gesetzlich vorgeschrieben.',
         },
         {
-          h: '§9 Laufzeit und Kündigung',
-          p: '(1) Dieser Vertrag gilt ab dem Datum der Technikerregistrierung auf der PDR Connect Plattform.\n(2) Jede Partei kann mit 14-tägiger schriftlicher Frist per E-Mail an info@cybratech-solutions.com kündigen.\n(3) Eine Kündigung berührt nicht Zahlungsverpflichtungen aus abgeschlossenen oder laufenden Einsätzen.\n(4) Bei schwerwiegenden Verstößen, betrügerischem Verhalten oder Dokumentenfälschung kann PDR Connect fristlos kündigen.',
+          h: '§9 Vertraulichkeit',
+          p: '(1) Der Techniker verpflichtet sich, alle Informationen über Auftraggeber, konkrete Auftragsdetails, vereinbarte Konditionen und sonstige ihm im Zusammenhang mit der Plattformnutzung bekannt gewordene Geschäftsinformationen vertraulich zu behandeln.\n(2) Diese Vertraulichkeitsverpflichtung gilt über die Vertragslaufzeit hinaus für einen Zeitraum von drei (3) Jahren nach Vertragsende.\n(3) PDR Connect behandelt alle persönlichen und beruflichen Daten des Technikers ebenfalls vertraulich und gibt diese nicht ohne Zustimmung des Technikers an Dritte weiter, soweit dies nicht zur Vertragserfüllung erforderlich ist.',
         },
         {
-          h: '§10 Anwendbares Recht und Gerichtsstand',
-          p: 'Dieser Vertrag unterliegt ausschließlich dem Recht der Republik Zypern. Streitigkeiten sind vor den zuständigen Gerichten in Nikosia, Zypern, zu klären.',
+          h: '§10 Haftung',
+          p: '(1) PDR Connect haftet unbeschränkt für Schäden, die auf Vorsatz oder grober Fahrlässigkeit von PDR Connect, seiner gesetzlichen Vertreter oder leitenden Angestellten beruhen, sowie für Schäden aus der Verletzung des Lebens, des Körpers oder der Gesundheit.\n(2) Bei einfacher Fahrlässigkeit haftet PDR Connect nur bei Verletzung einer wesentlichen Vertragspflicht (Kardinalpflicht), deren Erfüllung die ordnungsgemäße Durchführung des Vertrages überhaupt erst ermöglicht und auf deren Einhaltung der Techniker regelmäßig vertrauen darf. In diesen Fällen ist die Haftung auf den bei Vertragsschluss typischerweise vorhersehbaren, vertragstypischen Schaden begrenzt.\n(3) Eine weitergehende Haftung von PDR Connect ist ausgeschlossen. Insbesondere übernimmt PDR Connect keine Haftung für:\n• Ausfall oder Verzögerung von Zahlungen durch Auftraggeber\n• Qualitätsstreitigkeiten zwischen Techniker und Auftraggeber\n• Entgangenen Gewinn, mittelbare Schäden oder Folgeschäden\n• Schäden aufgrund höherer Gewalt oder technischer Ausfälle der Plattform\n(4) Die vorstehenden Haftungsbeschränkungen gelten nicht, soweit zwingendes Verbraucher- oder EU-Recht eine strengere Haftung vorschreibt.',
         },
         {
-          h: '§11 Änderungen',
-          p: 'PDR Connect behält sich vor, diese Bedingungen mit 30 Tagen Vorankündigung zu ändern. Die weitere Nutzung gilt als Zustimmung zu den geänderten Bedingungen.',
+          h: '§11 Streitbeilegung und Zahlungsrückhalte',
+          p: '(1) Bei Streitigkeiten zwischen Auftraggeber und Techniker über die Qualität, den Umfang oder die Abrechnung erbrachter Leistungen kann PDR Connect betroffene Zahlungen bis zur abschließenden Klärung des Sachverhalts vorübergehend zurückhalten.\n(2) PDR Connect entscheidet nicht verbindlich über den materiellen Leistungsanspruch der Parteien. Kommt innerhalb von 30 Tagen keine gütliche Einigung zustande, werden die streitigen Beträge auf Treuhandkonto gehalten, bis eine gerichtliche oder schiedsgerichtliche Entscheidung vorliegt.\n(3) Unstreitige Teilbeträge werden innerhalb von 7 Werktagen nach Feststellung der Unstrittigkeit ausgezahlt.\n(4) PDR Connect empfiehlt als außergerichtliche Streitbeilegung die EU-Plattform für Online-Streitbeilegung (ODR): https://ec.europa.eu/consumers/odr/',
+        },
+        {
+          h: '§12 Plattformverfügbarkeit',
+          p: '(1) PDR Connect ist bestrebt, eine möglichst hohe Verfügbarkeit der Plattform sicherzustellen, übernimmt jedoch keine Garantie für eine jederzeit unterbrechungsfreie Nutzung.\n(2) Regelmäßige Wartungsarbeiten können zu vorübergehenden Einschränkungen führen. PDR Connect informiert den Techniker über geplante Wartungsfenster soweit möglich mit angemessener Vorlauffrist.\n(3) Technische Ausfälle oder Störungen, die außerhalb des zumutbaren Einflussbereichs von PDR Connect liegen (z.B. Force Majeure, Ausfälle von Drittanbietern), begründen keine Schadensersatzansprüche gegenüber PDR Connect.',
+        },
+        {
+          h: '§13 Laufzeit und Kündigung',
+          p: '(1) Dieser Vertrag wird auf unbestimmte Zeit geschlossen und tritt mit der Registrierung des Technikers auf der PDR Connect Plattform in Kraft.\n(2) Jede Partei kann diesen Vertrag mit einer Frist von 14 Tagen in Textform (E-Mail an info@cybratech-solutions.com) ordentlich kündigen.\n(3) Die Kündigung berührt nicht bestehende Zahlungsverpflichtungen aus bereits abgeschlossenen oder laufenden Einsätzen.\n(4) Das Recht zur außerordentlichen fristlosen Kündigung aus wichtigem Grund bleibt unberührt. Als wichtiger Grund gilt für PDR Connect insbesondere:\n• Schwerwiegende oder wiederholte Verletzung von Vertragspflichten\n• Zahlungsumgehung oder versuchte Zahlungsumgehung\n• Vorlage gefälschter oder unrichtiger Dokumente\n• Betrügerisches oder strafbares Verhalten',
+        },
+        {
+          h: '§14 Vertragsänderungen',
+          p: '(1) PDR Connect ist berechtigt, diese Vertragsbedingungen zu ändern, soweit sachliche Gründe dies rechtfertigen (z.B. Gesetzesänderungen, Anpassungen der Gebührenstruktur, technische Weiterentwicklungen).\n(2) Wesentliche Änderungen werden dem Techniker mindestens 30 Tage vor ihrem Inkrafttreten in Textform (E-Mail) angekündigt. Die Mitteilung erfolgt an die im Profil hinterlegte E-Mail-Adresse.\n(3) Der Techniker hat das Recht, den Vertrag bis zum Zeitpunkt des Inkrafttretens der Änderungen fristlos zu kündigen. Macht der Techniker von diesem Sonderkündigungsrecht keinen Gebrauch und nutzt die Plattform nach Inkrafttreten weiter, gilt dies als Zustimmung zu den geänderten Bedingungen.\n(4) Redaktionelle Anpassungen ohne inhaltliche Auswirkungen auf Rechte und Pflichten der Parteien können ohne Vorankündigung vorgenommen werden.',
+        },
+        {
+          h: '§15 Anwendbares Recht und Gerichtsstand',
+          p: '(1) Dieser Vertrag unterliegt dem Recht der Republik Zypern unter Ausschluss des UN-Kaufrechts (CISG).\n(2) Soweit gesetzlich zulässig, ist Gerichtsstand für alle Streitigkeiten aus oder im Zusammenhang mit diesem Vertrag Nikosia, Republik Zypern.\n(3) Zwingende gesetzliche Gerichtsstände bleiben von dieser Regelung unberührt. Insbesondere werden Verbraucher- und Arbeitnehmer-Schutzvorschriften der EU sowie der Mitgliedstaaten hierdurch nicht eingeschränkt. In diesen Fällen sind die gesetzlich bestimmten Gerichtsstände maßgeblich.\n(4) Die EU-Kommission stellt eine Plattform zur Online-Streitbeilegung (ODR) bereit: https://ec.europa.eu/consumers/odr/ — PDR Connect ist zur Teilnahme an einem Schlichtungsverfahren nicht verpflichtet, wird jedoch etwaige Anfragen wohlwollend prüfen.',
+        },
+        {
+          h: '§16 Salvatorische Klausel',
+          p: 'Sollte eine Bestimmung dieses Vertrages ganz oder teilweise unwirksam oder undurchführbar sein oder werden, bleibt die Wirksamkeit der übrigen Bestimmungen hiervon unberührt. Die unwirksame oder undurchführbare Bestimmung ist durch eine wirksame Regelung zu ersetzen, die dem wirtschaftlichen Zweck der unwirksamen Bestimmung am nächsten kommt. Entsprechendes gilt für etwaige Vertragslücken.',
         },
       ],
     },
   },
 
-  /* ─────────────── GREEK ─────────────── */
+  /* ═══════════════════════════════════════════════════════════
+     ENGLISH  (EN)
+  ═══════════════════════════════════════════════════════════ */
+  en: {
+    pageTitle: 'Platform Contracts',
+    pageSubtitle: 'Two contract versions — for Clients and for Technicians/Workers',
+    tabClient: '🏢 For Clients / Contractors',
+    tabWorker: '🔧 For Technicians / Workers',
+
+    /* ── CLIENT ── */
+    client: {
+      title: 'Placement & Service Agreement',
+      badge: 'Client / Contractor Version',
+      printBtn: 'Print / Save as PDF',
+      parties: {
+        label: 'Parties',
+        operator: 'PDR Connect, operated by Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, Republic of Cyprus, VAT No. CY60015676H — hereinafter "PDR Connect"',
+        client: 'The company, dealership, workshop or individual registered on the platform — hereinafter "Client"',
+      },
+      intro: 'This Agreement governs the placement services provided by PDR Connect to the Client. By registering on the PDR Connect platform, the Client accepts this Agreement in full.',
+      sections: [
+        {
+          h: '§1 Subject of Agreement',
+          p: 'PDR Connect provides professional talent placement services, sourcing and presenting verified PDR technicians and automotive professionals to the Client through the PDR Connect platform (pdrconnect.eu). PDR Connect acts exclusively as an intermediary and does not itself become a party to the service contract concluded between the Client and the Technician.',
+        },
+        {
+          h: '§2 Services Provided by PDR Connect',
+          p: 'PDR Connect provides the following services to the Client:',
+          list: [
+            'Identification and presentation of verified technicians matching the Client\'s requirements',
+            'Verification of professional credentials, certifications, and identity documents',
+            'Facilitation of secure communication between Client and Technician via the platform',
+            'Issuance of all invoices and processing of all payments',
+            'Ongoing support and assistance throughout the placement process',
+          ],
+        },
+        {
+          h: '§3 Platform Service — Client (Currently Free)',
+          p: '(1) During the current launch phase, PDR Connect provides its placement services to Clients free of charge. No platform service fee is charged to the Client.\n(2) Clients pay only the agreed technician remuneration as invoiced by PDR Connect. No additional platform surcharge applies.\n(3) Example: If the agreed technician remuneration is €1,000, the Client is invoiced for exactly €1,000.\n(4) PDR Connect reserves the right to introduce a platform service fee for Clients in the future with at least 30 days\' advance written notice. The Client has the right to terminate this Agreement free of charge up to the date the change takes effect.',
+        },
+        {
+          h: '§4 Payment Terms',
+          p: '(1) As a Client you have free access to our platform. If a payment obligation arises, the following terms apply:\n(2) All invoices are payable within 14 days of the invoice date to: Cybratech Solutions Ltd. · Efesou 9, 5280 Paralimni, Cyprus · VAT: CY60015676H.\n(3) All payments must be transferred exclusively to PDR Connect. Direct payments to Technicians outside the platform are strictly prohibited.\n(4) In the event of suspected payment circumvention, PDR Connect is entitled to withhold payments to the extent necessary to investigate the matter. Once the investigation is concluded, undisputed amounts will be released without undue delay. PDR Connect reserves the right to suspend the account and pursue further legal remedies.\n(5) Late payments may be subject to statutory interest under EU Directive 2011/7/EU on combating late payment or applicable national law.',
+        },
+        {
+          h: '§5 Client Obligations',
+          list: [
+            'Provide accurate and complete job requirements when requesting placements',
+            'Ensure a safe, legal, and professionally appropriate working environment for all placed technicians',
+            'Comply with all applicable labour, tax, and social security laws in the country where the technician performs work',
+            'Honour all agreed assignment terms including duration, scope, and remuneration',
+            'Conduct all communications with Technicians exclusively through the PDR Connect platform',
+            'Not establish any direct employment or service relationships with placed technicians outside PDR Connect',
+          ],
+        },
+        {
+          h: '§6 Technician Verification & Warranty',
+          p: '(1) PDR Connect warrants that all presented technicians have been identity-verified through official documentation.\n(2) PDR Connect does not guarantee specific work outcomes, productivity levels, or project results.\n(3) The Client is responsible for assessing the suitability of presented technicians for their specific requirements.',
+        },
+        {
+          h: '§7 Data Protection & GDPR',
+          p: '(1) PDR Connect processes the Client\'s personal data solely for the purpose of performing this Agreement and providing placement services.\n(2) The processing of personal data is carried out in accordance with PDR Connect\'s current Privacy Policy and Regulation (EU) 2016/679 (General Data Protection Regulation — GDPR).\n(3) The Client has the following rights under GDPR: right of access (Art. 15), right to rectification (Art. 16), right to erasure (Art. 17), right to restriction of processing (Art. 18), right to data portability (Art. 20), and right to object (Art. 21). Requests should be directed to: datenschutz@cybratech-solutions.com\n(4) Client data will only be shared with third parties to the extent necessary for the performance of this Agreement or as required by law.',
+        },
+        {
+          h: '§8 Confidentiality',
+          p: '(1) Both Parties agree to keep all commercial terms, pricing, and assignment details strictly confidential.\n(2) This confidentiality obligation survives termination of this Agreement for a period of three (3) years.',
+        },
+        {
+          h: '§9 Liability',
+          p: '(1) PDR Connect shall be liable without limitation for damages caused by intentional misconduct or gross negligence, and for damages arising from injury to life, body, or health.\n(2) For cases of ordinary negligence, PDR Connect shall only be liable for breach of a material contractual obligation (cardinal obligation) whose fulfilment is essential for the proper performance of the Agreement and on whose observance the Client may regularly rely. In such cases, liability is limited to typically foreseeable damage.\n(3) Any further liability of PDR Connect is excluded. This includes in particular lost profits, indirect damages, and consequential losses.\n(4) The above limitations do not apply where mandatory consumer protection or EU law requires stricter liability.',
+        },
+        {
+          h: '§10 Dispute Resolution',
+          p: '(1) In the event of disputes between Client and Technician regarding the quality or scope of services rendered, PDR Connect may temporarily withhold relevant payments pending clarification of the matter.\n(2) PDR Connect does not issue binding decisions on the merits of the parties\' claims. Such decisions are reserved for the competent courts or an agreed arbitrator.\n(3) PDR Connect will make reasonable efforts to facilitate an amicable resolution. The EU ODR platform is available at: https://ec.europa.eu/consumers/odr/',
+        },
+        {
+          h: '§11 Platform Availability',
+          p: '(1) PDR Connect endeavours to provide the highest possible platform availability but does not guarantee uninterrupted access at all times.\n(2) Planned maintenance windows will be communicated to users in advance where possible. Force majeure events or third-party infrastructure failures beyond PDR Connect\'s reasonable control do not give rise to liability.\n(3) PDR Connect shall not be liable for any losses arising from temporary unavailability of the platform unless caused by PDR Connect\'s own fault.',
+        },
+        {
+          h: '§12 Term and Termination',
+          p: '(1) This Agreement is effective from the date of Client registration and continues for an indefinite period.\n(2) Either Party may terminate this Agreement with 14 days\' written notice by email to info@cybratech-solutions.com.\n(3) Termination does not affect payment obligations for ongoing or completed assignments.\n(4) Either Party may terminate immediately for cause. Cause includes, but is not limited to, material breach of this Agreement or payment circumvention.',
+        },
+        {
+          h: '§13 Amendments',
+          p: '(1) PDR Connect may amend these terms where there are objective grounds for doing so (e.g. legal changes, fee structure adjustments, technical developments).\n(2) Material amendments will be communicated at least 30 days before taking effect.\n(3) The Client has the right to terminate this Agreement free of charge up to the date the amendment takes effect. Continued use of the platform after that date constitutes acceptance.\n(4) Non-material amendments (editorial corrections, clarifications) may be made without prior notice.',
+        },
+        {
+          h: '§14 Governing Law and Jurisdiction',
+          p: '(1) This Agreement is governed by the laws of the Republic of Cyprus, excluding the UN Convention on Contracts for the International Sale of Goods (CISG).\n(2) To the extent permitted by law, the exclusive jurisdiction for all disputes arising from or in connection with this Agreement shall be the courts of Nicosia, Republic of Cyprus.\n(3) Mandatory statutory jurisdictions — in particular consumer protection provisions under EU law — remain unaffected. The EU ODR platform is available at: https://ec.europa.eu/consumers/odr/',
+        },
+        {
+          h: '§15 Severability',
+          p: 'Should any provision of this Agreement be or become wholly or partially invalid or unenforceable, this shall not affect the validity of the remaining provisions. The invalid or unenforceable provision shall be replaced by a valid provision that most closely achieves the economic purpose of the invalid provision.',
+        },
+      ],
+    },
+
+    /* ── WORKER ── */
+    worker: {
+      title: 'Placement & Service Agreement',
+      badge: 'Technician / Worker Version',
+      printBtn: 'Print / Save as PDF',
+      parties: {
+        label: 'Parties',
+        operator: 'PDR Connect, operated by Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, Republic of Cyprus, VAT No. CY60015676H — hereinafter "PDR Connect"',
+        client: 'The individual professional registered on the platform — hereinafter "Technician"',
+      },
+      intro: 'This Placement and Service Agreement (hereinafter "Agreement") governs the legal relationship between PDR Connect and the Technician regarding the use of the PDR Connect platform and associated placement services. By registering on the PDR Connect platform, the Technician agrees to be legally bound by this Agreement.',
+      sections: [
+        {
+          h: '§1 Subject of Agreement',
+          p: 'PDR Connect provides professional placement services, matching the Technician with client businesses requiring skilled automotive professionals, through the PDR Connect platform (pdrconnect.eu). PDR Connect acts exclusively as an intermediary and does not itself become a party to the service contract concluded between the Technician and the Client.',
+        },
+        {
+          h: '§2 Services Provided by PDR Connect',
+          p: 'PDR Connect provides the following services to the Technician:',
+          list: [
+            'Active promotion of the Technician\'s profile to registered client businesses',
+            'Facilitation of secure communication between Technician and potential Clients via the platform',
+            'Issuance of all invoices to Clients and processing of all payment flows',
+            'Transfer of the Technician\'s net earnings (after platform fee per §3) following verified receipt of payment',
+            'Support and guidance throughout the placement process',
+          ],
+        },
+        {
+          h: '§3 Platform Service Fee',
+          p: '(1) PDR Connect retains a platform service fee of 10% of the total agreed net assignment value as a placement and administration fee.\n(2) This fee is deducted from the agreed gross amount before payment is transferred to the Technician.\n(3) Example: For an assignment value of €1,000 (net), PDR Connect retains €100 (10%). The Technician receives €900.\n(4) The fee covers: profile marketing and visibility, client matching, secure communication infrastructure, contract and invoice management, and payment processing.\n(5) PDR Connect reserves the right to adjust the platform fee with at least 30 days\' advance written notice. The Technician has the right to terminate this Agreement free of charge up to the date the adjustment takes effect.',
+        },
+        {
+          h: '§4 Payment Terms',
+          p: '(1) PDR Connect will transfer the Technician\'s remuneration within 7 business days after: (a) full payment from the Client has been received by PDR Connect, (b) the Technician has submitted a proper invoice, and (c) PDR Connect has reviewed and approved that invoice.\n(2) The Technician is entitled to submit an invoice to PDR Connect (Cybratech Solutions Ltd.) only after being formally notified by PDR Connect that the Client\'s full payment has been confirmed. Invoices submitted before such notification are not due and will not be processed.\n(3) All invoices must be addressed to: Cybratech Solutions Ltd. · Efesou 9, 5280 Paralimni, Cyprus · VAT: CY60015676H.\n(4) The Technician must not request, accept, or facilitate direct payments from Clients that bypass the PDR Connect platform. Such conduct constitutes a serious breach of this Agreement and entitles PDR Connect to immediate termination and damages.\n(5) In the event of suspected payment circumvention or other irregularities, PDR Connect is entitled to withhold pending payments to the extent necessary to investigate the matter. Once the investigation is concluded, undisputed amounts will be released without undue delay. PDR Connect reserves the right to suspend the Technician\'s profile and pursue further legal remedies.\n(6) Approved earnings are transferred exclusively to the bank account provided by the Technician in their platform profile. The Technician bears sole responsibility for maintaining accurate and current banking details.',
+        },
+        {
+          h: '§5 Technician Obligations',
+          list: [
+            'Maintain a complete, truthful, and up-to-date profile including all relevant qualifications, certifications, and availability',
+            'Upload and continuously update all required documents (ID/passport, A1 certificate where applicable, professional qualification certificates)',
+            'Honour all accepted placements and agreed assignment terms',
+            'Use the PDR Connect platform exclusively for communication with Clients — no exchange of private contact details',
+            'Notify PDR Connect immediately if an accepted assignment cannot be fulfilled',
+            'Maintain professional conduct and recognised industry standards throughout all assignments',
+          ],
+        },
+        {
+          h: '§6 Professional Standards and Qualifications',
+          p: '(1) The Technician warrants that all stated qualifications, experience, and certifications are truthful, genuine, and current. Misrepresentation entitles PDR Connect to immediate termination and damages.\n(2) The Technician agrees to perform all work in accordance with recognised technical standards and professional industry practices.\n(3) PDR Connect is entitled to suspend or permanently remove a Technician\'s profile in cases of verified professional misconduct, document fraud, or repeated material breaches of this Agreement.',
+        },
+        {
+          h: '§7 Independent Contractor Status',
+          p: '(1) The Technician operates as an independent self-employed service provider. This Agreement does not create an employment relationship, employee-like relationship, or any other dependency under employment law between the Technician and PDR Connect.\n(2) The Technician is solely responsible for:\n• Proper tax registration and payment of all applicable taxes (income tax, VAT, etc.) in their country of residence\n• Payment of social security contributions and other statutory levies\n• Obtaining adequate professional indemnity insurance\n• Compliance with all applicable labour, business licensing, and immigration regulations in the country of work\n(3) PDR Connect does not act as an employer and does not make social security contributions, provide paid leave, or pay sick pay on behalf of the Technician.',
+        },
+        {
+          h: '§8 Data Protection & GDPR',
+          p: '(1) PDR Connect processes the Technician\'s personal data solely for the purpose of performing this Agreement and providing placement services.\n(2) The processing of personal data is carried out in accordance with PDR Connect\'s current Privacy Policy and Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 (General Data Protection Regulation — GDPR).\n(3) The Technician has the following rights under GDPR: right of access (Art. 15), right to rectification (Art. 16), right to erasure (Art. 17), right to restriction of processing (Art. 18), right to data portability (Art. 20), and right to object (Art. 21). Requests should be directed to: datenschutz@cybratech-solutions.com\n(4) The Technician\'s data will only be shared with third parties (in particular Clients) to the extent necessary for providing the placement service or as required by law.',
+        },
+        {
+          h: '§9 Confidentiality',
+          p: '(1) The Technician agrees to keep all Client information, assignment details, agreed terms, and any other business information received through the use of the platform strictly confidential.\n(2) This confidentiality obligation survives termination of this Agreement for a period of three (3) years.\n(3) PDR Connect likewise treats all personal and professional data of the Technician as confidential and will not share it with third parties without the Technician\'s consent except where necessary for the performance of this Agreement.',
+        },
+        {
+          h: '§10 Liability',
+          p: '(1) PDR Connect shall be liable without limitation for damages caused by intentional misconduct or gross negligence by PDR Connect, its legal representatives, or senior employees, and for damages arising from injury to life, body, or health.\n(2) For cases of ordinary (simple) negligence, PDR Connect shall only be liable for breach of a material contractual obligation (cardinal obligation) whose fulfilment is essential to the proper performance of the Agreement and on whose observance the Technician may regularly rely. In such cases, liability is limited to the typically foreseeable damage at the time of contract formation.\n(3) Any further liability of PDR Connect is excluded. This includes in particular:\n• Delayed or failed payment by Clients\n• Quality or performance disputes between Technician and Client\n• Lost profits, indirect damages, or consequential losses\n• Damages due to force majeure or third-party infrastructure failures\n(4) The above limitations do not apply where mandatory consumer protection or EU law requires stricter liability.',
+        },
+        {
+          h: '§11 Dispute Resolution & Payment Retention',
+          p: '(1) In the event of disputes between Client and Technician regarding the quality, scope, or billing of services, PDR Connect may temporarily retain relevant payments pending resolution of the matter.\n(2) PDR Connect does not issue binding decisions on the merits of the parties\' substantive claims. If no amicable resolution is reached within 30 days, disputed amounts will be held in escrow pending a court or arbitration decision.\n(3) Undisputed partial amounts will be released within 7 business days of being established as undisputed.\n(4) For out-of-court dispute resolution, the EU Online Dispute Resolution (ODR) platform is available at: https://ec.europa.eu/consumers/odr/',
+        },
+        {
+          h: '§12 Platform Availability',
+          p: '(1) PDR Connect endeavours to maintain the highest possible platform availability but does not guarantee uninterrupted access at all times.\n(2) Planned maintenance windows will be communicated to users in advance where reasonably possible. Unplanned outages due to force majeure or failures beyond PDR Connect\'s reasonable control do not give rise to claims against PDR Connect.\n(3) PDR Connect shall not be liable for any losses arising from temporary unavailability of the platform unless directly caused by PDR Connect\'s own fault.',
+        },
+        {
+          h: '§13 Term and Termination',
+          p: '(1) This Agreement takes effect upon the Technician\'s registration on the PDR Connect platform and continues for an indefinite period.\n(2) Either Party may terminate this Agreement with 14 days\' written notice by email to info@cybratech-solutions.com.\n(3) Termination does not affect payment obligations for completed or ongoing assignments.\n(4) The right to terminate immediately for good cause remains unaffected. Good cause for PDR Connect includes in particular:\n• Material or repeated breach of contractual obligations\n• Payment circumvention or attempted circumvention\n• Submission of falsified or inaccurate documents\n• Fraudulent or criminal conduct',
+        },
+        {
+          h: '§14 Amendments',
+          p: '(1) PDR Connect may amend these terms where there are objective grounds for doing so (e.g. legislative changes, fee structure adjustments, technical developments).\n(2) Material amendments will be communicated to the Technician at least 30 days before taking effect, by email to the address registered in the Technician\'s profile.\n(3) The Technician has the right to terminate this Agreement free of charge up to the date the amendment takes effect. Continued use of the platform after that date constitutes acceptance of the amended terms.\n(4) Non-material amendments (editorial corrections, clarifications without substantive effect) may be made without prior notice.',
+        },
+        {
+          h: '§15 Governing Law and Jurisdiction',
+          p: '(1) This Agreement is governed by the laws of the Republic of Cyprus, excluding the UN Convention on Contracts for the International Sale of Goods (CISG).\n(2) To the extent permitted by law, the courts of Nicosia, Republic of Cyprus shall have exclusive jurisdiction for all disputes arising from or in connection with this Agreement.\n(3) Mandatory statutory jurisdictions remain unaffected — in particular, consumer and worker protection provisions of the EU and individual member states are not restricted by this clause. Where applicable EU or national law prescribes a specific jurisdiction, that jurisdiction shall prevail.\n(4) The EU ODR platform is available at: https://ec.europa.eu/consumers/odr/ — PDR Connect is not obliged to participate in arbitration proceedings but will consider any such request in good faith.',
+        },
+        {
+          h: '§16 Severability',
+          p: 'Should any provision of this Agreement be or become wholly or partially invalid or unenforceable, this shall not affect the validity of the remaining provisions. The invalid or unenforceable provision shall be replaced by a valid provision that most closely achieves the economic purpose intended by the invalid provision. The same applies to any gaps in the Agreement.',
+        },
+      ],
+    },
+  },
+
+  /* ═══════════════════════════════════════════════════════════
+     GREEK  (EL)
+  ═══════════════════════════════════════════════════════════ */
   el: {
     pageTitle: 'Συμβόλαια Πλατφόρμας',
     pageSubtitle: 'Δύο εκδόσεις συμβολαίου — για Πελάτες και για Τεχνικούς/Εργαζομένους',
@@ -341,64 +428,21 @@ const CONTRACTS: Record<string, ContractSet> = {
       },
       intro: 'Η παρούσα Σύμβαση διέπει τις υπηρεσίες τοποθέτησης που παρέχει η PDR Connect στον Πελάτη. Με την εγγραφή στην πλατφόρμα PDR Connect, ο Πελάτης αποδέχεται πλήρως την παρούσα Σύμβαση.',
       sections: [
-        {
-          h: '§1 Αντικείμενο Σύμβασης',
-          p: 'Η PDR Connect παρέχει επαγγελματικές υπηρεσίες τοποθέτησης προσωπικού, εντοπίζοντας και παρουσιάζοντας στον Πελάτη επαληθευμένους τεχνικούς PDR και επαγγελματίες αυτοκινήτων μέσω της πλατφόρμας PDR Connect (pdrconnect.com).',
-        },
-        {
-          h: '§2 Υπηρεσίες της PDR Connect',
-          p: 'Η PDR Connect παρέχει τις ακόλουθες υπηρεσίες στον Πελάτη:',
-          list: [
-            'Εντοπισμός και παρουσίαση επαληθευμένων τεχνικών που ανταποκρίνονται στις απαιτήσεις του Πελάτη',
-            'Επαλήθευση επαγγελματικών προσόντων, πιστοποιητικών και εγγράφων ταυτότητας',
-            'Διευκόλυνση ασφαλούς επικοινωνίας μεταξύ Πελάτη και Τεχνικού μέσω της πλατφόρμας',
-            'Έκδοση όλων των τιμολογίων και διεκπεραίωση όλων των πληρωμών',
-            'Συνεχής υποστήριξη καθ\' όλη τη διάρκεια της διαδικασίας τοποθέτησης',
-          ],
-        },
-        {
-          h: '§3 Υπηρεσία Πλατφόρμας — Πελάτης (Προς το Παρόν Δωρεάν)',
-          p: '(1) Κατά τη διάρκεια της τρέχουσας φάσης εκκίνησης, η PDR Connect παρέχει τις υπηρεσίες τοποθέτησης και αντιστοίχισης στους Πελάτες δωρεάν. Δεν χρεώνεται καμία αμοιβή πλατφόρμας στον Πελάτη.\n(2) Οι Πελάτες πληρώνουν αποκλειστικά τη συμφωνηθείσα αμοιβή τεχνικού σύμφωνα με το τιμολόγιο που εκδίδει η PDR Connect. Δεν εφαρμόζεται καμία πρόσθετη χρέωση.\n(3) Παράδειγμα: Εάν η συμφωνηθείσα αμοιβή τεχνικού είναι 1.000 €, ο Πελάτης τιμολογείται για ακριβώς 1.000 €.\n(4) Η PDR Connect διατηρεί το δικαίωμα να εισαγάγει αμοιβή πλατφόρμας για τους Πελάτες στο μέλλον. Οι Πελάτες θα ενημερώνονται με τουλάχιστον 30 ημέρες προειδοποίηση πριν από την εφαρμογή οποιασδήποτε τέτοιας χρέωσης.',
-        },
-        {
-          h: '§4 Όροι Πληρωμής',
-          p: '(1) Ως Πελάτης/Εργολάβος έχετε ελεύθερη και δωρεάν πρόσβαση στην εφαρμογή μας. Ωστόσο, εάν προκύψει υποχρέωση πληρωμής, ισχύουν τα ακόλουθα:\n(2) Όλα τα τιμολόγια είναι πληρωτέα στον Φορέα Εκμετάλλευσης αυτής της Πλατφόρμας: «Διαχειρίζεται η Cybratech-Solutions · Efesou 9, 5280 Paralimni, Κύπρος · ΑΦΜ: CY60015676H» εντός 14 ημερών από την ημερομηνία έκδοσης τιμολογίου.\n(3) Όλες οι πληρωμές πρέπει να μεταφέρονται αποκλειστικά στον Φορέα Εκμετάλλευσης αυτής της Πλατφόρμας: «Cybratech-Solutions · Efesou 9, 5280 Paralimni, Κύπρος · ΑΦΜ: CY60015676H». Άμεσες πληρωμές από τον Πελάτη στους Τεχνικούς εκτός πλατφόρμας απαγορεύονται αυστηρά.\n(4) Σε περίπτωση παράκαμψης πληρωμής, η PDR Connect διατηρεί το δικαίωμα να αναστείλει τον λογαριασμό, να χρεώσει την αμοιβή πλατφόρμας πλέον προσαύξησης και να ασκήσει νομικά μέσα.\n(5) Καθυστερημένες πληρωμές ενδέχεται να υπόκεινται σε νόμιμους τόκους βάσει του εφαρμοστέου κυπριακού δικαίου.',
-        },
-        {
-          h: '§5 Υποχρεώσεις Πελάτη',
-          list: [
-            'Παρέχει ακριβείς και πλήρεις απαιτήσεις εργασίας κατά την αίτηση τοποθέτησης',
-            'Εξασφαλίζει ασφαλές και νόμιμο εργασιακό περιβάλλον για όλους τους τοποθετούμενους τεχνικούς',
-            'Συμμορφώνεται με όλη την ισχύουσα εργατική νομοθεσία στη χώρα εργασίας',
-            'Τηρεί τους συμφωνηθέντες όρους ανάθεσης συμπεριλαμβανομένης διάρκειας και αμοιβής',
-            'Διεξάγει όλη την επικοινωνία με τεχνικούς αποκλειστικά μέσω της πλατφόρμας PDR Connect',
-            'Δεν δημιουργεί απευθείας σχέσεις εργασίας με τοποθετούμενους τεχνικούς εκτός PDR Connect',
-          ],
-        },
-        {
-          h: '§6 Επαλήθευση Τεχνικού και Εγγύηση',
-          p: '(1) Η PDR Connect εγγυάται ότι όλοι οι παρουσιαζόμενοι τεχνικοί έχουν επαληθευτεί μέσω επίσημων εγγράφων.\n(2) Η PDR Connect δεν εγγυάται συγκεκριμένα αποτελέσματα εργασίας ή επίπεδα παραγωγικότητας.\n(3) Ο Πελάτης είναι υπεύθυνος για την αξιολόγηση της καταλληλότητας των παρουσιαζόμενων τεχνικών.',
-        },
-        {
-          h: '§7 Ευθύνη',
-          p: '(1) Η ευθύνη της PDR Connect περιορίζεται στις συνολικές αμοιβές πλατφόρμας που κατέβαλε ο Πελάτης.\n(2) Η PDR Connect δεν ευθύνεται για διαφορές ποιότητας εργασίας, ζημίες από τη συμπεριφορά τεχνικού ή επακόλουθες απώλειες.\n(3) Ο Πελάτης αναλαμβάνει πλήρη ευθύνη για τη συμμόρφωση με τοπικές εργατικές και φορολογικές διατάξεις.',
-        },
-        {
-          h: '§8 Εμπιστευτικότητα',
-          p: '(1) Τα Μέρη συμφωνούν να τηρούν εμπιστευτικά όλους τους εμπορικούς όρους και λεπτομέρειες ανάθεσης.\n(2) Τα δεδομένα Πελάτη επεξεργάζονται σύμφωνα με την Πολιτική Απορρήτου της PDR Connect και τον ΓΚΠΔ.',
-        },
-        {
-          h: '§9 Διάρκεια και Καταγγελία',
-          p: '(1) Η Σύμβαση ισχύει από την ημερομηνία εγγραφής του Πελάτη στην πλατφόρμα PDR Connect.\n(2) Κάθε Μέρος μπορεί να καταγγείλει τη Σύμβαση με 14 ημέρες γραπτή ειδοποίηση στο info@cybratech-solutions.com.\n(3) Η καταγγελία δεν επηρεάζει υποχρεώσεις πληρωμής από ενεργές αναθέσεις.\n(4) Σε περίπτωση σοβαρής παράβασης, η PDR Connect μπορεί να καταγγείλει τη Σύμβαση άμεσα.',
-        },
-        {
-          h: '§10 Εφαρμοστέο Δίκαιο και Δικαιοδοσία',
-          p: 'Η παρούσα Σύμβαση διέπεται αποκλειστικά από τους νόμους της Κυπριακής Δημοκρατίας. Οι διαφορές εκδικάζονται ενώπιον των αρμόδιων δικαστηρίων Λευκωσίας, Κύπρος.',
-        },
-        {
-          h: '§11 Τροποποιήσεις',
-          p: 'Η PDR Connect διατηρεί το δικαίωμα να τροποποιεί τους όρους με 30 ημέρες προειδοποίηση. Η συνέχιση χρήσης συνιστά αποδοχή των τροποποιημένων όρων.',
-        },
+        { h: '§1 Αντικείμενο', p: 'Η PDR Connect παρέχει υπηρεσίες τοποθέτησης επαγγελματιών και ενεργεί αποκλειστικά ως μεσολαβητής. Η PDR Connect δεν καθίσταται μέρος της σύμβασης που συνάπτεται μεταξύ Πελάτη και Τεχνικού.' },
+        { h: '§2 Παρεχόμενες Υπηρεσίες', list: ['Εντοπισμός επαληθευμένων τεχνικών', 'Επαλήθευση εγγράφων και προσόντων', 'Ασφαλής επικοινωνία μέσω πλατφόρμας', 'Έκδοση τιμολογίων και διαχείριση πληρωμών', 'Συνεχής υποστήριξη'] },
+        { h: '§3 Αμοιβή — Πελάτης (Δωρεάν)', p: 'Κατά τη φάση εκκίνησης δεν χρεώνεται αμοιβή πλατφόρμας. Ο Πελάτης πληρώνει μόνο τη συμφωνηθείσα αμοιβή τεχνικού. Μελλοντικές αλλαγές γνωστοποιούνται 30 ημέρες νωρίτερα με δικαίωμα καταγγελίας.' },
+        { h: '§4 Όροι Πληρωμής', p: 'Σε περίπτωση παράκαμψης πληρωμής, η PDR Connect δικαιούται να παρακρατεί πληρωμές μόνο στο αναγκαίο μέτρο για τη διερεύνηση. Τα αδιαμφισβήτητα ποσά αποδίδονται αμέσως μετά. Τόκοι υπερημερίας σύμφωνα με Οδηγία ΕΕ 2011/7/ΕΕ.' },
+        { h: '§5 Υποχρεώσεις Πελάτη', list: ['Ακριβείς απαιτήσεις εργασίας', 'Ασφαλές εργασιακό περιβάλλον', 'Συμμόρφωση με εργατική νομοθεσία', 'Τήρηση συμφωνηθέντων όρων', 'Επικοινωνία μόνο μέσω πλατφόρμας', 'Όχι άμεσες σχέσεις με τεχνικούς'] },
+        { h: '§6 Επαλήθευση Τεχνικού', p: 'Η PDR Connect βεβαιώνει ταυτοτική επαλήθευση αλλά δεν εγγυάται αποτελέσματα εργασίας. Ο Πελάτης αξιολογεί την καταλληλότητα.' },
+        { h: '§7 Προστασία Δεδομένων & ΓΚΠΔ', p: 'Επεξεργασία δεδομένων σύμφωνα με Κανονισμό (ΕΕ) 2016/679 (ΓΚΠΔ) και Πολιτική Απορρήτου PDR Connect. Δικαιώματα: πρόσβαση (Αρθ. 15), διόρθωση (Αρθ. 16), διαγραφή (Αρθ. 17), φορητότητα (Αρθ. 20). Επικοινωνία: datenschutz@cybratech-solutions.com' },
+        { h: '§8 Εμπιστευτικότητα', p: 'Εμπιστευτικότητα όλων των εμπορικών όρων για 3 χρόνια μετά τη λήξη της σύμβασης.' },
+        { h: '§9 Ευθύνη', p: 'Απεριόριστη ευθύνη για δόλο, βαριά αμέλεια, σωματικές βλάβες. Για ελαφρά αμέλεια μόνο κατά παραβίαση ουσιωδών υποχρεώσεων, περιορισμένη σε προβλέψιμες ζημίες. Ευθύνη για διαφυγόν κέρδος και επακόλουθες ζημίες αποκλείεται.' },
+        { h: '§10 Επίλυση Διαφορών', p: 'Η PDR Connect δύναται να παρακρατεί πληρωμές κατά τη διάρκεια διαφορών χωρίς να αποφαίνεται επί της ουσίας. Πλατφόρμα ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§11 Διαθεσιμότητα Πλατφόρμας', p: 'Η PDR Connect αποσκοπεί σε υψηλή διαθεσιμότητα αλλά δεν εγγυάται αδιάλειπτη λειτουργία. Δεν ευθύνεται για βλάβες εκτός ελέγχου της.' },
+        { h: '§12 Διάρκεια και Καταγγελία', p: 'Αόριστη διάρκεια από την εγγραφή. Καταγγελία με 14 ημέρες προειδοποίηση. Άμεση καταγγελία για σοβαρές παραβάσεις.' },
+        { h: '§13 Τροποποιήσεις', p: 'Ουσιαστικές αλλαγές γνωστοποιούνται 30 ημέρες νωρίτερα με δικαίωμα καταγγελίας. Η συνέχιση χρήσης συνιστά αποδοχή.' },
+        { h: '§14 Εφαρμοστέο Δίκαιο', p: 'Δίκαιο Κυπριακής Δημοκρατίας. Γεωγραφική δικαιοδοσία: Λευκωσία, εκτός υποχρεωτικών εθνικών ή ευρωπαϊκών διατάξεων προστασίας καταναλωτή.' },
+        { h: '§15 Διατηρητέα Ισχύς', p: 'Εάν οποιαδήποτε διάταξη είναι άκυρη, οι υπόλοιπες παραμένουν σε ισχύ. Η άκυρη διάταξη αντικαθίσταται από έγκυρη που εξυπηρετεί τον ίδιο σκοπό.' },
       ],
     },
     worker: {
@@ -408,76 +452,36 @@ const CONTRACTS: Record<string, ContractSet> = {
       parties: {
         label: 'Συμβαλλόμενα Μέρη',
         operator: 'PDR Connect, που λειτουργεί από την Cybratech Solutions Ltd., Efesou 9, 5280 Παραλίμνι, Κυπριακή Δημοκρατία, ΑΦΜ CY60015676H — εφεξής «PDR Connect»',
-        client: 'Το φυσικό πρόσωπο (επαγγελματίας) εγγεγραμμένο στην πλατφόρμα — εφεξής «Τεχνικός»',
+        client: 'Το φυσικό πρόσωπο (επαγγελματίας/τεχνικός) εγγεγραμμένο στην πλατφόρμα — εφεξής «Τεχνικός»',
       },
-      intro: 'Η παρούσα Σύμβαση διέπει τις υπηρεσίες τοποθέτησης που παρέχει η PDR Connect στον Τεχνικό. Με την εγγραφή στην πλατφόρμα PDR Connect, ο Τεχνικός αποδέχεται πλήρως την παρούσα Σύμβαση.',
+      intro: 'Η παρούσα Σύμβαση Τοποθέτησης και Υπηρεσιών διέπει τη νομική σχέση μεταξύ PDR Connect και Τεχνικού. Με την εγγραφή στην πλατφόρμα PDR Connect, ο Τεχνικός αποδέχεται νομικά δεσμευτικά την παρούσα Σύμβαση.',
       sections: [
-        {
-          h: '§1 Αντικείμενο Σύμβασης',
-          p: 'Η PDR Connect παρέχει υπηρεσίες τοποθέτησης, αντιστοιχίζοντας τον Τεχνικό με επιχειρήσεις-πελάτες που χρειάζονται ειδικευμένους επαγγελματίες αυτοκινήτων, μέσω της πλατφόρμας PDR Connect (pdrconnect.com).',
-        },
-        {
-          h: '§2 Υπηρεσίες της PDR Connect',
-          p: 'Η PDR Connect παρέχει τις ακόλουθες υπηρεσίες στον Τεχνικό:',
-          list: [
-            'Ενεργή προώθηση του προφίλ του Τεχνικού σε επιχειρήσεις-πελάτες',
-            'Διευκόλυνση ασφαλούς επικοινωνίας μεταξύ Τεχνικού και δυνητικών Πελατών',
-            'Έκδοση όλων των τιμολογίων στους Πελάτες και διεκπεραίωση όλων των πληρωμών',
-            'Μεταφορά αμοιβής Τεχνικού (μείον αμοιβή πλατφόρμας) μετά λήψη πληρωμής',
-            'Υποστήριξη καθ\' όλη τη διάρκεια της διαδικασίας τοποθέτησης',
-          ],
-        },
-        {
-          h: '§3 Αμοιβή Πλατφόρμας — Τεχνικός',
-          p: '(1) Η PDR Connect παρακρατεί αμοιβή πλατφόρμας 10% επί της συνολικής συμφωνηθείσας αξίας ανάθεσης ως αμοιβή τοποθέτησης και διαχείρισης.\n(2) Η αμοιβή αφαιρείται από τη συμφωνηθείσα αξία πριν το υπόλοιπο μεταφερθεί στον Τεχνικό.\n(3) Παράδειγμα: Για ανάθεση αξίας 1.000 €, η PDR Connect παρακρατεί 100 € (10%) και ο Τεχνικός λαμβάνει 900 €.\n(4) Η αμοιβή καλύπτει: προώθηση προφίλ, αντιστοίχιση πελατών, επικοινωνία, διαχείριση τιμολογίων και επεξεργασία πληρωμών.\n(5) Η PDR Connect διατηρεί το δικαίωμα να προσαρμόσει την αμοιβή με 30 ημέρες προειδοποίηση.',
-        },
-        {
-          h: '§4 Όροι Πληρωμής για Τεχνικούς / Εργαζομένους',
-          p: '(1) Η PDR Connect θα μεταφέρει την αμοιβή του Τεχνικού/Εργαζομένου εντός 7 εργάσιμων ημερών από τη λήψη του Τιμολογίου που εκδίδει ο Τεχνικός/Εργαζόμενος ΚΑΙ αφού η PDR Connect έχει εξετάσει και εγκρίνει το εν λόγω Τιμολόγιο.\n(2) Οι Τεχνικοί/Εργαζόμενοι δικαιούνται να εκδίδουν Τιμολόγιο προς την PDR Connect (Cybratech Solutions Ltd.) μόνον αφού τους κοινοποιηθεί επίσημα από την PDR Connect ότι η πλήρης πληρωμή από τον Πελάτη έχει ληφθεί από την Πλατφόρμα. Τιμολόγια που εκδίδονται πριν από αυτή την κοινοποίηση δεν είναι έγκυρα και δεν θα επεξεργαστούν.\n(3) Ο Τεχνικός δεν επιτρέπεται να αιτείται, αποδέχεται ή διευκολύνει άμεσες πληρωμές από Πελάτες εκτός της πλατφόρμας PDR Connect. Μια τέτοια συμπεριφορά συνιστά σοβαρή παράβαση της παρούσας Σύμβασης.\n(4) Σε περίπτωση παράκαμψης πληρωμής, η PDR Connect διατηρεί το δικαίωμα να αναστείλει αμέσως το προφίλ του Τεχνικού, να παρακρατήσει τυχόν εκκρεμείς πληρωμές και να κάνει χρήση όλων των διαθέσιμων νομικών μέσων.\n(5) Οι εγκεκριμένες αμοιβές μεταφέρονται αποκλειστικά στον τραπεζικό λογαριασμό που έχει δηλώσει ο Τεχνικός στο προφίλ του στην πλατφόρμα. Ο Τεχνικός φέρει αποκλειστική ευθύνη για την ακρίβεια και την ενημέρωση των τραπεζικών στοιχείων του.\n(6) Όλα τα Τιμολόγια πρέπει να εκδίδονται προς: Cybratech-Solutions · Efesou 9, 5280 Paralimni, Κύπρος · ΑΦΜ: CY60015676H.',
-        },
-        {
-          h: '§5 Υποχρεώσεις Τεχνικού',
-          list: [
-            'Διατήρηση ακριβούς, πλήρους και ενημερωμένου προφίλ με πιστοποιητικά και διαθεσιμότητα',
-            'Αναφόρτωση και διατήρηση όλων των απαιτούμενων εγγράφων (ταυτότητα, πιστοποιητικό Α1, πιστοποιητικά)',
-            'Τήρηση όλων των αποδεκτών αναθέσεων και συμφωνηθέντων όρων',
-            'Επικοινωνία με Πελάτες αποκλειστικά μέσω της πλατφόρμας PDR Connect',
-            'Άμεση ειδοποίηση της PDR Connect σε περίπτωση αδυναμίας εκπλήρωσης ανάθεσης',
-            'Διατήρηση επαγγελματικής συμπεριφοράς και βιομηχανικών προτύπων σε όλες τις αναθέσεις',
-          ],
-        },
-        {
-          h: '§6 Επαγγελματικά Πρότυπα και Προσόντα',
-          p: '(1) Ο Τεχνικός εγγυάται ότι όλα τα δηλωθέντα προσόντα, εμπειρία και πιστοποιητικά είναι ακριβή, αυθεντικά και ισχύοντα.\n(2) Ο Τεχνικός αναλαμβάνει να εκτελεί όλες τις εργασίες σύμφωνα με αναγνωρισμένα επαγγελματικά πρότυπα.\n(3) Η PDR Connect δύναται να αναστείλει το προφίλ σε περίπτωση επαγγελματικής ατασθαλίας, πλαστών εγγράφων ή επανειλημμένων παραβάσεων.',
-        },
-        {
-          h: '§7 Καθεστώς Ανεξάρτητου Εργολάβου',
-          p: '(1) Ο Τεχνικός λειτουργεί ως ανεξάρτητος πάροχος υπηρεσιών. Η παρούσα Σύμβαση δεν δημιουργεί σχέση εργασίας μεταξύ Τεχνικού και PDR Connect.\n(2) Ο Τεχνικός είναι αποκλειστικά υπεύθυνος για: φόρους και εισφορές κοινωνικής ασφάλισης, ασφάλεια επαγγελματικής ευθύνης, συμμόρφωση με εργατική νομοθεσία στη χώρα εργασίας.\n(3) Η PDR Connect δεν παρέχει παροχές εργαζομένου ή εισφορές κοινωνικής ασφάλισης.',
-        },
-        {
-          h: '§8 Εμπιστευτικότητα',
-          p: '(1) Ο Τεχνικός συμφωνεί να τηρεί εμπιστευτικές όλες τις πληροφορίες Πελατών, λεπτομέρειες αναθέσεων και εμπορικούς όρους.\n(2) Τα προσωπικά δεδομένα Τεχνικού επεξεργάζονται σύμφωνα με την Πολιτική Απορρήτου της PDR Connect και τον ΓΚΠΔ.',
-        },
-        {
-          h: '§9 Διάρκεια και Καταγγελία',
-          p: '(1) Η Σύμβαση ισχύει από την ημερομηνία εγγραφής του Τεχνικού στην πλατφόρμα PDR Connect.\n(2) Κάθε Μέρος μπορεί να καταγγείλει τη Σύμβαση με 14 ημέρες γραπτή ειδοποίηση στο info@cybratech-solutions.com.\n(3) Η καταγγελία δεν επηρεάζει υποχρεώσεις πληρωμής από ολοκληρωμένες ή ενεργές αναθέσεις.\n(4) Σε περίπτωση σοβαρής παράβασης ή πλαστογραφίας εγγράφων, η PDR Connect μπορεί να καταγγείλει άμεσα.',
-        },
-        {
-          h: '§10 Εφαρμοστέο Δίκαιο και Δικαιοδοσία',
-          p: 'Η παρούσα Σύμβαση διέπεται αποκλειστικά από τους νόμους της Κυπριακής Δημοκρατίας. Οι διαφορές εκδικάζονται ενώπιον των αρμόδιων δικαστηρίων Λευκωσίας, Κύπρος.',
-        },
-        {
-          h: '§11 Τροποποιήσεις',
-          p: 'Η PDR Connect διατηρεί το δικαίωμα να τροποποιεί τους όρους με 30 ημέρες προειδοποίηση. Η συνέχιση χρήσης συνιστά αποδοχή των τροποποιημένων όρων.',
-        },
+        { h: '§1 Αντικείμενο', p: 'Η PDR Connect ενεργεί αποκλειστικά ως μεσολαβητής για την τοποθέτηση τεχνικών σε επιχειρήσεις-πελάτες μέσω της πλατφόρμας pdrconnect.eu. Δεν καθίσταται συμβαλλόμενο μέρος στη σύμβαση μεταξύ Τεχνικού και Πελάτη.' },
+        { h: '§2 Υπηρεσίες PDR Connect', list: ['Προώθηση προφίλ σε επιχειρήσεις-πελάτες', 'Ασφαλής επικοινωνία μέσω πλατφόρμας', 'Τιμολόγηση και διαχείριση πληρωμών', 'Μεταφορά αμοιβής μετά επαληθευμένη πληρωμή', 'Υποστήριξη καθ\' όλη τη διαδικασία'] },
+        { h: '§3 Αμοιβή Πλατφόρμας', p: '10% επί της συμφωνηθείσας καθαρής αξίας. Παράδειγμα: 1.000€ → 100€ PDR Connect, 900€ Τεχνικός. Αλλαγές γνωστοποιούνται 30 ημέρες νωρίτερα με δικαίωμα καταγγελίας.' },
+        { h: '§4 Όροι Πληρωμής', p: 'Πληρωμή εντός 7 εργάσιμων από επαληθευμένη είσπραξη. Τιμολόγιο μόνο μετά επίσημη γνωστοποίηση. Παράκαμψη = σοβαρή παράβαση. Παρακράτηση μόνο στο αναγκαίο μέτρο για έρευνα — αδιαμφισβήτητα ποσά αποδίδονται άμεσα.' },
+        { h: '§5 Υποχρεώσεις Τεχνικού', list: ['Πλήρες και αληθές προφίλ', 'Ενημερωμένα έγγραφα (ταυτότητα, Α1, πιστοποιητικά)', 'Τήρηση αναθέσεων', 'Επικοινωνία μόνο μέσω πλατφόρμας', 'Άμεση ειδοποίηση αδυναμίας εκτέλεσης', 'Επαγγελματική συμπεριφορά'] },
+        { h: '§6 Επαγγελματικά Πρότυπα', p: 'Εγγύηση αληθούς προφίλ. Εκτέλεση εργασιών κατά αναγνωρισμένα πρότυπα. Αναστολή/διαγραφή προφίλ για παραβάσεις, πλαστά έγγραφα ή επανειλημμένες παραβάσεις.' },
+        { h: '§7 Ανεξάρτητος Επαγγελματίας', p: 'Δεν δημιουργείται σχέση εξαρτημένης εργασίας. Ο Τεχνικός ευθύνεται για: φορολογική συμμόρφωση, εισφορές, ασφάλιση ευθύνης, εργατική/μεταναστευτική νομοθεσία. Η PDR Connect δεν παρέχει εργοδοτικές παροχές.' },
+        { h: '§8 Προστασία Δεδομένων & ΓΚΠΔ', p: 'Επεξεργασία βάσει Κανονισμού (ΕΕ) 2016/679. Δικαιώματα: πρόσβαση (Αρθ. 15), διόρθωση (Αρθ. 16), διαγραφή (Αρθ. 17), περιορισμός (Αρθ. 18), φορητότητα (Αρθ. 20), εναντίωση (Αρθ. 21). Επικοινωνία: datenschutz@cybratech-solutions.com' },
+        { h: '§9 Εμπιστευτικότητα', p: 'Εμπιστευτικότητα πληροφοριών πελατών και επαγγελματικών στοιχείων για 3 χρόνια μετά τη λήξη. Αμοιβαία υποχρέωση εμπιστευτικότητας.' },
+        { h: '§10 Ευθύνη', p: 'Απεριόριστη για δόλο, βαριά αμέλεια και σωματικές βλάβες. Για ελαφρά αμέλεια: μόνο κατά παραβίαση ουσιωδών υποχρεώσεων, περιορισμένη σε προβλέψιμες ζημίες. Εξαίρεση: αποτυχία πληρωμής πελατών, διαφορές ποιότητας, διαφυγόν κέρδος.' },
+        { h: '§11 Επίλυση Διαφορών & Παρακράτηση', p: 'Κατά διαφορές Πελάτη-Τεχνικού: παρακράτηση έως 30 ημέρες. Αδιαμφισβήτητα ποσά: αποδίδονται εντός 7 εργάσιμων. Η PDR Connect δεν αποφαίνεται επί της ουσίας. ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§12 Διαθεσιμότητα Πλατφόρμας', p: 'Αποσκοπεί σε υψηλή διαθεσιμότητα. Γνωστοποίηση προγραμματισμένων συντηρήσεων. Δεν ευθύνεται για βλάβες εκτός ελέγχου.' },
+        { h: '§13 Διάρκεια και Καταγγελία', p: 'Αόριστη διάρκεια από εγγραφή. 14 ημέρες προειδοποίηση. Άμεση καταγγελία για: επανειλημμένες παραβάσεις, παράκαμψη πληρωμών, πλαστά έγγραφα, απάτη.' },
+        { h: '§14 Τροποποιήσεις', p: 'Ουσιαστικές αλλαγές: 30 ημέρες γνωστοποίηση + δικαίωμα καταγγελίας. Η συνέχιση = αποδοχή. Μη ουσιαστικές: χωρίς προειδοποίηση.' },
+        { h: '§15 Εφαρμοστέο Δίκαιο & Δικαιοδοσία', p: 'Δίκαιο Κύπρου. Αποκλειστική δικαιοδοσία: Λευκωσία, εκτός υποχρεωτικών ευρωπαϊκών/εθνικών διατάξεων. ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§16 Διατηρητέα Ισχύς', p: 'Άκυρες ή ανεκτέλεστες διατάξεις αντικαθίστανται από έγκυρες που εξυπηρετούν τον ίδιο οικονομικό σκοπό. Οι υπόλοιπες διατάξεις παραμένουν σε ισχύ.' },
       ],
     },
   },
 
-  /* ─────────────── SPANISH ─────────────── */
+  /* ═══════════════════════════════════════════════════════════
+     SPANISH  (ES)
+  ═══════════════════════════════════════════════════════════ */
   es: {
     pageTitle: 'Contratos de Plataforma',
-    pageSubtitle: 'Dos versiones de contrato — para Clientes y para Técnicos/Trabajadores',
+    pageSubtitle: 'Dos versiones — para Clientes y para Técnicos/Trabajadores',
     tabClient: '🏢 Para Clientes / Contratistas',
     tabWorker: '🔧 Para Técnicos / Trabajadores',
     client: {
@@ -491,64 +495,21 @@ const CONTRACTS: Record<string, ContractSet> = {
       },
       intro: 'Este Acuerdo regula los servicios de colocación proporcionados por PDR Connect al Cliente. Al registrarse en la plataforma PDR Connect, el Cliente acepta este Acuerdo en su totalidad.',
       sections: [
-        {
-          h: '§1 Objeto del Acuerdo',
-          p: 'PDR Connect proporciona servicios profesionales de colocación de personal, buscando y presentando al Cliente técnicos PDR verificados y profesionales del automóvil a través de la plataforma PDR Connect (pdrconnect.com).',
-        },
-        {
-          h: '§2 Servicios Proporcionados por PDR Connect',
-          p: 'PDR Connect proporciona los siguientes servicios al Cliente:',
-          list: [
-            'Identificación y presentación de técnicos verificados que cumplan los requisitos del Cliente',
-            'Verificación de credenciales profesionales, certificaciones y documentos de identidad',
-            'Facilitación de comunicación segura entre Cliente y Técnico a través de la plataforma',
-            'Emisión de todas las facturas y procesamiento de todos los pagos',
-            'Apoyo continuo durante todo el proceso de colocación',
-          ],
-        },
-        {
-          h: '§3 Servicio de Plataforma — Cliente (Actualmente Gratuito)',
-          p: '(1) Durante la fase de lanzamiento actual, PDR Connect proporciona sus servicios de colocación y matching a los Clientes de forma gratuita. No se cobra ninguna tarifa de plataforma al Cliente.\n(2) Los Clientes pagan únicamente la remuneración acordada del técnico según la factura emitida por PDR Connect. No se aplica ningún cargo adicional de plataforma.\n(3) Ejemplo: Si la remuneración acordada del técnico es de €1.000, el Cliente recibe una factura por exactamente €1.000.\n(4) PDR Connect se reserva el derecho de introducir una tarifa de servicio de plataforma para Clientes en el futuro. Los Clientes serán notificados con al menos 30 días de aviso previo antes de que dicha tarifa entre en vigor.',
-        },
-        {
-          h: '§4 Condiciones de Pago',
-          p: '(1) Como Cliente/Contratista, tiene acceso libre y gratuito a nuestra plataforma. Sin embargo, en caso de que surja alguna obligación de pago, se aplican las siguientes condiciones:\n(2) Todas las facturas son pagaderas a PDR Connect (Cybratech Solutions Ltd.) dentro de los 14 días siguientes a la fecha de la factura.\n(3) Todos los pagos deben transferirse exclusivamente a PDR Connect. Los pagos directos del Cliente a los Técnicos fuera de la plataforma están estrictamente prohibidos.\n(4) En caso de elusión de pagos, PDR Connect se reserva el derecho de suspender la cuenta, facturar la tarifa pendiente más un recargo y emprender acciones legales.\n(5) Los pagos tardíos pueden estar sujetos a intereses legales conforme a la ley chipriota aplicable.',
-        },
-        {
-          h: '§5 Obligaciones del Cliente',
-          list: [
-            'Proporcionar requisitos de trabajo precisos y completos al solicitar colocaciones',
-            'Garantizar un entorno de trabajo seguro, legal y profesionalmente apropiado para todos los técnicos colocados',
-            'Cumplir con todas las leyes laborales aplicables en el país donde trabaja el técnico',
-            'Respetar todos los términos acordados de la asignación incluyendo duración, alcance y remuneración',
-            'Realizar todas las comunicaciones con los Técnicos exclusivamente a través de la plataforma PDR Connect',
-            'No establecer relaciones de empleo o servicio directas con técnicos colocados fuera de PDR Connect',
-          ],
-        },
-        {
-          h: '§6 Verificación del Técnico y Garantía',
-          p: '(1) PDR Connect garantiza que todos los técnicos presentados han sido verificados mediante documentación oficial.\n(2) PDR Connect no garantiza resultados específicos de trabajo, niveles de productividad ni resultados concretos.\n(3) El Cliente es responsable de evaluar la idoneidad de los técnicos presentados para sus requisitos específicos.',
-        },
-        {
-          h: '§7 Responsabilidad',
-          p: '(1) La responsabilidad de PDR Connect se limita a las tarifas de plataforma totales pagadas por el Cliente para la asignación relevante.\n(2) PDR Connect no es responsable de disputas sobre calidad del trabajo, daños derivados de la conducta del técnico o pérdidas consecuentes.\n(3) El Cliente asume plena responsabilidad por el cumplimiento de las normativas laborales y fiscales locales en el país de trabajo.',
-        },
-        {
-          h: '§8 Confidencialidad',
-          p: '(1) Ambas Partes acuerdan mantener confidenciales todos los términos comerciales y detalles de asignación.\n(2) Los datos del Cliente se procesan conforme a la Política de Privacidad de PDR Connect y el RGPD aplicable.',
-        },
-        {
-          h: '§9 Vigencia y Rescisión',
-          p: '(1) Este Acuerdo es efectivo desde la fecha de registro del Cliente en la plataforma PDR Connect.\n(2) Cualquiera de las Partes puede rescindir este Acuerdo con 14 días de aviso escrito a info@cybratech-solutions.com.\n(3) La rescisión no afecta a las obligaciones de pago de asignaciones activas en curso.\n(4) En casos de incumplimiento grave, PDR Connect puede rescindir este Acuerdo con efecto inmediato.',
-        },
-        {
-          h: '§10 Ley Aplicable y Jurisdicción',
-          p: 'Este Acuerdo se rige exclusivamente por las leyes de la República de Chipre. Las disputas se resolverán ante los tribunales competentes de Nicosia, Chipre.',
-        },
-        {
-          h: '§11 Modificaciones',
-          p: 'PDR Connect se reserva el derecho de modificar estos términos con 30 días de aviso previo. El uso continuado de la plataforma tras el período de aviso constituye aceptación de los términos modificados.',
-        },
+        { h: '§1 Objeto', p: 'PDR Connect actúa exclusivamente como intermediario de colocación de profesionales. PDR Connect no se convierte en parte del contrato celebrado entre el Cliente y el Técnico.' },
+        { h: '§2 Servicios', list: ['Identificación de técnicos verificados', 'Verificación de credenciales y documentos', 'Comunicación segura a través de la plataforma', 'Emisión de facturas y gestión de pagos', 'Asistencia continua'] },
+        { h: '§3 Tarifa — Cliente (Gratuito)', p: 'Sin tarifa de plataforma durante el lanzamiento. Los cambios futuros se notifican con 30 días de antelación con derecho a rescisión.' },
+        { h: '§4 Condiciones de Pago', p: 'En caso de elusión de pagos, PDR Connect podrá retener pagos sólo en la medida necesaria para la investigación. Los importes no controvertidos se liberan de inmediato. Intereses de demora según Directiva UE 2011/7/UE.' },
+        { h: '§5 Obligaciones del Cliente', list: ['Requisitos precisos', 'Entorno seguro', 'Cumplimiento normativa laboral', 'Respetar condiciones acordadas', 'Comunicación sólo vía plataforma', 'Sin relaciones directas con técnicos'] },
+        { h: '§6 Verificación', p: 'PDR Connect verifica identidad pero no garantiza resultados. El Cliente evalúa la idoneidad.' },
+        { h: '§7 Protección de Datos & RGPD', p: 'Tratamiento según Reglamento (UE) 2016/679 (RGPD). Derechos: acceso, rectificación, supresión, portabilidad, oposición. Contacto: datenschutz@cybratech-solutions.com' },
+        { h: '§8 Confidencialidad', p: 'Confidencialidad de todos los términos comerciales durante 3 años tras la finalización.' },
+        { h: '§9 Responsabilidad', p: 'Responsabilidad ilimitada por dolo, negligencia grave y daños personales. Por negligencia leve: sólo por incumplimiento de obligaciones esenciales, limitada a daños previsibles. Se excluye lucro cesante y daños indirectos.' },
+        { h: '§10 Resolución de Disputas', p: 'PDR Connect puede retener pagos durante disputas sin pronunciarse sobre el fondo. Plataforma ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§11 Disponibilidad', p: 'Se esfuerza por alta disponibilidad sin garantizarla. Sin responsabilidad por fallos fuera de su control.' },
+        { h: '§12 Vigencia y Rescisión', p: 'Vigencia indefinida. Rescisión con 14 días. Rescisión inmediata por causa grave.' },
+        { h: '§13 Modificaciones', p: 'Cambios materiales notificados 30 días antes con derecho a rescisión. El uso continuado implica aceptación.' },
+        { h: '§14 Ley Aplicable', p: 'Derecho chipriota. Jurisdicción: Nicosia, salvo normas imperativas de consumidor UE. ODR disponible.' },
+        { h: '§15 Cláusula Salvatoria', p: 'Si alguna cláusula es inválida, las demás permanecen vigentes. Se reemplaza por una cláusula válida de igual propósito.' },
       ],
     },
     worker: {
@@ -560,66 +521,24 @@ const CONTRACTS: Record<string, ContractSet> = {
         operator: 'PDR Connect, operado por Cybratech Solutions Ltd., Efesou 9, 5280 Paralimni, República de Chipre, NIF CY60015676H — en adelante "PDR Connect"',
         client: 'El profesional individual registrado en la plataforma — en adelante "Técnico"',
       },
-      intro: 'Este Acuerdo regula los servicios de colocación proporcionados por PDR Connect al Técnico. Al registrarse en la plataforma PDR Connect, el Técnico acepta este Acuerdo en su totalidad.',
+      intro: 'Este Acuerdo de Colocación y Servicios rige la relación jurídica entre PDR Connect y el Técnico. Al registrarse en la plataforma PDR Connect, el Técnico acepta este Acuerdo con carácter legalmente vinculante.',
       sections: [
-        {
-          h: '§1 Objeto del Acuerdo',
-          p: 'PDR Connect proporciona servicios profesionales de colocación, conectando al Técnico con empresas clientes que necesitan profesionales cualificados del automóvil, a través de la plataforma PDR Connect (pdrconnect.com).',
-        },
-        {
-          h: '§2 Servicios Proporcionados por PDR Connect',
-          p: 'PDR Connect proporciona los siguientes servicios al Técnico:',
-          list: [
-            'Promoción activa del perfil del Técnico a empresas clientes que buscan especialistas',
-            'Facilitación de comunicación segura entre Técnico y posibles Clientes a través de la plataforma',
-            'Emisión de todas las facturas a los Clientes y procesamiento de todos los pagos',
-            'Transferencia de los ingresos del Técnico (menos la tarifa de plataforma) al recibir el pago del Cliente',
-            'Apoyo y asistencia durante todo el proceso de colocación',
-          ],
-        },
-        {
-          h: '§3 Tarifa de Plataforma — Técnico',
-          p: '(1) PDR Connect retiene una tarifa de servicio de plataforma del 10% del valor total acordado de la asignación como tarifa de colocación y administración.\n(2) Esta tarifa se deduce del valor acordado de la asignación antes de transferir el resto al Técnico.\n(3) Ejemplo: Para una asignación con un valor acordado de €1.000, PDR Connect retiene €100 (10%) y el Técnico recibe €900.\n(4) La tarifa cubre: marketing del perfil, matching con clientes, comunicación segura, administración de contratos y procesamiento de pagos.\n(5) PDR Connect se reserva el derecho de ajustar la tarifa con 30 días de aviso previo.',
-        },
-        {
-          h: '§4 Condiciones de Pago para Técnicos / Trabajadores',
-          p: '(1) PDR Connect transferirá los ingresos del Técnico/Trabajador dentro de los 7 días hábiles siguientes a la recepción de la Factura emitida por el Técnico/Trabajador Y después de que PDR Connect haya revisado y aprobado dicha Factura.\n(2) Los Técnicos/Trabajadores únicamente podrán emitir una Factura a PDR Connect (Cybratech Solutions Ltd.) después de haber sido notificados formalmente por PDR Connect de que el pago íntegro del Cliente ha sido recibido por la Plataforma. Las facturas emitidas con anterioridad a dicha notificación no son válidas y no serán procesadas.\n(3) El Técnico no debe solicitar, aceptar ni facilitar pagos directos de Clientes que eludan la plataforma PDR Connect. Tal conducta constituye un incumplimiento grave del presente Acuerdo.\n(4) En caso de elusión de pagos, PDR Connect se reserva el derecho de suspender inmediatamente el perfil del Técnico, retener cualquier pago pendiente y ejercer todos los recursos legales disponibles.\n(5) Los ingresos aprobados se transfieren exclusivamente a la cuenta bancaria proporcionada por el Técnico en su perfil de la plataforma. El Técnico es el único responsable de mantener sus datos bancarios correctos y actualizados.\n(6) Todas las Facturas deben emitirse a: Cybratech-Solutions · Efesou 9, 5280 Paralimni, Chipre · NIF: CY60015676H.',
-        },
-        {
-          h: '§5 Obligaciones del Técnico',
-          list: [
-            'Mantener un perfil preciso, completo y actualizado con certificaciones, cualificaciones y disponibilidad',
-            'Cargar y mantener toda la documentación requerida (DNI válido, certificado A1 cuando proceda, certificaciones)',
-            'Respetar todas las colocaciones aceptadas y los términos de asignación acordados',
-            'Realizar todas las comunicaciones con Clientes exclusivamente a través de la plataforma PDR Connect',
-            'Notificar a PDR Connect de inmediato en caso de imposibilidad de cumplir una colocación aceptada',
-            'Mantener una conducta profesional y los estándares del sector en todas las asignaciones',
-          ],
-        },
-        {
-          h: '§6 Estándares Profesionales y Cualificaciones',
-          p: '(1) El Técnico garantiza que todas las cualificaciones, experiencia y certificaciones declaradas son precisas, genuinas y vigentes.\n(2) El Técnico se compromete a realizar todo el trabajo conforme a los estándares profesionales reconocidos del sector.\n(3) PDR Connect puede suspender el perfil de un Técnico en caso de mala conducta profesional verificada, documentación fraudulenta o incumplimientos reiterados.',
-        },
-        {
-          h: '§7 Condición de Contratista Independiente',
-          p: '(1) El Técnico opera como proveedor de servicios independiente. Este Acuerdo no establece una relación laboral entre el Técnico y PDR Connect.\n(2) El Técnico es el único responsable de: todos los impuestos y cotizaciones a la seguridad social aplicables, seguro de responsabilidad civil profesional, y cumplimiento de la normativa laboral y de inmigración en el país de trabajo.\n(3) PDR Connect no proporciona beneficios de empleado, vacaciones pagadas ni cotizaciones a la seguridad social en nombre del Técnico.',
-        },
-        {
-          h: '§8 Confidencialidad',
-          p: '(1) El Técnico acuerda mantener confidencial toda la información del Cliente, detalles de asignación y términos comerciales.\n(2) Los datos personales del Técnico se procesan conforme a la Política de Privacidad de PDR Connect y el RGPD aplicable.',
-        },
-        {
-          h: '§9 Vigencia y Rescisión',
-          p: '(1) Este Acuerdo es efectivo desde la fecha de registro del Técnico en la plataforma PDR Connect.\n(2) Cualquiera de las Partes puede rescindir este Acuerdo con 14 días de aviso escrito a info@cybratech-solutions.com.\n(3) La rescisión no afecta a las obligaciones de pago de asignaciones completadas o activas.\n(4) En casos de incumplimiento grave, conducta fraudulenta o falsificación de documentos, PDR Connect puede rescindir con efecto inmediato.',
-        },
-        {
-          h: '§10 Ley Aplicable y Jurisdicción',
-          p: 'Este Acuerdo se rige exclusivamente por las leyes de la República de Chipre. Las disputas se resolverán ante los tribunales competentes de Nicosia, Chipre.',
-        },
-        {
-          h: '§11 Modificaciones',
-          p: 'PDR Connect se reserva el derecho de modificar estos términos con 30 días de aviso previo. El uso continuado de la plataforma tras el período de aviso constituye aceptación de los términos modificados.',
-        },
+        { h: '§1 Objeto', p: 'PDR Connect actúa exclusivamente como intermediario para conectar técnicos con empresas clientes a través de pdrconnect.eu. No se convierte en parte del contrato entre Técnico y Cliente.' },
+        { h: '§2 Servicios PDR Connect', list: ['Promoción activa del perfil', 'Comunicación segura con clientes', 'Facturación y gestión de pagos', 'Transferencia de honorarios tras pago verificado', 'Asistencia durante todo el proceso'] },
+        { h: '§3 Tarifa de Plataforma', p: '10% del valor neto acordado. Ejemplo: 1.000€ → 100€ PDR Connect, 900€ Técnico. Cambios con 30 días de antelación y derecho a rescisión.' },
+        { h: '§4 Condiciones de Pago', p: 'Pago en 7 días hábiles tras recepción verificada. Factura sólo tras notificación oficial. Elusión = incumplimiento grave. Retención sólo en medida necesaria para investigación — importes no controvertidos se liberan de inmediato.' },
+        { h: '§5 Obligaciones del Técnico', list: ['Perfil completo y veraz', 'Documentos actualizados (DNI, A1, certificados)', 'Cumplir asignaciones aceptadas', 'Comunicación sólo vía plataforma', 'Notificar incumplimiento inmediatamente', 'Conducta profesional'] },
+        { h: '§6 Estándares Profesionales', p: 'Garantía de perfil veraz. Trabajo conforme a estándares del sector. Suspensión/eliminación por mala conducta, documentos falsos o infracciones reiteradas.' },
+        { h: '§7 Contratista Independiente', p: 'No se crea relación laboral. El Técnico es responsable de: impuestos, cotizaciones, seguros, normativa laboral/migratoria. PDR Connect no proporciona beneficios laborales.' },
+        { h: '§8 Protección de Datos & RGPD', p: 'Tratamiento según Reglamento (UE) 2016/679 (RGPD). Derechos: acceso (Art. 15), rectificación (Art. 16), supresión (Art. 17), limitación (Art. 18), portabilidad (Art. 20), oposición (Art. 21). Contacto: datenschutz@cybratech-solutions.com' },
+        { h: '§9 Confidencialidad', p: 'Confidencialidad de información de clientes durante 3 años tras finalización. Obligación mutua.' },
+        { h: '§10 Responsabilidad', p: 'Ilimitada por dolo, negligencia grave y daños personales. Por negligencia leve: sólo obligaciones esenciales, limitada a daños previsibles. Se excluye: fallo de pago de clientes, disputas de calidad, lucro cesante.' },
+        { h: '§11 Resolución de Disputas & Retención', p: 'Retención hasta 30 días en disputas. Importes no controvertidos en 7 días hábiles. PDR Connect no decide sobre el fondo. ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§12 Disponibilidad', p: 'Alta disponibilidad sin garantía de continuidad. Sin responsabilidad por fallos fuera de control.' },
+        { h: '§13 Vigencia y Rescisión', p: 'Indefinida desde el registro. Rescisión con 14 días. Rescisión inmediata por: incumplimiento reiterado, elusión de pagos, documentos falsos, fraude.' },
+        { h: '§14 Modificaciones', p: 'Cambios materiales: 30 días + derecho a rescisión. Uso continuado = aceptación. Cambios no materiales: sin preaviso.' },
+        { h: '§15 Ley Aplicable & Jurisdicción', p: 'Derecho chipriota. Jurisdicción: Nicosia, salvo disposiciones imperativas de protección UE. ODR: https://ec.europa.eu/consumers/odr/' },
+        { h: '§16 Cláusula Salvatoria', p: 'Las disposiciones inválidas se reemplazan por disposiciones válidas de igual propósito económico. Las demás disposiciones permanecen en vigor.' },
       ],
     },
   },

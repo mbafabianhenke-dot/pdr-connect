@@ -9,7 +9,7 @@ import {
   Trash2, ExternalLink, CheckCircle, XCircle, User,
   FileText, AlertTriangle, Clock, Save, Eye, ImageIcon,
   Calendar, Globe, Briefcase, Lock, Unlock, MapPin,
-  Building2, Tag, Award, BookOpen, Download,
+  Building2, Tag, Award, BookOpen, Download, Send, Loader2,
 } from 'lucide-react';
 import { ROLE_LABELS, CRAFT_ROLES, COUNTRIES, BUNDESLAENDER, plzToBundesland } from '@/types/database';
 import { formatDate } from '@/lib/utils';
@@ -34,6 +34,69 @@ export default function UserDetailClient({
   const [profile, setProfile]     = useState(initialProfile);
   const [documents, setDocuments] = useState(initialDocs);
   const [saving, setSaving]       = useState(false);
+
+  /* ── Export with attachment selection ───────────────────────────────────── */
+  const [showExportModal, setShowExportModal] = useState(false);
+  const [exporting,       setExporting]       = useState(false);
+  const [emailTarget,     setEmailTarget]     = useState('');
+
+  // Selection state — default: everything checked
+  const [selDocs,        setSelDocs]        = useState<Set<string>>(new Set());
+  const [selContracts,   setSelContracts]   = useState<Set<string>>(new Set());
+  const [selGallery,     setSelGallery]     = useState<Set<number>>(new Set());
+  const [selAvatar,      setSelAvatar]      = useState(true);
+
+  // Open modal: initialise all items as selected
+  const openExportModal = () => {
+    setSelDocs(new Set(documents.map((d: any) => d.id)));
+    setSelContracts(new Set(contracts.map((c: any) => c.id)));
+    setSelGallery(new Set((profile.gallery_urls ?? []).map((_: any, i: number) => i)));
+    setSelAvatar(true);
+    setEmailTarget('');
+    setShowExportModal(true);
+  };
+
+  const toggleSet = <T,>(set: Set<T>, item: T): Set<T> => {
+    const next = new Set(set);
+    next.has(item) ? next.delete(item) : next.add(item);
+    return next;
+  };
+
+  const buildParams = () => {
+    const p = new URLSearchParams();
+    p.set('doc_ids',      Array.from(selDocs).join(','));
+    p.set('contract_ids', Array.from(selContracts).join(','));
+    p.set('gallery_idx',  Array.from(selGallery).join(','));
+    p.set('avatar',       selAvatar ? '1' : '0');
+    return p.toString();
+  };
+
+  const downloadProfile = () => {
+    window.open(
+      `/api/admin/export-profile/${profile.id}?action=download&${buildParams()}`,
+      '_blank'
+    );
+  };
+
+  const sendProfileEmail = async () => {
+    if (!emailTarget.trim()) { toast.error('Bitte E-Mail-Adresse eingeben'); return; }
+    setExporting(true);
+    try {
+      const url = `/api/admin/export-profile/${profile.id}?action=email&email=${encodeURIComponent(emailTarget)}&${buildParams()}`;
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (data.success) {
+        toast.success(`✅ Profil gesendet an ${emailTarget}`);
+        setShowExportModal(false);
+      } else {
+        toast.error('Fehler: ' + (data.error ?? 'Unbekannt'));
+      }
+    } catch (e: any) {
+      toast.error(e.message);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   // ── Basic fields ─────────────────────────────────────────────────────────
   const [editName,    setEditName]    = useState(profile.full_name ?? '');
@@ -266,6 +329,16 @@ export default function UserDetailClient({
             <p className="text-xs text-gray-400 mt-1">ID: <span className="font-mono">{profile.id}</span></p>
           </div>
 
+          {/* Export button — opens attachment selection modal */}
+          <div className="flex flex-wrap gap-2 mb-2">
+            <button
+              onClick={openExportModal}
+              className="flex items-center gap-1.5 rounded-lg bg-indigo-600 text-white px-3 py-2 text-xs font-semibold hover:bg-indigo-700 transition"
+            >
+              <Download className="h-3.5 w-3.5" /> Profil exportieren
+            </button>
+          </div>
+
           {/* Quick actions */}
           <div className="flex flex-wrap gap-2">
             <button onClick={() => toggle('is_blocked', profile.is_blocked)}
@@ -391,21 +464,36 @@ export default function UserDetailClient({
         {/* Standort */}
         <div className="card">
           <SectionTitle icon={<MapPin className="h-4 w-4 text-blue-500"/>}>
-            Standort (Deutschland)
+            Physischer Standort
+            <span className="ml-2 text-xs font-normal text-gray-400">(wo der User wohnt/basiert)</span>
           </SectionTitle>
+
+          {/* Current available countries summary */}
+          <div className="mb-3 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2">
+            <p className="text-xs text-blue-700 font-medium">
+              🌍 Aktiv in: {profile.available_countries?.length
+                ? profile.available_countries.join(', ')
+                : <span className="text-gray-400">Keine Länder ausgewählt</span>
+              }
+            </p>
+            <p className="text-xs text-blue-500 mt-0.5">
+              ℹ️ "Aktiv in" = Länder wo der User Aufträge annimmt (unten änderbar). Nicht sein Wohnort.
+            </p>
+          </div>
+
           <div className="space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Postleitzahl (PLZ)</label>
+              <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Postleitzahl (PLZ) — nur für DE</label>
               <input
                 value={editPlz}
                 onChange={e => setEditPlz(e.target.value)}
                 className="input"
-                placeholder="z.B. 80331"
+                placeholder="z.B. 80331 (optional)"
                 maxLength={5}
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Bundesland</label>
+              <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">Bundesland — nur für DE</label>
               <select value={editBundesland} onChange={e => setEditBundesland(e.target.value)} className="input">
                 <option value="">— kein Bundesland —</option>
                 {BUNDESLAENDER.map(bl => (
@@ -424,6 +512,19 @@ export default function UserDetailClient({
           <SectionTitle icon={<Building2 className="h-4 w-4 text-orange-500"/>}>
             {t('profile.companySection')}
           </SectionTitle>
+          {/* Show current DB state */}
+          {!profile.company_name && !profile.company_street && (
+            <div className="mb-3 rounded-lg bg-amber-50 border border-amber-200 px-3 py-2">
+              <p className="text-xs text-amber-700 font-medium">⚠️ Keine Firmeninformationen eingetragen</p>
+              <p className="text-xs text-amber-600 mt-0.5">Der User hat die Firmenfelder noch nicht ausgefüllt und gespeichert.</p>
+            </div>
+          )}
+          {profile.company_name && (
+            <div className="mb-3 rounded-lg bg-green-50 border border-green-100 px-3 py-2">
+              <p className="text-xs text-green-700 font-medium">✅ Gespeichert: {profile.company_name}</p>
+              <p className="text-xs text-gray-400">{[profile.company_street, profile.company_house_number, profile.company_zip, profile.company_country].filter(Boolean).join(', ')}</p>
+            </div>
+          )}
           <div className="space-y-3">
             <div>
               <label className="block text-xs font-semibold text-gray-500 mb-1 uppercase tracking-wide">{t('profile.companyName')}</label>
@@ -647,12 +748,15 @@ export default function UserDetailClient({
                 <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${c.signed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
                   {c.signed ? `Unterzeichnet ${c.signed_at ? formatDate(c.signed_at) : ''}` : 'Ausstehend'}
                 </span>
-                {c.pdf_url && (
-                  <a href={c.pdf_url} target="_blank" rel="noopener noreferrer"
-                    className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition" title="PDF öffnen">
-                    <Download className="h-3.5 w-3.5"/>
-                  </a>
-                )}
+                {/* Always use view API — handles private storage + generates HTML for agb/privacy */}
+                <a href={`/api/contracts/${c.id}/view`} target="_blank" rel="noopener noreferrer"
+                  className="rounded-lg bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 transition" title="Ansehen / Herunterladen">
+                  <Eye className="h-3.5 w-3.5"/>
+                </a>
+                <a href={`/api/contracts/${c.id}/view?download=1`} target="_blank" rel="noopener noreferrer"
+                  className="rounded-lg bg-indigo-50 p-2 text-indigo-600 hover:bg-indigo-100 transition" title="Herunterladen">
+                  <Download className="h-3.5 w-3.5"/>
+                </a>
               </div>
             ))}
           </div>
@@ -773,6 +877,239 @@ export default function UserDetailClient({
                 <p className="text-sm font-mono text-orange-800 mt-1 bg-orange-100 rounded px-2 py-1">{v.detected_pattern}</p>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* ══════════════════════════════════════════════════════════════
+          EXPORT MODAL — Anhänge auswählen
+      ══════════════════════════════════════════════════════════════ */}
+      {showExportModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+
+            {/* Header */}
+            <div className="bg-gradient-to-r from-indigo-600 to-indigo-800 px-6 py-4 flex-shrink-0">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Download className="h-5 w-5" /> Profil exportieren
+                  </h2>
+                  <p className="text-indigo-200 text-sm mt-0.5">{profile.full_name} — Anhänge auswählen</p>
+                </div>
+                <button
+                  onClick={() => setShowExportModal(false)}
+                  className="text-white/70 hover:text-white text-2xl leading-none transition"
+                >
+                  ×
+                </button>
+              </div>
+            </div>
+
+            {/* Scrollable content */}
+            <div className="overflow-y-auto flex-1 px-6 py-4 space-y-5">
+
+              {/* ── Profildaten (immer enthalten) ── */}
+              <div className="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                  <span className="text-sm font-semibold text-gray-700">Profildaten</span>
+                  <span className="ml-auto text-xs text-gray-400 bg-gray-200 rounded-full px-2 py-0.5">Immer enthalten</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1 ml-6">Name, E-Mail, Telefon, Firmendaten, Rollen, Länder, Bio</p>
+              </div>
+
+              {/* ── Profilfoto ── */}
+              {profile.avatar_url && (
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Profilfoto</p>
+                  <label className="flex items-center gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selAvatar}
+                      onChange={() => setSelAvatar(v => !v)}
+                      className="h-4 w-4 rounded border-gray-300 text-indigo-600"
+                    />
+                    <img src={profile.avatar_url} alt="" className="h-10 w-10 rounded-lg object-cover border border-gray-200" />
+                    <span className="text-sm text-gray-700">Profilfoto einschließen</span>
+                  </label>
+                </div>
+              )}
+
+              {/* ── Dokumente ── */}
+              {documents.length > 0 && (
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Dokumente ({documents.length})</p>
+                    <div className="flex gap-2 text-xs">
+                      <button
+                        onClick={() => setSelDocs(new Set(documents.map((d: any) => d.id)))}
+                        className="text-indigo-600 hover:underline"
+                      >Alle</button>
+                      <span className="text-gray-300">|</span>
+                      <button
+                        onClick={() => setSelDocs(new Set())}
+                        className="text-gray-400 hover:underline"
+                      >Keine</button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {documents.map((doc: any) => {
+                      const DOC_LABELS: Record<string, string> = {
+                        EU_ID: '🪪 EU-Ausweis / Reisepass', A1: '📄 A1-Bescheinigung',
+                        TRAVEL_DOC: '✈️ Reisedokument', COMPANY_DOC: '🏢 Firmenunterlage',
+                        IDENTITY_DOC: '🪪 Reisepass', GALLERY_IMAGE: '🖼️ Galerie',
+                      };
+                      return (
+                        <label key={doc.id} className="flex items-center gap-3 cursor-pointer py-1.5 px-2 rounded-lg hover:bg-gray-50 transition">
+                          <input
+                            type="checkbox"
+                            checked={selDocs.has(doc.id)}
+                            onChange={() => setSelDocs(s => toggleSet(s, doc.id))}
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-sm text-gray-800">{DOC_LABELS[doc.type] ?? doc.type}</span>
+                          </div>
+                          <span className={`text-xs font-semibold rounded-full px-2 py-0.5 flex-shrink-0 ${
+                            doc.status === 'verified' ? 'bg-green-100 text-green-700'
+                            : doc.status === 'rejected' ? 'bg-red-100 text-red-700'
+                            : 'bg-amber-100 text-amber-700'
+                          }`}>
+                            {doc.status === 'verified' ? '✓ Verifiziert' : doc.status === 'rejected' ? '✗ Abgelehnt' : '⏳ Ausstehend'}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Verträge / AGB / Datenschutz ── */}
+              {contracts.length > 0 && (
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Verträge & Rechtsdokumente ({contracts.length})</p>
+                    <div className="flex gap-2 text-xs">
+                      <button onClick={() => setSelContracts(new Set(contracts.map((c: any) => c.id)))} className="text-indigo-600 hover:underline">Alle</button>
+                      <span className="text-gray-300">|</span>
+                      <button onClick={() => setSelContracts(new Set())} className="text-gray-400 hover:underline">Keine</button>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    {contracts.map((c: any) => {
+                      const vLabel: Record<string, string> = {
+                        agb: '📋 AGB', privacy: '🔒 Datenschutz',
+                        worker: '🔧 Techniker-Vertrag', client: '🏢 Kunden-Vertrag',
+                      };
+                      return (
+                        <label key={c.id} className="flex items-center gap-3 cursor-pointer py-1.5 px-2 rounded-lg hover:bg-gray-50 transition">
+                          <input
+                            type="checkbox"
+                            checked={selContracts.has(c.id)}
+                            onChange={() => setSelContracts(s => toggleSet(s, c.id))}
+                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 flex-shrink-0"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <span className="text-sm text-gray-800">{vLabel[c.version] ?? c.version}</span>
+                            <span className="text-xs text-gray-400 ml-2">{c.language?.toUpperCase()}</span>
+                          </div>
+                          <span className={`text-xs font-semibold rounded-full px-2 py-0.5 flex-shrink-0 ${c.signed ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
+                            {c.signed ? `✓ ${c.signed_at ? new Date(c.signed_at).toLocaleDateString('de-DE') : 'Unterzeichnet'}` : '⏳ Ausstehend'}
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* ── Galerie-Bilder ── */}
+              {(profile.gallery_urls ?? []).length > 0 && (
+                <div className="rounded-xl border border-gray-200 p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Galerie-Bilder ({(profile.gallery_urls ?? []).length})</p>
+                    <div className="flex gap-2 text-xs">
+                      <button onClick={() => setSelGallery(new Set((profile.gallery_urls ?? []).map((_: any, i: number) => i)))} className="text-indigo-600 hover:underline">Alle</button>
+                      <span className="text-gray-300">|</span>
+                      <button onClick={() => setSelGallery(new Set())} className="text-gray-400 hover:underline">Keine</button>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(profile.gallery_urls as string[]).map((url, i) => (
+                      <label key={i} className="relative cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={selGallery.has(i)}
+                          onChange={() => setSelGallery(s => toggleSet(s, i))}
+                          className="sr-only"
+                        />
+                        <div className={`relative rounded-lg overflow-hidden border-2 transition ${selGallery.has(i) ? 'border-indigo-500' : 'border-transparent'}`}>
+                          <img src={url} alt="" className="w-full h-20 object-cover" />
+                          {selGallery.has(i) && (
+                            <div className="absolute inset-0 bg-indigo-500/20 flex items-center justify-center">
+                              <CheckCircle className="h-6 w-6 text-indigo-600 drop-shadow" />
+                            </div>
+                          )}
+                          {!selGallery.has(i) && (
+                            <div className="absolute inset-0 bg-black/30" />
+                          )}
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer — actions */}
+            <div className="border-t border-gray-100 px-6 py-4 flex-shrink-0 space-y-3 bg-gray-50">
+              {/* Summary */}
+              <p className="text-xs text-gray-500 text-center">
+                <span className="font-semibold text-gray-700">
+                  {selDocs.size} Dokument{selDocs.size !== 1 ? 'e' : ''}
+                  {' · '}{selContracts.size} Vertrag/Verträge
+                  {' · '}{selGallery.size} Galerie-Bild{selGallery.size !== 1 ? 'er' : ''}
+                  {selAvatar && profile.avatar_url ? ' · Profilfoto' : ''}
+                </span>
+                {' '}ausgewählt
+              </p>
+
+              {/* Download button */}
+              <button
+                onClick={downloadProfile}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 text-sm transition"
+              >
+                <Download className="h-4 w-4" /> Herunterladen (HTML/PDF)
+              </button>
+
+              {/* Email section */}
+              <div className="flex gap-2">
+                <input
+                  type="email"
+                  value={emailTarget}
+                  onChange={e => setEmailTarget(e.target.value)}
+                  placeholder="E-Mail-Adresse für Versand..."
+                  className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-400"
+                  onKeyDown={e => e.key === 'Enter' && sendProfileEmail()}
+                />
+                <button
+                  onClick={sendProfileEmail}
+                  disabled={exporting || !emailTarget.trim()}
+                  className="flex items-center gap-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 text-sm transition disabled:opacity-50"
+                >
+                  {exporting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                  Senden
+                </button>
+              </div>
+
+              <button
+                onClick={() => setShowExportModal(false)}
+                className="w-full text-xs text-gray-400 hover:text-gray-600 py-1 transition"
+              >
+                Abbrechen
+              </button>
+            </div>
           </div>
         </div>
       )}

@@ -1,4 +1,28 @@
 {
+  "inquiry": {
+    "banner": "Browse technicians and click \"Add to Request\" on any profile you are interested in. Our team will handle the matching and contact you within 24h.",
+    "addToRequest": "Add to Request",
+    "added": "Added ✓",
+    "selectedCount": "{{count}} technician selected",
+    "selectedCount_plural": "{{count}} technicians selected",
+    "sendBtn": "Send Inquiry to PDR Connect",
+    "modalTitle": "Send Inquiry to PDR Connect",
+    "modalSub": "Our team will contact you within 24 hours",
+    "selectedTechs": "Selected Technicians",
+    "noTechs": "No specific technician — general inquiry",
+    "location": "Location / City",
+    "locationPlaceholder": "e.g. Munich, Germany",
+    "startDate": "Desired Start Date",
+    "budget": "Budget (optional)",
+    "budgetPlaceholder": "e.g. €800-1200 per day",
+    "message": "Your Message / Requirements",
+    "messagePlaceholder": "Describe your project, number of vehicles, type of damage, duration, any specific requirements...",
+    "notice": "Your inquiry and selected technician profiles are sent to the PDR Connect team. We will review and connect you with the best match within 24 hours.",
+    "cancel": "Cancel — do not send",
+    "send": "Send to PDR Connect",
+    "sending": "Sending...",
+    "success": "✅ Your request has been sent to our team! We will contact you shortly."
+  },
   "nav": {
     "dashboard": "Dashboard",
     "myOffer": "My Availability",
@@ -586,7 +610,11 @@
     "uploadSignedDesc": "Upload a PDF you have signed by hand or with an external tool (max 20 MB).",
     "uploadClient": "Upload Client Contract",
     "uploadWorker": "Upload Worker Contract",
-    "uploadSuccess": "Signed contract uploaded successfully."
+    "uploadSuccess": "Signed contract uploaded successfully.",
+    "agbContract": "Terms & Conditions (AGB)",
+    "privacyContract": "Privacy Policy (GDPR)",
+    "signedOn": "Signed on",
+    "accepted": "Accepted"
   },
   "admin": {
     "title": "Admin Panel",
@@ -856,6 +884,8 @@
     "badge": "Account Activation",
     "title": "Complete Your Profile",
     "subtitle": "Fill in all required fields and submit your profile for review. After approval you will get access to PDR Connect.",
+    "mandatoryBanner": "Company information required",
+    "mandatoryDesc": "Please fill in all required fields. Without complete company details you will not have access to the dashboard. EU companies must provide their VAT ID.",
     "signOut": "Sign Out",
     "step1Label": "Company Data",
     "step2Label": "Documents",

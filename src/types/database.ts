@@ -68,7 +68,7 @@ export function plzToBundesland(plz: string): string {
 
 /** Roles that are searchable craft professionals (excludes CUSTOMER) */
 export const CRAFT_ROLES: UserRole[] = ['PDR_TECHNICIAN', 'CAR_PAINTER', 'PREPARER', 'DISMANTLER'];
-export type DocType = 'EU_ID' | 'A1' | 'TRAVEL_DOC' | 'COMPANY_DOC' | 'GALLERY_IMAGE' | 'AVATAR';
+export type DocType = 'EU_ID' | 'A1' | 'TRAVEL_DOC' | 'COMPANY_DOC' | 'GALLERY_IMAGE' | 'AVATAR' | 'WORK_VISA';
 export type DocStatus = 'pending' | 'verified' | 'rejected';
 export type ContractLanguage = 'de' | 'en' | 'el' | 'es';
 

@@ -1,11 +1,15 @@
 /**
  * Client-side PDF generator for signed PDR Connect contracts.
  * Always generates in English (legally binding version) regardless of UI language.
- * Uses jsPDF text rendering — no external image conversion required.
+ * Uses jsPDF text rendering + real PDR Connect logo.
  */
 import { jsPDF } from 'jspdf';
 import CONTRACTS from './contract-content';
 import type { ContractDoc } from './contract-content';
+import {
+  loadLogoBase64, drawPDFHeader, drawPDFFooter,
+  C_BLUE, C_DARK, C_GRAY, C_LGRAY, C_WHITE,
+} from './pdf-header';
 
 export interface SignedContractParams {
   contractType: 'client' | 'worker';
@@ -14,16 +18,19 @@ export interface SignedContractParams {
   signatureDataUrl: string; // base64 PNG from SignaturePad
 }
 
-const BLUE: [number, number, number]    = [30,  64, 175];
-const DARK: [number, number, number]    = [17,  24,  39];
-const GRAY: [number, number, number]    = [107, 114, 128];
-const LGRAY: [number, number, number]   = [229, 231, 235];
+const BLUE   = C_BLUE;
+const DARK   = C_DARK;
+const GRAY   = C_GRAY;
+const LGRAY  = C_LGRAY;
+const WHITE  = C_WHITE;
 const BGBLUE: [number, number, number]  = [239, 246, 255];
-const WHITE: [number, number, number]   = [255, 255, 255];
 const BGDARK: [number, number, number]  = [249, 250, 251];
 
-export function generateContractPDF(params: SignedContractParams): Blob {
+export async function generateContractPDF(params: SignedContractParams): Promise<Blob> {
   const { contractType, signerName, signerEmail, signatureDataUrl } = params;
+
+  // Load logo before building PDF
+  const logoBase64 = await loadLogoBase64();
 
   // Always use English content for the legal PDF
   const set = CONTRACTS['en'];
@@ -37,28 +44,7 @@ export function generateContractPDF(params: SignedContractParams): Blob {
   const yRef = { v: M };
 
   // ─────────────── helpers ─────────────────────────────────────────────
-  const addFooter = () => {
-    const pg = pdf.getCurrentPageInfo().pageNumber;
-    // Footer separator line
-    pdf.setDrawColor(...LGRAY);
-    pdf.setLineWidth(0.3);
-    pdf.line(M, PH - 14, PW - M, PH - 14);
-    pdf.setLineWidth(0.2);
-    // Logo circle mini
-    pdf.setFillColor(30, 64, 175);
-    pdf.circle(M + 3.5, PH - 9, 3, 'F');
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(5.5);
-    pdf.setTextColor(...WHITE);
-    pdf.text('C', M + 3.5, PH - 7.8, { align: 'center' });
-    // Footer text
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(7.5);
-    pdf.setTextColor(...GRAY);
-    pdf.text('PDR Connect · Cybratech Solutions Ltd. · Efesou 9, 5280 Paralimni, Cyprus · CY60015676H · info@cybratech-solutions.com', M + 9, PH - 8);
-    pdf.text(`Page ${pg}`, PW - M, PH - 8, { align: 'right' });
-    pdf.setTextColor(...DARK);
-  };
+  const addFooter = () => drawPDFFooter(pdf, BLUE);
 
   const newPage = () => {
     addFooter();
@@ -115,33 +101,12 @@ export function generateContractPDF(params: SignedContractParams): Blob {
   }
   pdf.restoreGraphicsState();
 
-  // ─────────────── HEADER BAR ──────────────────────────────────────────
-  pdf.setFillColor(...BLUE);
-  pdf.rect(0, 0, PW, 24, 'F');
-
-  // Logo circle (white circle with "C" initial as placeholder for Cybratech logo)
-  pdf.setFillColor(...WHITE);
-  pdf.circle(M + 8, 12, 8, 'F');
-  pdf.setFont('helvetica', 'bold');
-  pdf.setFontSize(9);
-  pdf.setTextColor(30, 64, 175);
-  pdf.text('C', M + 8, 15, { align: 'center' });
-
-  // Brand text
-  pdf.setFont('helvetica', 'bold');
-  pdf.setFontSize(14);
-  pdf.setTextColor(...WHITE);
-  pdf.text('PDR CONNECT', M + 20, 10);
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(7.5);
-  pdf.setTextColor(191, 219, 254); // blue-200
-  pdf.text('by Cybratech Solutions Ltd.', M + 20, 16.5);
-
-  pdf.setFont('helvetica', 'normal');
-  pdf.setFontSize(8);
-  pdf.setTextColor(191, 219, 254);
-  pdf.text('Efesou 9, 5280 Paralimni, Cyprus · CY60015676H', PW - M, 12, { align: 'right' });
-  yRef.v = 32;
+  // ─────────────── HEADER (with real logo) ─────────────────────────────
+  yRef.v = drawPDFHeader(pdf, {
+    logoBase64,
+    accentColor: BLUE,
+    rightLabel: 'Efesou 9, 5280 Paralimni, Cyprus · CY60015676H',
+  });
 
   // Contract title
   pdf.setFont('helvetica', 'bold');

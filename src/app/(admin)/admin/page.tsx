@@ -4,6 +4,8 @@ import AdminTabs from './AdminTabs';
 
 export const dynamic = 'force-dynamic';
 
+interface PageProps { searchParams?: { tab?: string; id?: string } }
+
 /** Extract storage path from a full Supabase Storage URL */
 function extractStoragePath(fileUrl: string): string | null {
   try {
@@ -20,7 +22,8 @@ function extractStoragePath(fileUrl: string): string | null {
   }
 }
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: PageProps) {
+  const initialTab = (searchParams?.tab as string) ?? 'stats';
   const supabase = await createClient();
   const adminClient = createAdminClient();
 
@@ -66,9 +69,8 @@ export default async function AdminPage() {
       .order('created_at', { ascending: true }),
     supabase
       .from('job_requests')
-      .select('*, users(full_name, role)')
-      .eq('status', 'open')
-      .order('created_at', { ascending: true }),
+      .select('*, users(id, full_name, role, email, phone, company_name, avatar_url)')
+      .order('created_at', { ascending: false }),
     supabase
       .from('matches')
       .select('*, offers(available_from, available_until), job_requests(role_needed, location_city, location_country)')
@@ -123,6 +125,13 @@ export default async function AdminPage() {
     );
   }
 
+  // ── Load customer inquiries ──────────────────────────────────────────────
+  const { data: inquiries } = await supabase
+    .from('customer_inquiries')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(100);
+
   const stats = {
     total: userCount ?? 0,
     premium: premiumCount ?? 0,
@@ -144,7 +153,9 @@ export default async function AdminPage() {
       openOffers={openOffers ?? []}
       openRequests={openRequests ?? []}
       activeMatches={activeMatches ?? []}
+      inquiries={inquiries ?? []}
       stats={stats}
+      initialTab={initialTab}
     />
   );
 }

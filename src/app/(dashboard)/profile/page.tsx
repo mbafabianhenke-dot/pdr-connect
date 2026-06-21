@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
@@ -105,6 +105,7 @@ export default function ProfilePage() {
   const supabase = createClient();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const tabRef = useRef<HTMLDivElement>(null);
 
   /* loading / profile */
   const [profile, setProfile] = useState<any>(null);
@@ -588,6 +589,26 @@ export default function ProfilePage() {
   const langKey = (['en','de','es','el'].includes(i18n.language.slice(0,2))
     ? i18n.language.slice(0,2) : 'en') as ProfileLang;
 
+  /** Map completion step key → in-page section id */
+  const STEP_SECTION: Record<string, string | undefined> = {
+    company_info: undefined,           // first section in overview — tab scroll is enough
+    company_doc:  'section-company-doc',
+    services:     undefined,           // first section in settings — tab scroll is enough
+    countries:    'section-countries',
+    identity_doc: 'section-identity-doc',
+  };
+
+  /** Switch tab AND scroll to the specific section */
+  const goToTab = (targetTab: Tab, sectionId?: string) => {
+    setTab(targetTab);
+    setTimeout(() => {
+      const el = sectionId
+        ? document.getElementById(sectionId)
+        : tabRef.current;
+      el?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 80);
+  };
+
   /** Translate a role key → localised label */
   const tRole = (key?: string) =>
     key ? t(`profile.roles.${key}`, { defaultValue: ROLE_LABELS[key] ?? key }) : '—';
@@ -674,7 +695,7 @@ export default function ProfilePage() {
                 {!step.done && (
                   <button
                     type="button"
-                    onClick={() => setTab(step.tab as any)}
+                    onClick={() => goToTab(step.tab as Tab, STEP_SECTION[step.key])}
                     className="text-xs font-semibold text-orange-600 hover:text-orange-800 underline flex-shrink-0 whitespace-nowrap"
                   >
                     {t('profile.completion.goTo', 'Go to')} {t(`profile.tabs.${step.tab}`, step.tab)} →
@@ -850,7 +871,7 @@ export default function ProfilePage() {
       </div>
 
       {/* ── Tab Navigation ────────────────────────────────── */}
-      <div className="flex overflow-x-auto gap-1 rounded-xl bg-gray-100 p-1 no-scrollbar">
+      <div ref={tabRef} className="flex overflow-x-auto gap-1 rounded-xl bg-gray-100 p-1 no-scrollbar">
         {TABS.map(({ id, label, icon: Icon }) => (
           <button
             key={id}
@@ -1023,7 +1044,7 @@ export default function ProfilePage() {
             )}
 
             {/* Company Document Upload */}
-            <div>
+            <div id="section-company-doc">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('profile.companyDocLabel')} <span className="text-red-400">*</span>
               </label>
@@ -1073,7 +1094,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Identity Document Upload (Passport / EU ID) */}
-            <div>
+            <div id="section-identity-doc">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 {t('profile.identityDocLabel', 'Passport or EU ID')} <span className="text-red-400">*</span>
               </label>
@@ -1713,7 +1734,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Available Countries */}
-          <div className={`card ${countries.length === 0 ? 'border-red-300 ring-1 ring-red-200' : ''}`}>
+          <div id="section-countries" className={`card ${countries.length === 0 ? 'border-red-300 ring-1 ring-red-200' : ''}`}>
             <h2 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
               <Globe className="h-4 w-4 text-brand-600" />
               {t('profile.availableCountries')}

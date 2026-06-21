@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&display=swap');
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { width: 1080px; height: 1080px; overflow: hidden; font-family: 'Inter', sans-serif; }
+
+.card {
+  width: 1080px; height: 1080px;
+  background: #060d1a;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+
+/* Dramatic radial background */
+.bg-radial {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(234,88,12,0.3) 0%, rgba(29,78,216,0.15) 50%, transparent 80%);
+}
+.bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 80px 80px;
+}
+
+/* Alert tag */
+.alert-tag {
+  position: relative; z-index: 10;
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.4);
+  border-radius: 100px; padding: 12px 28px;
+  margin-bottom: 48px;
+}
+.alert-dot {
+  width: 12px; height: 12px; background: #ef4444; border-radius: 50%;
+  box-shadow: 0 0 12px #ef4444;
+}
+.alert-text { color: #ef4444; font-size: 16px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+
+/* Main headline */
+.headline {
+  position: relative; z-index: 10;
+  text-align: center; margin-bottom: 20px;
+}
+.headline-top {
+  font-size: 28px; font-weight: 700; color: rgba(255,255,255,0.5);
+  letter-spacing: 6px; text-transform: uppercase; margin-bottom: 16px;
+}
+.headline-main {
+  font-size: 96px; font-weight: 900; line-height: 0.95;
+  letter-spacing: -4px; color: white;
+}
+.headline-main .orange { color: #fb923c; }
+.headline-sub {
+  font-size: 32px; font-weight: 700; color: rgba(255,255,255,0.6);
+  letter-spacing: -0.5px; margin-top: 12px;
+}
+
+/* Divider */
+.divider {
+  width: 80px; height: 3px;
+  background: linear-gradient(90deg, #fbbf24, #f97316);
+  border-radius: 2px; margin: 36px auto;
+}
+
+/* Message */
+.message {
+  position: relative; z-index: 10;
+  font-size: 26px; color: rgba(255,255,255,0.75); text-align: center;
+  max-width: 800px; line-height: 1.5; margin-bottom: 52px; font-weight: 500;
+}
+.message strong { color: white; font-weight: 800; }
+.message .gold { color: #fbbf24; }
+
+/* Countries row */
+.countries {
+  position: relative; z-index: 10;
+  display: flex; gap: 16px; margin-bottom: 52px;
+}
+.country {
+  background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px; padding: 16px 28px;
+  display: flex; align-items: center; gap: 12px;
+}
+.country-flag { font-size: 28px; }
+.country-info .c-name { color: white; font-size: 18px; font-weight: 700; }
+.country-info .c-status { color: #4ade80; font-size: 13px; font-weight: 600; }
+
+/* CTA */
+.cta {
+  position: relative; z-index: 10;
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  border-radius: 18px; padding: 24px 64px;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: 0 20px 60px rgba(251,191,36,0.3);
+}
+.cta-text {
+  font-size: 24px; font-weight: 900; color: #1e3a5f; letter-spacing: -0.5px;
+}
+.cta-arrow { font-size: 24px; }
+
+/* Logo bottom */
+.logo-bottom {
+  position: absolute; bottom: 36px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 8px; z-index: 10;
+}
+.logo-bottom .dot { width: 6px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 50%; }
+.logo-bottom span { color: rgba(255,255,255,0.25); font-size: 14px; letter-spacing: 3px; text-transform: uppercase; }
+
+.accent-line {
+  position: absolute; bottom: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, transparent, #f97316, #fbbf24, #f97316, transparent);
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="bg-radial"></div>
+  <div class="bg-grid"></div>
+
+  <div class="alert-tag">
+    <div class="alert-dot"></div>
+    <span class="alert-text">⚡ LIVE UPDATE</span>
+  </div>
+
+  <div class="headline">
+    <div class="headline-top">Europe · Season 2026</div>
+    <div class="headline-main">HAIL <span class="orange">SEASON</span><br>IS HERE</div>
+    <div class="headline-sub">Workshops are searching NOW</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="message">
+    <strong>Germany & Belgium</strong> are already contacting us for<br>
+    <span class="gold">PDR Technicians & R&I Guys</span>
+  </div>
+
+  <div class="countries">
+    <div class="country">
+      <div class="country-flag">🇩🇪</div>
+      <div class="country-info">
+        <div class="c-name">Germany</div>
+        <div class="c-status">● Actively searching</div>
+      </div>
+    </div>
+    <div class="country">
+      <div class="country-flag">🇧🇪</div>
+      <div class="country-info">
+        <div class="c-name">Belgium</div>
+        <div class="c-status">● Actively searching</div>
+      </div>
+    </div>
+    <div class="country">
+      <div class="country-flag">🇳🇱</div>
+      <div class="country-info">
+        <div class="c-name">Netherlands</div>
+        <div class="c-status">● Coming soon</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta">
+    <span class="cta-text">Complete your profile → Get hired</span>
+    <span class="cta-arrow">→</span>
+  </div>
+
+  <div class="logo-bottom">
+    <div class="dot"></div>
+    <span>pdrconnect.eu</span>
+    <div class="dot"></div>
+  </div>
+
+  <div class="accent-line"></div>
+</div>
+</body>
+</html>

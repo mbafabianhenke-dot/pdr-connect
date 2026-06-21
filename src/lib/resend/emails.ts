@@ -1,8 +1,8 @@
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'noreply@pdrconnect.com';
-const OPERATOR = 'Cybratech-Solutions (PDR Connect)';
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'hello@pdrconnect.eu';
+const OPERATOR = 'PDR Connect by Cybratech-Solutions';
 
 type Lang = 'en' | 'de' | 'es' | 'el';
 function normLang(lang?: string | null): Lang {
@@ -385,7 +385,15 @@ const DOC_TYPE_LABELS: Record<string, string> = {
   IDENTITY_DOC:  '🪪 Reisepass / EU-Ausweis',
   GALLERY_IMAGE: '🖼 Galeriebild',
   AVATAR:        '👤 Profilbild',
+  WORK_VISA:     '🇦🇺 Work Visa (Australia)',
 };
+
+// Public download URLs for the Australia Subclass 400 invitation templates
+// (stored in the public `visa-templates` Supabase Storage bucket).
+const VISA_TEMPLATE_URLS = {
+  adr: 'https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/ADR-Subclass-400-Visa-Invitation-Template.docx',
+  pdrTeam: 'https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/PDR-Team-Visa-Invitation-Template.docx',
+} as const;
 
 export async function sendNewDocumentAdminEmail(
   adminEmail: string,
@@ -722,51 +730,104 @@ export async function sendProfileReminderEmail(to: string, name: string, lang?: 
   });
 }
 
-export async function sendEmailConfirmationEmail(
-  to: string,
-  name: string,
-  confirmationUrl: string,
-  lang?: string,
-) {
+/**
+ * Invitation to apply for the Australia Subclass 400 (Short Stay Specialist)
+ * Work Visa. Points the technician to the in-app Documents page where the two
+ * invitation-letter templates can be downloaded any time, and asks them to
+ * reply with the applicant details needed to issue their letter.
+ */
+export async function sendWorkVisaInvitationEmail(to: string, name: string, lang?: string) {
   const l = normLang(lang);
   const c = ({
     en: {
-      subject: '✉️ Confirm your PDR Connect email address',
-      header: 'Almost there!',
+      subject: '🇦🇺 Work Visa for Australia — download your invitation documents',
+      header: 'Work Visa for Australia 🇦🇺',
       greeting: `Hello ${name},`,
-      body: 'Thank you for registering at PDR Connect. Please confirm your email address by clicking the button below.',
-      btn: 'Confirm email address →',
-      hint: 'This link is valid for 24 hours. If you did not register, please ignore this email.',
+      intro: 'PDR-Team / Absolute Dent Repair is supporting Subclass 400 (Temporary Work – Short Stay Specialist) visas so certified PDR technicians can travel to Australia for the upcoming hail-repair season. Typical engagement: 3–4 months of project-based work, with earnings of approximately AUD $2,000–$4,000 per week depending on repairs completed.',
+      stepsTitle: 'How it works',
+      steps: [
+        'Open the <strong>Documents</strong> page in PDR Connect and download the two invitation-letter templates (available any time).',
+        'Reply to this email with your applicant details: full name (exactly as in your passport), passport number, date of birth, nationality, and a clear photo of your passport page.',
+        'We issue and sign your official Letter of Invitation for the Subclass 400 visa application.',
+        'Once your visa is approved, upload it to your profile under <strong>Documents → Work Visa</strong>.',
+      ],
+      btn: 'Open Documents in PDR Connect →',
+      directTitle: 'Direct download:',
+      adrLabel: 'ADR — Subclass 400 Invitation Template',
+      pdrLabel: 'PDR-Team — Subclass 400 Invitation Template',
+      closing: 'Please act as soon as possible so we can secure your place for the Australian season.',
       op: 'Operated by Cybratech-Solutions · Efesou 9, 5280 Paralimni, Cyprus',
     },
     de: {
-      subject: '✉️ E-Mail-Adresse bei PDR Connect bestätigen',
-      header: 'Fast geschafft!',
+      subject: '🇦🇺 Arbeitsvisum für Australien — Einladungsdokumente herunterladen',
+      header: 'Arbeitsvisum für Australien 🇦🇺',
       greeting: `Hallo ${name},`,
-      body: 'Vielen Dank für Ihre Registrierung bei PDR Connect. Bitte bestätigen Sie Ihre E-Mail-Adresse, indem Sie auf den Button unten klicken.',
-      btn: 'E-Mail-Adresse bestätigen →',
-      hint: 'Dieser Link ist 24 Stunden gültig. Wenn Sie sich nicht registriert haben, ignorieren Sie diese E-Mail bitte.',
+      intro: 'PDR-Team / Absolute Dent Repair unterstützt Visa der Subklasse 400 (Temporary Work – Short Stay Specialist), damit zertifizierte PDR-Techniker für die kommende Hagelsaison nach Australien reisen können. Typischer Einsatz: 3–4 Monate projektbasierte Arbeit, mit einem Verdienst von ca. AUD 2.000–4.000 pro Woche, je nach abgeschlossenen Reparaturen.',
+      stepsTitle: 'So funktioniert es',
+      steps: [
+        'Öffnen Sie die Seite <strong>Dokumente</strong> in PDR Connect und laden Sie die beiden Einladungsschreiben-Vorlagen herunter (jederzeit verfügbar).',
+        'Antworten Sie auf diese E-Mail mit Ihren Antragsdaten: vollständiger Name (genau wie im Reisepass), Reisepassnummer, Geburtsdatum, Staatsangehörigkeit und ein deutliches Foto Ihrer Passseite.',
+        'Wir stellen Ihr offizielles Einladungsschreiben für den Subclass-400-Visumantrag aus und unterzeichnen es.',
+        'Sobald Ihr Visum genehmigt ist, laden Sie es in Ihrem Profil unter <strong>Dokumente → Work Visa</strong> hoch.',
+      ],
+      btn: 'Dokumente in PDR Connect öffnen →',
+      directTitle: 'Direkter Download:',
+      adrLabel: 'ADR — Subclass 400 Einladungsvorlage',
+      pdrLabel: 'PDR-Team — Subclass 400 Einladungsvorlage',
+      closing: 'Bitte handeln Sie so schnell wie möglich, damit wir Ihren Platz für die australische Saison sichern können.',
       op: 'Betrieben von Cybratech-Solutions · Efesou 9, 5280 Paralimni, Zypern',
     },
     es: {
-      subject: '✉️ Confirma tu dirección de correo en PDR Connect',
-      header: '¡Ya casi!',
+      subject: '🇦🇺 Visa de trabajo para Australia — descarga tus documentos de invitación',
+      header: 'Visa de trabajo para Australia 🇦🇺',
       greeting: `Hola ${name},`,
-      body: 'Gracias por registrarte en PDR Connect. Por favor confirma tu dirección de correo electrónico haciendo clic en el botón de abajo.',
-      btn: 'Confirmar dirección de correo →',
-      hint: 'Este enlace es válido durante 24 horas. Si no te has registrado, ignora este correo.',
+      intro: 'PDR-Team / Absolute Dent Repair apoya las visas Subclass 400 (Trabajo Temporal – Especialista de Estancia Corta) para que técnicos de PDR certificados puedan viajar a Australia para la próxima temporada de granizo. Compromiso típico: 3–4 meses de trabajo por proyecto, con ingresos de aproximadamente AUD 2.000–4.000 por semana según las reparaciones completadas.',
+      stepsTitle: 'Cómo funciona',
+      steps: [
+        'Abre la página <strong>Documentos</strong> en PDR Connect y descarga las dos plantillas de carta de invitación (disponibles en cualquier momento).',
+        'Responde a este correo con tus datos: nombre completo (exactamente como en el pasaporte), número de pasaporte, fecha de nacimiento, nacionalidad y una foto clara de la página de tu pasaporte.',
+        'Emitimos y firmamos tu Carta de Invitación oficial para la solicitud de la visa Subclass 400.',
+        'Una vez aprobada tu visa, súbela a tu perfil en <strong>Documentos → Work Visa</strong>.',
+      ],
+      btn: 'Abrir Documentos en PDR Connect →',
+      directTitle: 'Descarga directa:',
+      adrLabel: 'ADR — Plantilla de invitación Subclass 400',
+      pdrLabel: 'PDR-Team — Plantilla de invitación Subclass 400',
+      closing: 'Por favor actúa lo antes posible para que podamos asegurar tu lugar para la temporada australiana.',
       op: 'Operado por Cybratech-Solutions · Efesou 9, 5280 Paralimni, Chipre',
     },
     el: {
-      subject: '✉️ Επιβεβαιώστε τη διεύθυνση email σας στο PDR Connect',
-      header: 'Σχεδόν εκεί!',
+      subject: '🇦🇺 Άδεια εργασίας για Αυστραλία — κατεβάστε τα έγγραφα πρόσκλησης',
+      header: 'Άδεια εργασίας για Αυστραλία 🇦🇺',
       greeting: `Γεια σας ${name},`,
-      body: 'Σας ευχαριστούμε για την εγγραφή σας στο PDR Connect. Παρακαλώ επιβεβαιώστε τη διεύθυνση email σας κάνοντας κλικ στο παρακάτω κουμπί.',
-      btn: 'Επιβεβαίωση διεύθυνσης email →',
-      hint: 'Αυτός ο σύνδεσμος ισχύει για 24 ώρες. Εάν δεν εγγραφήκατε, αγνοήστε αυτό το email.',
+      intro: 'Η PDR-Team / Absolute Dent Repair υποστηρίζει βίζες Subclass 400 (Προσωρινή Εργασία – Ειδικός Σύντομης Διαμονής) ώστε πιστοποιημένοι τεχνικοί PDR να ταξιδέψουν στην Αυστραλία για την επερχόμενη σεζόν χαλαζιού. Τυπική απασχόληση: 3–4 μήνες εργασίας ανά έργο, με αποδοχές περίπου AUD 2.000–4.000 την εβδομάδα ανάλογα με τις επισκευές.',
+      stepsTitle: 'Πώς λειτουργεί',
+      steps: [
+        'Ανοίξτε τη σελίδα <strong>Έγγραφα</strong> στο PDR Connect και κατεβάστε τα δύο πρότυπα επιστολής πρόσκλησης (διαθέσιμα ανά πάσα στιγμή).',
+        'Απαντήστε σε αυτό το email με τα στοιχεία σας: πλήρες όνομα (όπως ακριβώς στο διαβατήριο), αριθμό διαβατηρίου, ημερομηνία γέννησης, υπηκοότητα και μια καθαρή φωτογραφία της σελίδας του διαβατηρίου σας.',
+        'Εκδίδουμε και υπογράφουμε την επίσημη Επιστολή Πρόσκλησής σας για την αίτηση βίζας Subclass 400.',
+        'Μόλις εγκριθεί η βίζα σας, ανεβάστε την στο προφίλ σας στα <strong>Έγγραφα → Work Visa</strong>.',
+      ],
+      btn: 'Άνοιγμα Εγγράφων στο PDR Connect →',
+      directTitle: 'Άμεση λήψη:',
+      adrLabel: 'ADR — Πρότυπο πρόσκλησης Subclass 400',
+      pdrLabel: 'PDR-Team — Πρότυπο πρόσκλησης Subclass 400',
+      closing: 'Παρακαλώ ενεργήστε το συντομότερο δυνατό ώστε να εξασφαλίσουμε τη θέση σας για την αυστραλιανή σεζόν.',
       op: 'Λειτουργεί από την Cybratech-Solutions · Efesou 9, 5280 Paralimni, Κύπρος',
     },
-  } as Record<Lang, { subject: string; header: string; greeting: string; body: string; btn: string; hint: string; op: string }>)[l];
+  } as Record<Lang, {
+    subject: string; header: string; greeting: string; intro: string;
+    stepsTitle: string; steps: string[]; btn: string; directTitle: string;
+    adrLabel: string; pdrLabel: string; closing: string; op: string;
+  }>)[l];
+
+  const stepsHtml = c.steps.map((s, i) => `
+    <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0">
+      <div style="flex-shrink:0;width:26px;height:26px;border-radius:50%;background:#1d4ed8;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;line-height:1">${i + 1}</div>
+      <div style="color:#374151;font-size:14px;line-height:1.5">${s}</div>
+    </div>`).join('');
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://pdrconnect.eu';
 
   return resend.emails.send({
     from: `${OPERATOR} <${FROM}>`,
@@ -775,23 +836,73 @@ export async function sendEmailConfirmationEmail(
     html: `
       <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
         <div style="background:#1d4ed8;padding:24px;border-radius:12px 12px 0 0">
-          <h1 style="color:white;margin:0">PDR Connect</h1>
-          <p style="color:#bfdbfe;margin:6px 0 0;font-size:14px">${c.header}</p>
+          <h1 style="color:white;margin:0;font-size:21px">${c.header}</h1>
         </div>
         <div style="padding:32px;background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px">
           <h2 style="margin-top:0;color:#111827">${c.greeting}</h2>
-          <p style="color:#374151;line-height:1.6">${c.body}</p>
-          <a href="${confirmationUrl}"
-             style="display:inline-block;background:#1d4ed8;color:white;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;margin:16px 0">
+          <p style="color:#374151;line-height:1.6">${c.intro}</p>
+
+          <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:8px 18px;margin:20px 0">
+            <p style="margin:8px 0 4px;font-weight:700;color:#111827;font-size:14px">${c.stepsTitle}</p>
+            ${stepsHtml}
+          </div>
+
+          <a href="${appUrl}/documents" style="display:inline-block;background:#1d4ed8;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;margin:8px 0 20px">
             ${c.btn}
           </a>
-          <p style="color:#9ca3af;font-size:13px;margin-top:24px">${c.hint}</p>
-          <hr style="border:none;border-top:1px solid #f3f4f6;margin:24px 0" />
-          <p style="color:#9ca3af;font-size:12px;margin:0">${c.op}<br>
+
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;padding:14px 16px;margin:8px 0 20px">
+            <p style="margin:0 0 8px;color:#1e40af;font-size:13px;font-weight:600">${c.directTitle}</p>
+            <p style="margin:4px 0"><a href="${VISA_TEMPLATE_URLS.adr}" style="color:#1d4ed8;font-size:14px">📄 ${c.adrLabel}</a></p>
+            <p style="margin:4px 0"><a href="${VISA_TEMPLATE_URLS.pdrTeam}" style="color:#1d4ed8;font-size:14px">📄 ${c.pdrLabel}</a></p>
+          </div>
+
+          <p style="color:#374151;line-height:1.6">${c.closing}</p>
+          <p style="color:#9ca3af;font-size:13px;margin-top:24px;border-top:1px solid #f3f4f6;padding-top:16px">${c.op}<br>
           <a href="mailto:info@cybratech-solutions.com" style="color:#9ca3af">info@cybratech-solutions.com</a></p>
         </div>
       </div>
     `,
+  });
+}
+
+export async function sendEmailConfirmationEmail(
+  to: string,
+  name: string,
+  confirmationUrl: string,
+  lang?: string,
+) {
+  const l = normLang(lang);
+
+  // Personal subjects — avoid "noreply", "activate", "confirm" spam triggers
+  const subjects: Record<Lang, string> = {
+    en: `Welcome to PDR Connect, ${name}`,
+    de: `Willkommen bei PDR Connect, ${name}`,
+    es: `Bienvenido a PDR Connect, ${name}`,
+    el: `Καλώς ήλθατε στο PDR Connect, ${name}`,
+  };
+
+  const greetings: Record<Lang, string> = {
+    en: `Hello ${name},\n\nThank you for joining PDR Connect.\n\nTo activate your account, please open the link below:\n\n${confirmationUrl}\n\nThis link expires in 24 hours.\n\nBest regards,\nPDR Connect\ninfo@cybratech-solutions.com`,
+    de: `Hallo ${name},\n\nVielen Dank für Ihre Registrierung bei PDR Connect.\n\nUm Ihr Konto zu aktivieren, öffnen Sie bitte den folgenden Link:\n\n${confirmationUrl}\n\nDieser Link ist 24 Stunden gültig.\n\nMit freundlichen Grüßen,\nPDR Connect\ninfo@cybratech-solutions.com`,
+    es: `Hola ${name},\n\nGracias por registrarte en PDR Connect.\n\nPara activar tu cuenta, abre el siguiente enlace:\n\n${confirmationUrl}\n\nEste enlace expira en 24 horas.\n\nSaludos,\nPDR Connect\ninfo@cybratech-solutions.com`,
+    el: `Γεια σας ${name},\n\nΕυχαριστούμε για την εγγραφή σας στο PDR Connect.\n\nΓια να ενεργοποιήσετε τον λογαριασμό σας, ανοίξτε τον παρακάτω σύνδεσμο:\n\n${confirmationUrl}\n\nΑυτός ο σύνδεσμος λήγει σε 24 ώρες.\n\nΜε εκτίμηση,\nPDR Connect\ninfo@cybratech-solutions.com`,
+  };
+
+  const plainText = greetings[l];
+
+  // Minimal HTML — no styled buttons, no complex layout, just clean text
+  const htmlBody = plainText.replace(/\n/g, '<br>').replace(
+    confirmationUrl,
+    `<a href="${confirmationUrl}">${confirmationUrl}</a>`,
+  );
+
+  return resend.emails.send({
+    from: `PDR Connect by Cybratech-Solutions <${FROM}>`,
+    to,
+    subject: subjects[l],
+    text: plainText,          // plain-text version (lower spam score)
+    html: `<div style="font-family:Arial,sans-serif;font-size:15px;color:#222;line-height:1.7;max-width:580px">${htmlBody}</div>`,
   });
 }
 
@@ -904,6 +1015,110 @@ export async function sendProfileCompletionReminderEmail(
           </a>
           <p style="color:#9ca3af;font-size:12px;margin-top:8px;padding-top:16px;border-top:1px solid #f3f4f6">
             ${c.footer}<br><br>
+            ${c.op}<br>
+            <a href="mailto:info@cybratech-solutions.com" style="color:#9ca3af">info@cybratech-solutions.com</a>
+          </p>
+        </div>
+      </div>
+    `,
+  });
+}
+
+/**
+ * Reminder to users who haven't filled in their company information yet.
+ * Sent manually by admin from the admin panel.
+ */
+export async function sendCompanyInfoReminderEmail(to: string, name: string, lang?: string) {
+  const l = normLang(lang);
+  const c = ({
+    en: {
+      subject: '⚠️ PDR Connect — Please complete your company information',
+      header:  'Company information missing',
+      greeting: `Hello ${name},`,
+      body1: 'We noticed that your PDR Connect account is missing important company information.',
+      body2: 'Without complete company details, you will not have full access to the platform and your profile will not be visible to other professionals.',
+      missing: 'The following information is missing:',
+      items: ['Company name', 'Full company address (street, house number, ZIP, country)', 'Business phone number'],
+      action: 'Please log in now and fill in your company details — it only takes 2 minutes.',
+      btn: '→ Complete company information now',
+      closing: 'If you have any questions, feel free to contact us at any time.',
+      op: 'Operated by Cybratech-Solutions · Efesou 9, 5280 Paralimni, Cyprus',
+    },
+    de: {
+      subject: '⚠️ PDR Connect — Bitte Firmeninformationen vervollständigen',
+      header:  'Firmeninformationen fehlen',
+      greeting: `Hallo ${name},`,
+      body1: 'Wir haben festgestellt, dass in Ihrem PDR Connect Konto noch wichtige Firmeninformationen fehlen.',
+      body2: 'Ohne vollständige Firmendaten haben Sie keinen vollständigen Zugang zur Plattform und Ihr Profil ist für andere Fachleute nicht sichtbar.',
+      missing: 'Folgende Angaben fehlen noch:',
+      items: ['Firmenname', 'Vollständige Firmenadresse (Straße, Hausnummer, PLZ, Land)', 'Telefonnummer des Unternehmers'],
+      action: 'Bitte melden Sie sich jetzt an und tragen Sie Ihre Firmendaten ein — es dauert nur 2 Minuten.',
+      btn: '→ Firmendaten jetzt vervollständigen',
+      closing: 'Bei Fragen stehen wir Ihnen jederzeit gerne zur Verfügung.',
+      op: 'Betrieben von Cybratech-Solutions · Efesou 9, 5280 Paralimni, Zypern',
+    },
+    es: {
+      subject: '⚠️ PDR Connect — Por favor completa los datos de tu empresa',
+      header:  'Datos de empresa incompletos',
+      greeting: `Hola ${name},`,
+      body1: 'Hemos notado que en tu cuenta de PDR Connect faltan datos importantes de la empresa.',
+      body2: 'Sin datos completos de la empresa, no tendrás acceso completo a la plataforma y tu perfil no será visible para otros profesionales.',
+      missing: 'Falta la siguiente información:',
+      items: ['Nombre de la empresa', 'Dirección completa (calle, número, código postal, país)', 'Número de teléfono de la empresa'],
+      action: 'Por favor inicia sesión ahora y completa los datos de tu empresa — solo lleva 2 minutos.',
+      btn: '→ Completar datos de empresa ahora',
+      closing: 'Si tienes alguna pregunta, no dudes en contactarnos.',
+      op: 'Operado por Cybratech-Solutions · Efesou 9, 5280 Paralimni, Chipre',
+    },
+    el: {
+      subject: '⚠️ PDR Connect — Παρακαλώ συμπληρώστε τα στοιχεία της εταιρείας σας',
+      header:  'Λείπουν στοιχεία εταιρείας',
+      greeting: `Γεια σας ${name},`,
+      body1: 'Παρατηρήσαμε ότι στον λογαριασμό σας στο PDR Connect λείπουν σημαντικά στοιχεία εταιρείας.',
+      body2: 'Χωρίς πλήρη στοιχεία εταιρείας, δεν θα έχετε πλήρη πρόσβαση στην πλατφόρμα και το προφίλ σας δεν θα είναι ορατό σε άλλους επαγγελματίες.',
+      missing: 'Λείπουν τα ακόλουθα στοιχεία:',
+      items: ['Επωνυμία εταιρείας', 'Πλήρης διεύθυνση εταιρείας (οδός, αριθμός, ΤΚ, χώρα)', 'Τηλέφωνο επιχείρησης'],
+      action: 'Παρακαλώ συνδεθείτε τώρα και συμπληρώστε τα στοιχεία της εταιρείας σας — χρειάζεται μόνο 2 λεπτά.',
+      btn: '→ Συμπλήρωση στοιχείων εταιρείας τώρα',
+      closing: 'Εάν έχετε οποιεσδήποτε ερωτήσεις, μη διστάσετε να επικοινωνήσετε μαζί μας.',
+      op: 'Λειτουργεί από την Cybratech-Solutions · Efesou 9, 5280 Paralimni, Κύπρος',
+    },
+  } as Record<Lang, { subject:string; header:string; greeting:string; body1:string; body2:string; missing:string; items:string[]; action:string; btn:string; closing:string; op:string }>)[l];
+
+  return resend.emails.send({
+    from: `${OPERATOR} <${FROM}>`,
+    to,
+    subject: c.subject,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:0 auto">
+        <div style="background:#d97706;padding:24px;border-radius:12px 12px 0 0">
+          <p style="color:#fef3c7;margin:0 0 4px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">PDR Connect</p>
+          <h1 style="color:white;margin:0;font-size:20px">⚠️ ${c.header}</h1>
+        </div>
+        <div style="padding:32px;background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px">
+          <h2 style="margin-top:0;color:#111827">${c.greeting}</h2>
+          <p style="color:#374151;line-height:1.6">${c.body1}</p>
+          <p style="color:#374151;line-height:1.6">${c.body2}</p>
+
+          <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px 20px;margin:20px 0">
+            <p style="margin:0 0 10px;font-weight:700;color:#92400e;font-size:14px">${c.missing}</p>
+            ${c.items.map(item => `
+              <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #fef3c7">
+                <span style="color:#d97706;font-size:16px">⚠️</span>
+                <span style="color:#374151;font-size:14px;font-weight:600">${item}</span>
+              </div>
+            `).join('')}
+          </div>
+
+          <p style="color:#374151;margin:20px 0 16px;line-height:1.6">${c.action}</p>
+
+          <a href="${process.env.NEXT_PUBLIC_APP_URL}/onboarding"
+             style="display:inline-block;background:#1d4ed8;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:15px;margin-bottom:24px">
+            ${c.btn}
+          </a>
+
+          <p style="color:#6b7280;font-size:13px">${c.closing}</p>
+          <p style="color:#9ca3af;font-size:12px;margin-top:24px;border-top:1px solid #f3f4f6;padding-top:16px">
             ${c.op}<br>
             <a href="mailto:info@cybratech-solutions.com" style="color:#9ca3af">info@cybratech-solutions.com</a>
           </p>

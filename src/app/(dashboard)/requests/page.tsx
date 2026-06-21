@@ -8,7 +8,7 @@ import { COUNTRIES } from '@/types/database';
 import { formatDate } from '@/lib/utils';
 import {
   Plus, Send, Clock, CheckCircle, XCircle, AlertTriangle,
-  ChevronUp, Info, Loader2, MapPin,
+  ChevronUp, Info, Loader2, MapPin, Search, Users,
 } from 'lucide-react';
 
 const ROLE_OPTIONS = [
@@ -51,9 +51,28 @@ interface JobRequest {
   created_at: string;
 }
 
+interface CustomerInquiry {
+  id: string;
+  message: string;
+  location: string | null;
+  start_date: string | null;
+  budget: string | null;
+  selected_technicians: Array<{ id: string; full_name: string; role: string }>;
+  status: string;
+  created_at: string;
+}
+
+const INQUIRY_STATUS: Record<string, { cls: string; label: string; icon: string }> = {
+  new:         { cls: 'bg-amber-100 text-amber-700',   label: 'Pending Review',  icon: '⏳' },
+  in_progress: { cls: 'bg-blue-100 text-blue-700',     label: 'In Progress',     icon: '🔄' },
+  matched:     { cls: 'bg-green-100 text-green-700',   label: 'Match Found!',    icon: '✅' },
+  closed:      { cls: 'bg-gray-100 text-gray-500',     label: 'Closed',          icon: '🔒' },
+};
+
 export default function RequestsPage() {
   const { t } = useTranslation();
   const [requests,   setRequests]   = useState<JobRequest[]>([]);
+  const [inquiries,  setInquiries]  = useState<CustomerInquiry[]>([]);
   const [loading,    setLoading]    = useState(true);
   const [showForm,   setShowForm]   = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -75,12 +94,14 @@ export default function RequestsPage() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    const { data } = await supabase
-      .from('job_requests')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-    setRequests(data ?? []);
+
+    const [jobReqRes, inquiryRes] = await Promise.all([
+      supabase.from('job_requests').select('*').eq('user_id', user.id).order('created_at', { ascending: false }),
+      supabase.from('customer_inquiries').select('*').eq('customer_id', user.id).order('created_at', { ascending: false }),
+    ]);
+
+    setRequests(jobReqRes.data ?? []);
+    setInquiries(inquiryRes.data ?? []);
     setLoading(false);
   };
 
@@ -234,6 +255,101 @@ export default function RequestsPage() {
             {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
             {submitting ? t('requests.submitting') : t('requests.submitBtn')}
           </button>
+        </div>
+      )}
+
+      {/* ── PDR Connect Inquiries (new system via Find Pros) ── */}
+      {inquiries.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <Search className="h-5 w-5 text-brand-600" />
+            <h2 className="font-semibold text-gray-900">My Inquiries via PDR Connect</h2>
+            <span className="text-xs bg-brand-100 text-brand-700 rounded-full px-2 py-0.5 font-medium">
+              {inquiries.length} inquiry{inquiries.length !== 1 ? 's' : ''}
+            </span>
+          </div>
+
+          <div className="rounded-xl bg-blue-50 border border-blue-200 px-4 py-3 text-sm text-blue-800">
+            ℹ️ These are inquiries you sent to the PDR Connect team via the "Find Pros" page.
+            Our team reviews each request and will contact you within 24 hours.
+          </div>
+
+          {inquiries.map(inq => {
+            const st = INQUIRY_STATUS[inq.status] ?? INQUIRY_STATUS.new;
+            return (
+              <div key={inq.id} className={`card border-l-4 ${
+                inq.status === 'matched'     ? 'border-l-green-500' :
+                inq.status === 'in_progress' ? 'border-l-blue-500' :
+                inq.status === 'new'         ? 'border-l-amber-400' :
+                'border-l-gray-300'
+              } space-y-3`}>
+                {/* Status + date */}
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${st.cls}`}>
+                      {st.icon} {st.label}
+                    </span>
+                    <span className="text-xs text-gray-400">
+                      Sent {new Date(inq.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </span>
+                  </div>
+                  {inq.status === 'matched' && (
+                    <span className="text-xs font-bold text-green-700 bg-green-50 border border-green-200 rounded-full px-3 py-1">
+                      🎉 PDR Connect found a match for you!
+                    </span>
+                  )}
+                </div>
+
+                {/* Details */}
+                {(inq.location || inq.start_date || inq.budget) && (
+                  <div className="flex flex-wrap gap-3 text-xs text-gray-600">
+                    {inq.location  && <span>📍 {inq.location}</span>}
+                    {inq.start_date && <span>📅 From {new Date(inq.start_date).toLocaleDateString('en-GB')}</span>}
+                    {inq.budget    && <span>💶 {inq.budget}</span>}
+                  </div>
+                )}
+
+                {/* Message */}
+                <div className="rounded-lg bg-gray-50 border border-gray-200 px-3 py-2">
+                  <p className="text-xs font-medium text-gray-500 mb-1">Your message:</p>
+                  <p className="text-sm text-gray-700 line-clamp-3">{inq.message}</p>
+                </div>
+
+                {/* Selected technicians */}
+                {inq.selected_technicians?.length > 0 && (
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-2 flex items-center gap-1">
+                      <Users className="h-3.5 w-3.5" />
+                      Technicians you selected ({inq.selected_technicians.length}):
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {inq.selected_technicians.map((tech: any) => (
+                        <div key={tech.id} className="flex items-center gap-1.5 bg-brand-50 border border-brand-200 rounded-full px-3 py-1 text-xs text-brand-700 font-medium">
+                          <div className="h-5 w-5 rounded-full bg-brand-200 flex items-center justify-center font-bold text-xs">
+                            {tech.full_name?.charAt(0)}
+                          </div>
+                          {tech.full_name}
+                          <span className="text-brand-400">· {tech.role}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Status message based on status */}
+                {inq.status === 'in_progress' && (
+                  <div className="rounded-lg bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-700">
+                    🔄 <strong>Update:</strong> The PDR Connect team is working on finding the best match for your request.
+                  </div>
+                )}
+                {inq.status === 'matched' && (
+                  <div className="rounded-lg bg-green-50 border border-green-200 px-3 py-2 text-xs text-green-700">
+                    ✅ <strong>Great news!</strong> A technician has been matched to your request. The PDR Connect team will contact you shortly with details.
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

@@ -6,16 +6,22 @@ import toast from 'react-hot-toast';
 import { useTranslation } from 'react-i18next';
 import { createClient } from '@/lib/supabase/client';
 import { formatDate } from '@/lib/utils';
-import { ROLE_LABELS, type UserRole } from '@/types/database';
+import { ROLE_LABELS, COUNTRIES, type UserRole } from '@/types/database';
+
+/** Convert ISO 3166-1 alpha-2 code to emoji flag (e.g. "DE" → "🇩🇪") */
+const countryFlag = (code: string) =>
+  code.toUpperCase().replace(/[A-Z]/g, c =>
+    String.fromCodePoint(c.charCodeAt(0) - 65 + 0x1F1E6)
+  );
 import {
   Users, FileText, AlertTriangle, BarChart2,
   CheckCircle, XCircle, ExternalLink, Shield,
   ShieldCheck, Clock, Link2, SendHorizonal,
   MapPin, CalendarDays, Briefcase, Loader2, Download,
-  Eye, Building2, Mail,
+  Eye, Building2, Mail, Phone, Trash2,
 } from 'lucide-react';
 
-type TabId = 'stats' | 'matching' | 'contracts' | 'offers' | 'requests' | 'verifications' | 'users' | 'docs' | 'violations';
+type TabId = 'stats' | 'matching' | 'contracts' | 'offers' | 'requests' | 'inquiries' | 'verifications' | 'users' | 'docs' | 'violations';
 
 interface Props {
   users: any[];
@@ -26,6 +32,8 @@ interface Props {
   openOffers: any[];
   openRequests: any[];
   activeMatches: any[];
+  inquiries: any[];
+  initialTab?: string;
   stats: {
     total: number; premium: number; verified: number;
     pendingDocs: number; pendingVerifications: number;
@@ -42,17 +50,24 @@ export default function AdminTabs({
   openOffers: initialOffers,
   openRequests: initialRequests,
   activeMatches: initialMatches,
+  inquiries: initialInquiries,
+  initialTab,
   stats,
 }: Props) {
   const { t } = useTranslation();
-  const [tab, setTab] = useState<TabId>('stats');
+  const validTabs: TabId[] = ['stats','matching','contracts','offers','requests','inquiries','verifications','users','docs','violations'];
+  const startTab = (validTabs.includes(initialTab as TabId) ? initialTab : 'stats') as TabId;
+  const [tab, setTab] = useState<TabId>(startTab);
   const [users, setUsers]              = useState(initialUsers);
   const [docs, setDocs]                = useState(initialDocs);
   const [verifications, setVerifications] = useState(initialVerifications);
   const [offers, setOffers]            = useState(initialOffers);
   const [requests, setRequests]        = useState(initialRequests);
   const [matches, setMatches]          = useState(initialMatches);
-  const [search, setSearch]            = useState('');
+  const [inquiries, setInquiries]      = useState(initialInquiries);
+  const [search, setSearch]                   = useState('');
+  const [filterCountry, setFilterCountry]     = useState('');   // '' = all countries
+  const [showCountryDrop, setShowCountryDrop] = useState(false);
   // Match creation state
   const [selectedOffer,    setSelectedOffer]    = useState<string>('');
   const [selectedRequest,  setSelectedRequest]  = useState<string>('');
@@ -198,8 +213,34 @@ export default function AdminTabs({
     }
   };
 
-  const [sendingBulkEmail,    setSendingBulkEmail]    = useState(false);
-  const [sendingReminderEmail, setSendingReminderEmail] = useState(false);
+  const [sendingBulkEmail,       setSendingBulkEmail]       = useState(false);
+  const [sendingReminderEmail,   setSendingReminderEmail]   = useState(false);
+  const [sendingCompanyReminder, setSendingCompanyReminder] = useState(false);
+  const [sendingVisaInvite,      setSendingVisaInvite]      = useState(false);
+
+  const handleSendVisaInvitation = async () => {
+    const count = users.filter(u => !u.is_admin).length;
+    if (!window.confirm(
+      `🇦🇺 Work-Visa-Einladung an ALLE ${count} Nutzer senden?\n\n` +
+      `Inhalt: Australien Subclass 400 — Einladungsdokumente zum Download (in der App), ` +
+      `mit der Bitte, die Antragsdaten zu senden.\n\n` +
+      `Die E-Mail wird in der jeweiligen Nutzer-Sprache versendet.`
+    )) return;
+    setSendingVisaInvite(true);
+    try {
+      const res = await fetch('/api/admin/send-visa-invitation', { method: 'POST' });
+      const j = await res.json();
+      if (!res.ok) { toast.error(j.error ?? 'Fehler'); return; }
+      toast.success(
+        `✅ Work-Visa-Einladung gesendet an ${j.sent} Nutzer${j.failed > 0 ? ` · ${j.failed} fehlgeschlagen` : ''}`,
+        { duration: 6000 }
+      );
+    } catch {
+      toast.error('Netzwerkfehler');
+    } finally {
+      setSendingVisaInvite(false);
+    }
+  };
 
   const handleSendProfileUpdateEmail = async () => {
     if (!window.confirm(`Profil-Update-E-Mail an ALLE ${users.filter(u => !u.is_admin).length} Nutzer senden?\n\nJeder Nutzer erhält eine E-Mail mit der Bitte, sein Profil zu vervollständigen.`)) return;
@@ -241,9 +282,64 @@ export default function AdminTabs({
     }
   };
 
-  const filteredUsers = users.filter(u =>
-    !search || u.full_name?.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleSendCompanyReminder = async () => {
+    const incompleteCount = users.filter(u =>
+      !u.is_admin && (
+        !u.company_name?.trim() ||
+        !u.company_street?.trim() ||
+        !u.company_zip?.trim() ||
+        !u.company_country ||
+        !u.phone?.trim()
+      )
+    ).length;
+
+    if (incompleteCount === 0) {
+      toast('ℹ️ Alle Nutzer haben vollständige Firmendaten.', { duration: 4000 });
+      return;
+    }
+
+    if (!window.confirm(
+      `⚠️ Erinnerungs-E-Mail an ${incompleteCount} Nutzer senden?\n\n` +
+      `Diese Nutzer haben noch keine vollständigen Firmeninformationen eingetragen.\n\n` +
+      `Inhalt der E-Mail:\n` +
+      `  • Firmenname fehlt\n` +
+      `  • Firmenadresse fehlt\n` +
+      `  • Telefonnummer fehlt\n\n` +
+      `Weiter?`
+    )) return;
+
+    setSendingCompanyReminder(true);
+    try {
+      const res = await fetch('/api/admin/remind-company', { method: 'POST' });
+      const j = await res.json();
+      if (!res.ok) { toast.error(j.error ?? 'Fehler'); return; }
+      toast.success(
+        `✅ ${j.sent} E-Mail(s) versendet${j.failed > 0 ? ` · ${j.failed} fehlgeschlagen` : ''}`,
+        { duration: 6000 }
+      );
+    } catch {
+      toast.error('Netzwerkfehler');
+    } finally {
+      setSendingCompanyReminder(false);
+    }
+  };
+
+  // Build sorted list of countries that actually appear in user profiles
+  const usedCountries = Array.from(
+    new Set(
+      users.flatMap((u: any) => u.available_countries ?? [])
+    )
+  ).sort((a, b) => {
+    const nameA = COUNTRIES.find(c => c.code === a)?.name ?? a;
+    const nameB = COUNTRIES.find(c => c.code === b)?.name ?? b;
+    return nameA.localeCompare(nameB);
+  });
+
+  const filteredUsers = users.filter((u: any) => {
+    const matchSearch  = !search || u.full_name?.toLowerCase().includes(search.toLowerCase());
+    const matchCountry = !filterCountry || (u.available_countries ?? []).includes(filterCountry);
+    return matchSearch && matchCountry;
+  });
 
   const tabs: { id: TabId; label: string; icon: React.ElementType; highlight?: boolean }[] = [
     { id: 'stats',         label: t('admin.tabs.stats'),                                                icon: BarChart2 },
@@ -251,6 +347,7 @@ export default function AdminTabs({
     { id: 'contracts',     label: t('admin.tabs.contracts', { count: matches.length }),                 icon: FileText },
     { id: 'offers',        label: t('admin.tabs.offers', { count: offers.length }),                    icon: SendHorizonal },
     { id: 'requests',      label: t('admin.tabs.requests', { count: requests.length }),                icon: Briefcase },
+    { id: 'inquiries',     label: `📬 Kundenanfragen (${inquiries.filter((i:any)=>i.status==='new').length})`, icon: Mail, highlight: inquiries.some((i:any)=>i.status==='new') },
     { id: 'verifications', label: t('admin.tabs.verifications', { count: verifications.length }),      icon: ShieldCheck },
     { id: 'users',         label: t('admin.tabs.users', { count: users.length }),                      icon: Users },
     { id: 'docs',          label: t('admin.tabs.docs', { count: docs.length }),                        icon: FileText },
@@ -306,12 +403,102 @@ export default function AdminTabs({
       {tab === 'users' && (
         <div className="space-y-4">
           <div className="flex items-center gap-3 flex-wrap">
+            {/* ── Name search ── */}
             <input
-              className="input max-w-sm"
+              className="input max-w-xs"
               placeholder={t('admin.users.searchPlaceholder')}
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
+
+            {/* ── Country filter ── */}
+            <div className="relative">
+              <button
+                onClick={() => setShowCountryDrop(v => !v)}
+                className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition ${
+                  filterCountry
+                    ? 'border-brand-500 bg-brand-50 text-brand-700'
+                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                }`}
+              >
+                <MapPin className="h-4 w-4" />
+                {filterCountry
+                  ? countryFlag(filterCountry)
+                    + ' ' + (COUNTRIES.find(c => c.code === filterCountry)?.name ?? filterCountry)
+                  : 'Alle Länder'}
+                {filterCountry && (
+                  <span
+                    onClick={e => { e.stopPropagation(); setFilterCountry(''); }}
+                    className="ml-1 text-brand-400 hover:text-brand-700 font-bold"
+                    title="Filter zurücksetzen"
+                  >×</span>
+                )}
+              </button>
+
+              {showCountryDrop && (
+                <div className="absolute left-0 top-full mt-1 z-50 w-64 rounded-xl border border-gray-200 bg-white shadow-xl overflow-hidden">
+                  {/* Sticky search inside dropdown */}
+                  <div className="px-3 pt-2 pb-1 border-b border-gray-100">
+                    <input
+                      autoFocus
+                      placeholder="Land suchen…"
+                      className="w-full rounded-lg border border-gray-200 px-2.5 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-400"
+                      onClick={e => e.stopPropagation()}
+                      onChange={e => {
+                        // Filter the dropdown list inline via data attribute
+                        const q = e.target.value.toLowerCase();
+                        document.querySelectorAll('[data-country-item]').forEach((el: Element) => {
+                          const name = (el as HTMLElement).dataset.countryName ?? '';
+                          (el as HTMLElement).style.display = name.includes(q) ? '' : 'none';
+                        });
+                      }}
+                    />
+                  </div>
+                  <div className="max-h-56 overflow-y-auto">
+                    {/* "All" option */}
+                    <button
+                      onClick={() => { setFilterCountry(''); setShowCountryDrop(false); }}
+                      className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 transition ${!filterCountry ? 'font-bold text-brand-700 bg-brand-50' : 'text-gray-700'}`}
+                    >
+                      🌍 Alle Länder
+                      <span className="ml-auto text-xs text-gray-400">{users.length}</span>
+                    </button>
+                    {usedCountries.map(code => {
+                      const country = COUNTRIES.find(c => c.code === code);
+                      const count   = users.filter((u: any) => (u.available_countries ?? []).includes(code)).length;
+                      return (
+                        <button
+                          key={code}
+                          data-country-item
+                          data-country-name={(country?.name ?? code).toLowerCase()}
+                          onClick={() => { setFilterCountry(code); setShowCountryDrop(false); }}
+                          className={`w-full flex items-center gap-2 px-3 py-2 text-sm hover:bg-gray-50 transition ${filterCountry === code ? 'font-bold text-brand-700 bg-brand-50' : 'text-gray-700'}`}
+                        >
+                          <span>{country ? countryFlag(country.code) : '🌐'}</span>
+                          <span className="flex-1 text-left">{country?.name ?? code}</span>
+                          <span className="text-xs text-gray-400 bg-gray-100 rounded-full px-1.5 py-0.5">{count}</span>
+                        </button>
+                      );
+                    })}
+                    {usedCountries.length === 0 && (
+                      <p className="px-3 py-4 text-xs text-gray-400 text-center">Keine Länder hinterlegt</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Active filter summary */}
+            {(search || filterCountry) && (
+              <span className="text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1">
+                {filteredUsers.length} von {users.length} Nutzern
+                {filterCountry && (
+                  <span className="ml-1">
+                    · {COUNTRIES.find(c => c.code === filterCountry)?.name ?? filterCountry}
+                  </span>
+                )}
+              </span>
+            )}
             <button
               onClick={handleSendProfileUpdateEmail}
               disabled={sendingBulkEmail}
@@ -330,6 +517,26 @@ export default function AdminTabs({
               {sendingReminderEmail
                 ? <><Loader2 className="h-4 w-4 animate-spin" /> Sende…</>
                 : <><Mail className="h-4 w-4" /> Erinnerung: Länder + Dokumente</>
+              }
+            </button>
+            <button
+              onClick={handleSendCompanyReminder}
+              disabled={sendingCompanyReminder}
+              className="flex items-center gap-2 rounded-xl bg-orange-600 hover:bg-orange-700 text-white font-semibold px-4 py-2.5 text-sm transition disabled:opacity-60"
+            >
+              {sendingCompanyReminder
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Sende…</>
+                : <><Building2 className="h-4 w-4" /> ⚠️ Firmendaten fehlen — Erinnern</>
+              }
+            </button>
+            <button
+              onClick={handleSendVisaInvitation}
+              disabled={sendingVisaInvite}
+              className="flex items-center gap-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-2.5 text-sm transition disabled:opacity-60"
+            >
+              {sendingVisaInvite
+                ? <><Loader2 className="h-4 w-4 animate-spin" /> Sende…</>
+                : <><Mail className="h-4 w-4" /> 🇦🇺 Work-Visa-Einladung an alle</>
               }
             </button>
           </div>
@@ -773,39 +980,279 @@ export default function AdminTabs({
           {requests.length === 0 ? (
             <div className="card text-center py-10 text-gray-400">{t('admin.requestsList.none')}</div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                    <th className="pb-2 pr-4">{t('admin.users.name')}</th>
-                    <th className="pb-2 pr-4">{t('admin.requestsList.roleNeeded')}</th>
-                    <th className="pb-2 pr-4">{t('admin.requestsList.location')}</th>
-                    <th className="pb-2 pr-4">{t('admin.requestsList.dates')}</th>
-                    <th className="pb-2 pr-4">{t('admin.requestsList.budget')}</th>
-                    <th className="pb-2">{t('admin.users.status')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {requests.map((r: any) => (
-                    <tr key={r.id}>
-                      <td className="py-3 pr-4 font-medium text-gray-900">{r.users?.full_name}</td>
-                      <td className="py-3 pr-4">
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">{r.role_needed}</span>
-                      </td>
-                      <td className="py-3 pr-4 text-gray-500 text-xs">{r.location_city}, {r.location_country}</td>
-                      <td className="py-3 pr-4 text-gray-500 text-xs">
-                        {r.start_date ? new Date(r.start_date).toLocaleDateString('de-DE') : '?'} – {r.end_date ? new Date(r.end_date).toLocaleDateString('de-DE') : '?'}
-                      </td>
-                      <td className="py-3 pr-4 text-gray-700 font-medium">{r.budget ?? '—'}</td>
-                      <td className="py-3">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${
+            <div className="space-y-4">
+              {requests.map((r: any) => (
+                <div key={r.id} className="card border border-gray-200 hover:border-brand-200 transition space-y-4">
+                  {/* Header */}
+                  <div className="flex items-start gap-4 flex-wrap">
+                    {/* Avatar */}
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-700 font-bold text-lg flex-shrink-0">
+                      {r.users?.avatar_url
+                        ? <img src={r.users.avatar_url} className="h-12 w-12 rounded-xl object-cover" alt="" />
+                        : r.users?.full_name?.charAt(0)?.toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-bold text-gray-900 text-base">{r.users?.full_name ?? '—'}</p>
+                        {r.users?.company_name && (
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{r.users.company_name}</span>
+                        )}
+                        <span className={`ml-auto rounded-full px-2.5 py-0.5 text-xs font-bold ${
                           r.status === 'open' ? 'bg-amber-100 text-amber-700' : 'bg-purple-100 text-purple-700'
                         }`}>{r.status}</span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {r.users?.role} · Angefragt: {r.created_at ? new Date(r.created_at).toLocaleDateString('de-DE') : '—'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Request Details */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div className="rounded-lg bg-gray-50 px-3 py-2">
+                      <p className="text-xs text-gray-400 mb-0.5">Gesuchte Rolle</p>
+                      <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-semibold">{r.role_needed}</span>
+                    </div>
+                    <div className="rounded-lg bg-gray-50 px-3 py-2">
+                      <p className="text-xs text-gray-400 mb-0.5">Ort</p>
+                      <p className="text-sm font-medium text-gray-700">{r.location_city}, {r.location_country}</p>
+                    </div>
+                    <div className="rounded-lg bg-gray-50 px-3 py-2">
+                      <p className="text-xs text-gray-400 mb-0.5">Zeitraum</p>
+                      <p className="text-sm font-medium text-gray-700">
+                        {r.start_date ? new Date(r.start_date).toLocaleDateString('de-DE') : '?'} – {r.end_date ? new Date(r.end_date).toLocaleDateString('de-DE') : 'offen'}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-gray-50 px-3 py-2">
+                      <p className="text-xs text-gray-400 mb-0.5">Budget</p>
+                      <p className="text-sm font-bold text-brand-700">{r.budget ?? '—'}</p>
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  {r.description && (
+                    <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-3">
+                      <p className="text-xs font-semibold text-blue-600 mb-1">📋 Beschreibung / Anforderungen:</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{r.description}</p>
+                    </div>
+                  )}
+
+                  {/* Contact info + Actions */}
+                  <div className="flex items-center gap-3 flex-wrap pt-1 border-t border-gray-100">
+                    {/* Contact info */}
+                    <div className="flex items-center gap-3 flex-1 flex-wrap">
+                      {r.users?.email && (
+                        <a href={`mailto:${r.users.email}`}
+                          className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 font-medium">
+                          <Mail className="h-3.5 w-3.5" /> {r.users.email}
+                        </a>
+                      )}
+                      {r.users?.phone && (
+                        <a href={`tel:${r.users.phone}`}
+                          className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 font-medium">
+                          <Phone className="h-3.5 w-3.5" /> {r.users.phone}
+                        </a>
+                      )}
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {r.users?.email && (
+                        <a href={`mailto:${r.users.email}?subject=PDR Connect - Ihre Anfrage für ${r.role_needed} in ${r.location_city}&body=Sehr geehrte/r ${r.users.full_name},%0A%0AWir haben Ihre Anfrage erhalten und melden uns in Kürze.%0A%0ATeam PDR Connect`}
+                          className="flex items-center gap-1.5 rounded-lg bg-brand-600 text-white px-3 py-1.5 text-xs font-semibold hover:bg-brand-700 transition">
+                          <Mail className="h-3.5 w-3.5" /> Kontaktieren
+                        </a>
+                      )}
+                      {r.users?.id && (
+                        <a href={`/admin/users/${r.users.id}`}
+                          className="flex items-center gap-1.5 rounded-lg bg-gray-100 text-gray-700 px-3 py-1.5 text-xs font-semibold hover:bg-gray-200 transition">
+                          <ExternalLink className="h-3.5 w-3.5" /> Profil ansehen
+                        </a>
+                      )}
+                      {/* Delete job request */}
+                      <button
+                        onClick={async () => {
+                          if (!window.confirm('Job-Anfrage wirklich löschen?')) return;
+                          try {
+                            const res = await fetch(`/api/admin/job-request/${r.id}`, { method: 'DELETE' });
+                            if (res.ok) {
+                              setRequests((prev: any[]) => prev.filter((x: any) => x.id !== r.id));
+                              toast.success('Anfrage gelöscht');
+                            } else {
+                              const j = await res.json();
+                              toast.error('Fehler: ' + (j.error ?? 'Unbekannt'));
+                            }
+                          } catch (e: any) {
+                            toast.error('Fehler: ' + e.message);
+                          }
+                        }}
+                        className="flex items-center gap-1 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 px-2.5 py-1.5 text-xs font-semibold transition"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Löschen
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ══ CUSTOMER INQUIRIES ══ */}
+      {tab === 'inquiries' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-gray-500">
+              Alle Kundenanfragen über "Profis finden" — sortiert nach Datum (neueste zuerst)
+            </p>
+            <span className="text-xs font-medium bg-amber-100 text-amber-700 rounded-full px-3 py-1">
+              {inquiries.filter((i:any) => i.status === 'new').length} neue Anfragen
+            </span>
+          </div>
+
+          {inquiries.length === 0 ? (
+            <div className="card text-center py-12 text-gray-400">
+              <Mail className="h-10 w-10 mx-auto mb-2 text-gray-300" />
+              <p className="font-medium">Keine Anfragen vorhanden</p>
+              <p className="text-sm mt-1">Anfragen von Kunden erscheinen hier sobald sie über "Profis finden" gesendet werden.</p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {inquiries.map((inq: any) => (
+                <div key={inq.id} className={`card space-y-4 ${inq.status === 'new' ? 'border-l-4 border-l-amber-400' : ''}`}>
+                  {/* Header */}
+                  <div className="flex items-start justify-between gap-4 flex-wrap">
+                    <div>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-bold text-gray-900">{inq.customer_name ?? '—'}</h3>
+                        {inq.customer_company && (
+                          <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{inq.customer_company}</span>
+                        )}
+                        <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${
+                          inq.status === 'new'         ? 'bg-amber-100 text-amber-700' :
+                          inq.status === 'in_progress' ? 'bg-blue-100 text-blue-700' :
+                          inq.status === 'matched'     ? 'bg-green-100 text-green-700' :
+                          'bg-gray-100 text-gray-600'
+                        }`}>{inq.status}</span>
+                      </div>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        📅 {new Date(inq.created_at).toLocaleString('de-DE')}
+                      </p>
+                    </div>
+                    {/* Status updater + Delete */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <select
+                        value={inq.status}
+                        onChange={async (e) => {
+                          const newStatus = e.target.value;
+                          await fetch(`/api/admin/inquiry/${inq.id}`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ status: newStatus }),
+                          });
+                          setInquiries((prev: any[]) => prev.map((i: any) => i.id === inq.id ? { ...i, status: newStatus } : i));
+                        }}
+                        className="rounded-lg border border-gray-200 text-xs px-2 py-1.5 focus:outline-none"
+                      >
+                        <option value="new">🆕 Neu</option>
+                        <option value="in_progress">⏳ In Bearbeitung</option>
+                        <option value="matched">✅ Vermittelt</option>
+                        <option value="closed">🔒 Geschlossen</option>
+                      </select>
+                      <button
+                        onClick={async () => {
+                          if (!window.confirm('Anfrage wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.')) return;
+                          try {
+                            const res = await fetch(`/api/admin/inquiry/${inq.id}`, { method: 'DELETE' });
+                            if (res.ok) {
+                              setInquiries((prev: any[]) => prev.filter((i: any) => i.id !== inq.id));
+                              toast.success('Anfrage gelöscht');
+                            } else {
+                              const j = await res.json();
+                              toast.error('Fehler: ' + (j.error ?? 'Unbekannt'));
+                            }
+                          } catch (e: any) {
+                            toast.error('Fehler: ' + e.message);
+                          }
+                        }}
+                        className="flex items-center gap-1 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 px-2.5 py-1.5 text-xs font-semibold transition"
+                        title="Anfrage löschen"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Löschen
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Contact */}
+                  <div className="flex flex-wrap gap-3">
+                    {inq.customer_email && (
+                      <a href={`mailto:${inq.customer_email}`} className="flex items-center gap-1.5 text-xs text-brand-600 hover:text-brand-800 font-medium">
+                        <Mail className="h-3.5 w-3.5" /> {inq.customer_email}
+                      </a>
+                    )}
+                    {inq.customer_phone && (
+                      <a href={`tel:${inq.customer_phone}`} className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 font-medium">
+                        <Phone className="h-3.5 w-3.5" /> {inq.customer_phone}
+                      </a>
+                    )}
+                  </div>
+
+                  {/* Details grid */}
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    {inq.location && (
+                      <div className="rounded-lg bg-gray-50 px-3 py-2">
+                        <p className="text-xs text-gray-400 mb-0.5">Ort</p>
+                        <p className="text-sm font-medium text-gray-700">{inq.location}</p>
+                      </div>
+                    )}
+                    {inq.start_date && (
+                      <div className="rounded-lg bg-gray-50 px-3 py-2">
+                        <p className="text-xs text-gray-400 mb-0.5">Wunschtermin</p>
+                        <p className="text-sm font-medium text-gray-700">{new Date(inq.start_date).toLocaleDateString('de-DE')}</p>
+                      </div>
+                    )}
+                    {inq.budget && (
+                      <div className="rounded-lg bg-gray-50 px-3 py-2">
+                        <p className="text-xs text-gray-400 mb-0.5">Budget</p>
+                        <p className="text-sm font-bold text-brand-700">{inq.budget}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Message */}
+                  <div className="rounded-lg bg-blue-50 border border-blue-100 px-4 py-3">
+                    <p className="text-xs font-semibold text-blue-600 mb-1">💬 Nachricht des Kunden:</p>
+                    <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{inq.message}</p>
+                  </div>
+
+                  {/* Selected technicians */}
+                  {inq.selected_technicians?.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                        🔧 Ausgewählte Techniker ({inq.selected_technicians.length}):
+                      </p>
+                      <div className="space-y-2">
+                        {inq.selected_technicians.map((tech: any) => (
+                          <div key={tech.id} className="flex items-center gap-3 rounded-lg bg-gray-50 border px-3 py-2">
+                            <div className="h-8 w-8 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-sm font-bold flex-shrink-0">
+                              {tech.full_name?.charAt(0)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-semibold text-gray-900">{tech.full_name}</p>
+                              <p className="text-xs text-gray-400">{tech.role} · {tech.available_countries?.slice(0,3).join(', ')}</p>
+                            </div>
+                            <a href={`/admin/users/${tech.id}`}
+                              className="text-xs text-brand-600 hover:text-brand-800 font-medium flex items-center gap-1">
+                              <ExternalLink className="h-3.5 w-3.5" /> Profil
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           )}
         </div>

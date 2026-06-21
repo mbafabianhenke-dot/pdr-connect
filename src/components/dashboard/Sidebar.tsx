@@ -54,7 +54,7 @@ export default function Sidebar({ profile }: Props) {
   };
 
   return (
-    <aside className="flex w-64 flex-col border-r border-gray-200 bg-white">
+    <aside className="hidden lg:flex w-64 flex-col border-r border-gray-200 bg-white">
       {/* Logo */}
       <div className="flex items-center gap-2.5 border-b border-gray-200 px-5 py-4">
         <Image src="/logo.png" alt="Cybratech Solutions" width={54} height={54} unoptimized className="flex-shrink-0" />
@@ -108,18 +108,44 @@ export default function Sidebar({ profile }: Props) {
         })}
 
         {profile.is_admin && (
-          <Link
-            href="/admin"
-            className={cn(
-              'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
-              pathname.startsWith('/admin')
-                ? 'bg-red-50 text-red-700'
-                : 'text-red-600 hover:bg-red-50'
-            )}
-          >
-            <Shield className="h-4 w-4" />
-            {t('nav.adminPanel')}
-          </Link>
+          <>
+            <Link
+              href="/admin"
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
+                pathname === '/admin' || (pathname.startsWith('/admin') && !pathname.startsWith('/admin/hail'))
+                  ? 'bg-red-50 text-red-700'
+                  : 'text-red-600 hover:bg-red-50'
+              )}
+            >
+              <Shield className="h-4 w-4" />
+              {t('nav.adminPanel')}
+            </Link>
+            <Link
+              href="/admin/hail-leads"
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
+                pathname.startsWith('/admin/hail')
+                  ? 'bg-yellow-50 text-yellow-700'
+                  : 'text-yellow-600 hover:bg-yellow-50'
+              )}
+            >
+              <Globe className="h-4 w-4" />
+              ⛈️ Hagel-Leads
+            </Link>
+            <Link
+              href="/admin/de-businesses"
+              className={cn(
+                'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition',
+                pathname.startsWith('/admin/de-businesses')
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-blue-600 hover:bg-blue-50'
+              )}
+            >
+              <Globe className="h-4 w-4" />
+              🇩🇪 Betriebe-Verzeichnis
+            </Link>
+          </>
         )}
       </nav>
 

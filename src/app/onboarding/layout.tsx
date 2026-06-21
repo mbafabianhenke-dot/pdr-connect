@@ -9,14 +9,17 @@ export default async function OnboardingLayout({ children }: { children: React.R
 
   const { data: profile } = await supabase
     .from('users')
-    .select('is_verified, is_admin, is_blocked, verification_requested_at')
+    .select('is_blocked')
     .eq('id', user.id)
     .single();
 
   if (!profile || profile.is_blocked) redirect('/login?error=blocked');
 
-  // Already fully verified → go to dashboard
-  if (profile.is_verified || profile.is_admin) redirect('/dashboard');
+  // NOTE: We do NOT redirect admins or verified users here.
+  // Admins could land here if their profile is incomplete —
+  // redirecting them to /dashboard would cause a loop since
+  // the dashboard layout would send them back here.
+  // All users can use the onboarding form to complete their profile.
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-50 via-white to-indigo-50">

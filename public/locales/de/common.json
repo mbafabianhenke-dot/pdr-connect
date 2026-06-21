@@ -1,4 +1,28 @@
 {
+  "inquiry": {
+    "banner": "Durchsuchen Sie Techniker und klicken Sie bei interessanten Profilen auf \"Zur Anfrage hinzufügen\". Unser Team übernimmt die Vermittlung und meldet sich innerhalb von 24 Std.",
+    "addToRequest": "Zur Anfrage hinzufügen",
+    "added": "Hinzugefügt ✓",
+    "selectedCount": "{{count}} Techniker ausgewählt",
+    "selectedCount_plural": "{{count}} Techniker ausgewählt",
+    "sendBtn": "Anfrage an PDR Connect senden",
+    "modalTitle": "Anfrage an PDR Connect senden",
+    "modalSub": "Unser Team meldet sich innerhalb von 24 Stunden",
+    "selectedTechs": "Ausgewählte Techniker",
+    "noTechs": "Kein spezifischer Techniker — allgemeine Anfrage",
+    "location": "Ort / Stadt",
+    "locationPlaceholder": "z.B. München, Deutschland",
+    "startDate": "Gewünschter Starttermin",
+    "budget": "Budget (optional)",
+    "budgetPlaceholder": "z.B. 800-1200 Euro pro Tag",
+    "message": "Ihre Nachricht / Anforderungen",
+    "messagePlaceholder": "Beschreiben Sie Ihr Projekt, Fahrzeuganzahl, Schadensart, Dauer, besondere Anforderungen...",
+    "notice": "Ihre Anfrage und die ausgewählten Profile werden an das PDR Connect Team gesendet. Wir melden uns innerhalb von 24 Stunden.",
+    "cancel": "Abbrechen — nicht senden",
+    "send": "An PDR Connect senden",
+    "sending": "Wird gesendet...",
+    "success": "Ihre Anfrage wurde an unser Team gesendet! Wir melden uns in Kürze."
+  },
   "nav": {
     "dashboard": "Dashboard",
     "myOffer": "Mein Angebot",
@@ -586,7 +610,11 @@
     "uploadSignedDesc": "Laden Sie ein PDF hoch, das Sie handschriftlich oder mit einem externen Tool unterzeichnet haben (max. 20 MB).",
     "uploadClient": "Auftraggeber-Vertrag hochladen",
     "uploadWorker": "Techniker-Vertrag hochladen",
-    "uploadSuccess": "Unterzeichneter Vertrag erfolgreich hochgeladen."
+    "uploadSuccess": "Unterzeichneter Vertrag erfolgreich hochgeladen.",
+    "agbContract": "AGB — Allgemeine Geschäftsbedingungen",
+    "privacyContract": "Datenschutzerklärung (DSGVO)",
+    "signedOn": "Unterzeichnet am",
+    "accepted": "Akzeptiert"
   },
   "admin": {
     "title": "Admin-Bereich",
@@ -856,6 +884,8 @@
     "badge": "Konto-Aktivierung",
     "title": "Profil vervollständigen",
     "subtitle": "Füllen Sie alle Pflichtfelder aus und senden Sie Ihr Profil zur Überprüfung. Nach unserer Freigabe erhalten Sie Zugang zu PDR Connect.",
+    "mandatoryBanner": "Firmendaten erforderlich",
+    "mandatoryDesc": "Bitte füllen Sie alle Pflichtfelder aus. Ohne vollständige Firmendaten erhalten Sie keinen Zugang zum Dashboard. EU-Unternehmen müssen ihre USt-IdNr. angeben.",
     "signOut": "Abmelden",
     "step1Label": "Firmendaten",
     "step2Label": "Unterlagen",

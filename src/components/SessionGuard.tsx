@@ -1,16 +1,17 @@
 'use client';
 
 /**
- * SessionGuard — auto-logout when the browser is closed.
+ * SessionGuard — auto-logout when the browser/tab is closed for more than 5 seconds.
  *
  * Strategy:
  *  • Each tab registers a unique ID in localStorage["pdrconnect-tabs"].
- *  • beforeunload (only fires on real tab/window close, NOT on SPA navigation):
+ *  • beforeunload fires on real tab/window close AND hard-refresh:
  *      removes this tab's ID; if the list is now empty → records close-timestamp.
  *  • On mount: if a close-timestamp exists and is > GRACE_MS old → the browser
  *      was truly closed → sign out the active Supabase session → redirect /login.
- *  • GRACE_MS (2 s) covers hard-refresh (Ctrl+R), which also fires beforeunload but
- *      reloads the page within ~500 ms.
+ *  • GRACE_MS (5 s):
+ *      < 5 s = hard-refresh or very quick reopen → stay logged in
+ *      > 5 s = browser was closed → auto logout
  */
 
 import { useEffect, useRef } from 'react';
@@ -19,7 +20,7 @@ import { createClient } from '@/lib/supabase/client';
 
 const TABS_KEY  = 'pdrconnect-tabs';
 const CLOSE_KEY = 'pdrconnect-close-ts';
-const GRACE_MS  = 2000; // ignore closes < 2 s ago (= hard refresh)
+const GRACE_MS  = 5000; // auto-logout if page was closed for more than 5 seconds
 
 export default function SessionGuard() {
   const router = useRouter();
