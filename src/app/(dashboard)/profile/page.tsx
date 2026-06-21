@@ -11,6 +11,7 @@ import {
   Building2, FileText, Briefcase, Camera, Star,
   Settings, Globe, Eye, EyeOff, Upload, CheckCircle, Clock,
   Plus, Pencil, Trash2, Check, AlertTriangle, X, Languages, CreditCard,
+  Download,
 } from 'lucide-react';
 import { getProfileCompletion, type ProfileLang } from '@/lib/profile-completion';
 
@@ -1189,6 +1190,40 @@ export default function ProfilePage() {
                   />
                 </label>
               )}
+            </div>
+
+            {/* Australia Work Visa — invitation templates (download for everyone) */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t('profile.workVisaTemplatesLabel', '🇦🇺 Australia Work Visa — invitation templates')}
+              </label>
+              <p className="text-xs text-gray-400 mb-2">
+                {t('profile.workVisaTemplatesHint', 'Download the official Subclass 400 invitation-letter templates, fill in your applicant details, and send them back to start your visa application.')}
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <a
+                  href="https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/ADR-Subclass-400-Visa-Invitation-Template.docx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-sky-400 hover:bg-sky-50"
+                >
+                  <FileText className="h-5 w-5 text-sky-500 flex-shrink-0" />
+                  <span className="flex-1">{t('profile.workVisaTemplateAdr', 'ADR — Subclass 400 Invitation Template')}</span>
+                  <Download className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                </a>
+                <a
+                  href="https://spmbtjynxbqpecgumadv.supabase.co/storage/v1/object/public/visa-templates/PDR-Team-Visa-Invitation-Template.docx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                  className="flex flex-1 items-center gap-2 rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-sky-400 hover:bg-sky-50"
+                >
+                  <FileText className="h-5 w-5 text-sky-500 flex-shrink-0" />
+                  <span className="flex-1">{t('profile.workVisaTemplatePdr', 'PDR-Team — Subclass 400 Invitation Template')}</span>
+                  <Download className="h-4 w-4 text-gray-400 flex-shrink-0" />
+                </a>
+              </div>
             </div>
 
             {/* Australia Work Visa Upload */}
