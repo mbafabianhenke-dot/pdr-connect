@@ -458,105 +458,54 @@ export default function DocumentsPage() {
             </div>
           );
         })}
-      </div>
+        {/* ── Australia-Work-Visa (standard document field) ── */}
+        {(() => {
+          const vlang: VisaLang = (['en', 'de', 'es', 'el', 'pt'] as VisaLang[])
+            .includes((i18n.language?.split('-')[0] ?? 'en') as VisaLang)
+            ? (i18n.language.split('-')[0] as VisaLang)
+            : 'en';
+          const v = VISA_COPY[vlang];
+          const workVisaDocs = docs.filter(d => d.type === 'WORK_VISA');
+          const latest = workVisaDocs[0];
+          const labelFor = (key: string) => (key === 'adr' ? v.adr : v.pdr);
 
-      {/* ── Work Visa for Australia ── */}
-      {(() => {
-        const vlang: VisaLang = (['en', 'de', 'es', 'el', 'pt'] as VisaLang[])
-          .includes((i18n.language?.split('-')[0] ?? 'en') as VisaLang)
-          ? (i18n.language.split('-')[0] as VisaLang)
-          : 'en';
-        const v = VISA_COPY[vlang];
-        const workVisaDocs = docs.filter(d => d.type === 'WORK_VISA');
-        const labelFor = (key: string) => (key === 'adr' ? v.adr : v.pdr);
-
-        return (
-          <div className="rounded-2xl border-2 border-emerald-200 overflow-hidden shadow-sm">
-            <div className="px-5 py-4 bg-emerald-50 border-b border-emerald-200 flex items-center gap-3">
-              <span className="text-2xl leading-none">🇦🇺</span>
-              <div>
-                <h2 className="font-bold text-base text-emerald-900">{v.title}</h2>
-                <p className="text-xs text-emerald-700">{v.subtitle}</p>
-              </div>
-            </div>
-
-            <div className="px-5 py-5 bg-white space-y-5">
-              <p className="text-sm text-gray-600">{v.intro}</p>
-
-              {/* Template downloads */}
-              <div>
-                <p className="text-sm font-semibold text-gray-700 mb-2">{v.downloadTitle}</p>
-                <div className="space-y-2">
-                  {VISA_TEMPLATES.map(tpl => (
-                    <div key={tpl.key} className="flex items-center justify-between gap-3 rounded-xl border border-gray-200 px-4 py-3">
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 flex-shrink-0">
-                          <FileText className="h-5 w-5 text-emerald-600" />
-                        </div>
-                        <p className="text-sm font-medium text-gray-800 truncate">{labelFor(tpl.key)}</p>
-                      </div>
-                      <a
-                        href={tpl.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                        className="btn-secondary flex-shrink-0 inline-flex items-center gap-1.5 text-sm"
-                      >
-                        <Download className="h-4 w-4" />
-                        {v.download}
-                      </a>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Approved visa upload */}
-              <div className="rounded-xl border-2 border-dashed border-emerald-300 bg-emerald-50/40 p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white border border-emerald-200 flex-shrink-0">
-                      <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{v.uploadTitle}</h3>
-                      <p className="text-xs text-gray-500 mt-0.5">{v.uploadHint}</p>
-                    </div>
+          return (
+            <div className="card">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gray-100">
+                    <span className="text-lg leading-none">🇦🇺</span>
                   </div>
-                  <label className="btn-secondary cursor-pointer flex-shrink-0">
-                    <Upload className="h-4 w-4 mr-1.5" />
-                    {uploading === 'WORK_VISA'
-                      ? v.uploading
-                      : workVisaDocs.length > 0
-                      ? v.replace
-                      : v.upload}
-                    <input
-                      type="file"
-                      accept=".pdf,.jpg,.jpeg,.png"
-                      className="hidden"
-                      disabled={uploading === 'WORK_VISA'}
-                      onChange={e => {
-                        const f = e.target.files?.[0];
-                        if (f) handleUpload('WORK_VISA', f);
-                      }}
-                    />
-                  </label>
-                </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Australia-Work-Visa</h3>
+                    <p className="text-xs text-gray-500 mt-0.5">{v.subtitle}</p>
+                    <p className="text-xs text-gray-500 mt-1">{v.uploadHint}</p>
 
-                {/* Uploaded approved visas */}
-                {workVisaDocs.length > 0 && (
-                  <div className="mt-4 space-y-2 border-t border-emerald-200 pt-4">
-                    {workVisaDocs.map(doc => (
-                      <div key={doc.id} className="flex items-center justify-between gap-3 rounded-lg bg-white border border-gray-200 px-3 py-2">
-                        <div className="min-w-0">
-                          <div className="flex items-center gap-2">
-                            <StatusBadge status={doc.status} t={t} />
-                          </div>
-                          <p className="text-xs text-gray-400 mt-0.5">{v.uploadedOn} {formatDate(doc.created_at)}</p>
-                        </div>
-                        <div className="flex items-center gap-3 flex-shrink-0">
-                          {signedUrls[doc.id] && (
+                    {/* Invitation templates — available on every profile */}
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {VISA_TEMPLATES.map(tpl => (
+                        <a
+                          key={tpl.key}
+                          href={tpl.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          download
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-gray-50 px-2.5 py-1.5 text-xs font-medium text-gray-700 hover:border-brand-400 hover:text-brand-700 transition"
+                        >
+                          <Download className="h-3.5 w-3.5" />
+                          {labelFor(tpl.key)}
+                        </a>
+                      ))}
+                    </div>
+
+                    {latest && (
+                      <div className="mt-3 space-y-1.5">
+                        <StatusBadge status={latest.status} t={t} />
+                        <p className="text-xs text-gray-400">{v.uploadedOn} {formatDate(latest.created_at)}</p>
+                        <div className="flex flex-wrap items-center gap-3 pt-0.5">
+                          {signedUrls[latest.id] && (
                             <a
-                              href={signedUrls[doc.id]}
+                              href={signedUrls[latest.id]}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="inline-flex items-center gap-1 text-xs text-brand-600 hover:underline"
@@ -566,25 +515,47 @@ export default function DocumentsPage() {
                           )}
                           <button
                             type="button"
-                            onClick={() => handleDeleteDoc(doc)}
-                            disabled={deletingDoc === doc.id}
+                            onClick={() => handleDeleteDoc(latest)}
+                            disabled={deletingDoc === latest.id}
                             className="inline-flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition disabled:opacity-50"
                           >
-                            {deletingDoc === doc.id
+                            {deletingDoc === latest.id
                               ? <Loader2 className="h-3 w-3 animate-spin" />
                               : <Trash2 className="h-3 w-3" />}
                             {v.delete}
                           </button>
                         </div>
+                        {workVisaDocs.length > 1 && (
+                          <p className="text-xs text-gray-400">{workVisaDocs.length} {t('documents.versions') || 'Versionen'}</p>
+                        )}
                       </div>
-                    ))}
+                    )}
                   </div>
-                )}
+                </div>
+
+                <label className="btn-secondary cursor-pointer flex-shrink-0">
+                  <Upload className="h-4 w-4 mr-1.5" />
+                  {uploading === 'WORK_VISA'
+                    ? v.uploading
+                    : latest
+                    ? v.replace
+                    : v.upload}
+                  <input
+                    type="file"
+                    accept=".pdf,.jpg,.jpeg,.png"
+                    className="hidden"
+                    disabled={uploading === 'WORK_VISA'}
+                    onChange={e => {
+                      const f = e.target.files?.[0];
+                      if (f) handleUpload('WORK_VISA', f);
+                    }}
+                  />
+                </label>
               </div>
             </div>
-          </div>
-        );
-      })()}
+          );
+        })()}
+      </div>
 
       {/* ── Profile Verification Request ── */}
       {(() => {
